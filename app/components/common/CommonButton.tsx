@@ -1,3 +1,4 @@
+"use client";
 import { CommonButtonProps } from "@/app/types/CommonType";
 import { Button } from "@/shadcn/components/ui/button";
 import Link from "next/link";
@@ -19,7 +20,10 @@ const CommonButton: React.FC<ExtendedButtonProps> = ({
   if (link) {
     return (
       <Link href={link} className={className}>
-        <Button className={`rounded-sm cursor-pointer w-full`} asChild>
+        <Button
+          className={`rounded-xs bg-primary cursor-pointer w-full`}
+          asChild
+        >
           <span>{label}</span>
         </Button>
       </Link>
@@ -32,7 +36,7 @@ const CommonButton: React.FC<ExtendedButtonProps> = ({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`rounded-sm cursor-pointer ${className}`}
+      className={`rounded-sm cursor-pointer bg-orange-500 hover:bg-orange-600 ${className}`}
     >
       {label}
     </Button>
