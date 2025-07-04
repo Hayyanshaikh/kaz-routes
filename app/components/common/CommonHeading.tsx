@@ -3,8 +3,8 @@ import React from "react";
 
 const CommonHeading = ({ title, subtitle, className }: CommonHeadingProps) => {
   return (
-    <div className={`text-center ${className}`}>
-      <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2">
+    <div className={`text-center ${className} mb-10`}>
+      <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 text-stone-900">
         {title}
       </h1>
       {subtitle && (

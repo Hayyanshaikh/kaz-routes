@@ -20,6 +20,7 @@ export interface CommonButtonProps {
   className?: string;
   link?: string;
   icon?: React.ReactNode;
+  ref?: React.Ref<HTMLButtonElement>;
 }
 
 // Common Input Props

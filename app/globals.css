@@ -167,6 +167,39 @@
   width: 20px;
 }
 
+.swiper-button-next,
+.swiper-button-prev {
+  height: 40px !important;
+  background: var(--color-black) !important;
+  border-radius: 50%;
+  width: 40px !important;
+}
+
+.swiper-button-next:after,
+.swiper-button-prev:after {
+  color: #fff;
+  font-size: 15px !important;
+  font-weight: 600;
+}
+
+.swiper-button-next {
+  right: -40px !important;
+  transition: 0.3s ease;
+}
+
+.swiper-button-prev {
+  left: -40px !important;
+  transition: 0.3s ease;
+}
+
+.swiper:hover .swiper-button-prev {
+  left: 15px !important;
+}
+
+.swiper:hover .swiper-button-next {
+  right: 15px !important;
+}
+
 /* Breakpoints */
 @media (max-width: 768px) {
   .nav-link:before {

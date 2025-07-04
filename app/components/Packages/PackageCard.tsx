@@ -1,6 +1,8 @@
 "use client";
 import React from "react";
 import { Star, Clock, Users, Plus } from "lucide-react"; // Icons ke liye
+import CommonBadge from "../Common/CommonBadge";
+import CommonButton from "../Common/CommonButton";
 
 type PackageCardProps = {
   imageUrl: string;
@@ -24,19 +26,19 @@ const PackageCard: React.FC<PackageCardProps> = ({
   price,
 }) => {
   return (
-    <div className="bg-white rounded-xl shadow-lg overflow-hidden max-w-sm mx-auto my-4 transform transition-transform duration-300 hover:scale-105">
+    <div className="flex flex-col bg-white rounded-xl shadow-lg overflow-hidden transform duration-300 h-full">
       {/* Image Section */}
-      <div className="relative h-48 overflow-hidden w-full">
+      <div className="relative h-60 overflow-hidden w-full">
         <img
           src={imageUrl}
           alt={title}
-          className="rounded-t-xl"
+          className="rounded-t-xl w-full h-full object-cover duration-300 "
           onError={(e) => {
             e.currentTarget.src = `https://placehold.co/400x200/cccccc/333333?text=Image+Not+Found`;
           }}
         />
         {/* Rating Badge */}
-        <div className="absolute top-3 right-3 bg-white text-gray-800 px-3 py-1 rounded-full flex items-center shadow-md">
+        <div className="absolute top-3 right-3 bg-white text-stone-800 px-3 py-1 rounded-full flex items-center shadow-md">
           <Star
             size={16}
             fill="currentColor"
@@ -47,14 +49,14 @@ const PackageCard: React.FC<PackageCardProps> = ({
       </div>
 
       {/* Content Section */}
-      <div className="p-5">
+      <div className="p-5 flex flex-col flex-1">
         {/* Title */}
-        <h3 className="text-xl font-bold text-gray-800 mb-2">{title}</h3>
+        <h3 className="text-xl font-semibold text-stone-800 mb-2">{title}</h3>
         {/* Description */}
-        <p className="text-gray-600 text-sm mb-4">{description}</p>
+        <p className="text-stone-600 text-sm mb-4">{description}</p>
 
         {/* Duration & Participants */}
-        <div className="flex items-center justify-between text-gray-500 text-sm mb-4">
+        <div className="flex items-center justify-between text-stone-500 text-sm mb-4">
           <div className="flex items-center space-x-1">
             <Clock size={16} />
             <span>{duration}</span>
@@ -67,34 +69,27 @@ const PackageCard: React.FC<PackageCardProps> = ({
 
         {/* Highlights */}
         <div className="mb-4">
-          <h4 className="text-gray-700 font-semibold text-sm mb-2">
+          <h4 className="text-stone-900 font-semibold text-sm mb-2">
             Highlights:
           </h4>
           <div className="flex flex-wrap gap-2">
             {highlights.map((highlight, index) => (
-              <span
+              <CommonBadge
+                className="bg-primary/15 text-primary"
                 key={index}
-                className="bg-blue-100 text-blue-700 text-xs font-medium px-2.5 py-0.5 rounded-full"
-              >
-                {highlight}
-              </span>
+                label={highlight}
+              />
             ))}
           </div>
         </div>
 
         {/* Price and Add to Cart */}
-        <div className="flex items-center justify-between mt-4">
-          <div className="text-gray-900 text-2xl font-bold">
+        <div className="flex items-center justify-between mt-auto">
+          <div className="text-stone-900 text-xl font-semibold">
             ${price}
-            <span className="text-base font-normal text-gray-500">
-              {" "}
-              / person
-            </span>
+            <span className="text-sm font-normal text-stone-500">/ person</span>
           </div>
-          <button className="bg-blue-600 text-white px-5 py-2 rounded-full flex items-center space-x-2 shadow-md hover:bg-blue-700 transition duration-300 ease-in-out">
-            <Plus size={18} />
-            <span>Add to Cart</span>
-          </button>
+          <CommonButton label="Add to Cart" icon={<Plus size={18} />} />
         </div>
       </div>
     </div>

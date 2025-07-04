@@ -12,6 +12,7 @@ const CommonButton: React.FC<CommonButtonProps> = ({
   className = "",
   link,
   icon,
+  ref,
 }) => {
   const content = (
     <>
@@ -23,7 +24,11 @@ const CommonButton: React.FC<CommonButtonProps> = ({
   if (link) {
     return (
       <Link href={link} className={className}>
-        <Button className="rounded-sm bg-primary cursor-pointer w-full" asChild>
+        <Button
+          ref={ref}
+          className="rounded-sm bg-primary cursor-pointer w-full"
+          asChild
+        >
           <span>{content}</span>
         </Button>
       </Link>
@@ -32,10 +37,11 @@ const CommonButton: React.FC<CommonButtonProps> = ({
 
   return (
     <Button
+      ref={ref}
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`rounded-sm cursor-pointer bg-orange-500 hover:bg-orange-600 ${className}`}
+      className={`rounded-sm cursor-pointer bg-orange-500 hover:bg-orange-600 gap-0 ${className}`}
     >
       {content}
     </Button>

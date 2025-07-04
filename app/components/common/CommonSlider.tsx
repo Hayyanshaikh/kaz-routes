@@ -31,13 +31,17 @@ const CommonSlider = ({
       modules={[Autoplay, Navigation, Pagination]}
       slidesPerView={slidesPerView}
       spaceBetween={spaceBetween}
+      grabCursor={true}
       loop={loop}
       autoplay={autoplay ? { delay: 3000, disableOnInteraction: false } : false}
       navigation={showNavigation}
       pagination={showPagination ? { clickable: true } : false}
+      className="!p-2 !pb-3"
     >
       {items.map((item, index) => (
-        <SwiperSlide key={index}>{item}</SwiperSlide>
+        <SwiperSlide className="!h-auto" key={index}>
+          {item}
+        </SwiperSlide>
       ))}
     </Swiper>
   );
