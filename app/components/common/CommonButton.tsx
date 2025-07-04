@@ -4,33 +4,32 @@ import { Button } from "@/shadcn/components/ui/button";
 import Link from "next/link";
 import * as React from "react";
 
-interface ExtendedButtonProps extends CommonButtonProps {
-  link?: string; // optional link prop
-}
-
-const CommonButton: React.FC<ExtendedButtonProps> = ({
+const CommonButton: React.FC<CommonButtonProps> = ({
   label,
   onClick,
   type = "button",
   disabled = false,
   className = "",
   link,
+  icon,
 }) => {
-  // If `link` is provided, render as a Link
+  const content = (
+    <>
+      {icon && <span className="mr-2">{icon}</span>}
+      <span>{label}</span>
+    </>
+  );
+
   if (link) {
     return (
       <Link href={link} className={className}>
-        <Button
-          className={`rounded-xs bg-primary cursor-pointer w-full`}
-          asChild
-        >
-          <span>{label}</span>
+        <Button className="rounded-sm bg-primary cursor-pointer w-full" asChild>
+          <span>{content}</span>
         </Button>
       </Link>
     );
   }
 
-  // Otherwise render as regular button
   return (
     <Button
       type={type}
@@ -38,7 +37,7 @@ const CommonButton: React.FC<ExtendedButtonProps> = ({
       disabled={disabled}
       className={`rounded-sm cursor-pointer bg-orange-500 hover:bg-orange-600 ${className}`}
     >
-      {label}
+      {content}
     </Button>
   );
 };

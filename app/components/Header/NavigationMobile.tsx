@@ -22,12 +22,12 @@ const NavigationMobile = ({ className, navigationLinks = [] }: Props) => {
     <div className={`md:hidden ${className}`}>
       <Sheet>
         <SheetTrigger>
-          <Menu className="w-6 h-6 cursor-pointer" />
+          <Menu className="w-6 h-6 cursor-pointer text-white" />
         </SheetTrigger>
         <SheetContent side="right" className="w-80 bg-white gap-0">
           <SheetHeader>
             <SheetTitle>
-              <Logo />
+              <Logo className="!text-black" />
             </SheetTitle>
           </SheetHeader>
 
@@ -36,7 +36,7 @@ const NavigationMobile = ({ className, navigationLinks = [] }: Props) => {
             <NavigationLinksList
               links={navigationLinks}
               wrapperClass="flex-col gap-3"
-              itemClass="px-4 py-2"
+              itemClass="px-4 py-2 !text-black"
               onItemClick={() => document.body.click()} // auto-close
             />
             <CommonButton

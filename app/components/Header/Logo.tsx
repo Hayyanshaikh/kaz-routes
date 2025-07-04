@@ -1,10 +1,16 @@
 import Link from "next/link";
 import React from "react";
 
-const Logo = () => {
+interface LogoProps {
+  className?: string;
+}
+
+const Logo: React.FC<LogoProps> = ({ className = "" }) => {
   return (
-    <Link href="/" className="flex items-center gap-2">
-      <span className="font-bold text-lg">Kaz Routes</span>
+    <Link href="/">
+      <span className={`font-bold text-2xl text-white ${className}`}>
+        Kaz Routes
+      </span>
     </Link>
   );
 };

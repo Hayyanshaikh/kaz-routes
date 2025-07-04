@@ -28,7 +28,7 @@ const NavigationLinksList = ({
             key={link.href}
             href={link.href}
             onClick={onItemClick}
-            className={`nav-link ${
+            className={`nav-link text-white ${
               isActive ? "nav-link--active" : ""
             } ${itemClass}`}
           >

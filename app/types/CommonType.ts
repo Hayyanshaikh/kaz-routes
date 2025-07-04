@@ -18,6 +18,8 @@ export interface CommonButtonProps {
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
   className?: string;
+  link?: string;
+  icon?: React.ReactNode;
 }
 
 // Common Input Props
