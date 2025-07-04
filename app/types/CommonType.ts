@@ -95,3 +95,9 @@ export interface ContainerProps {
   children: ReactNode;
   className?: string;
 }
+
+export interface CommonHeadingProps {
+  title: string;
+  subtitle?: string;
+  className?: string;
+}
