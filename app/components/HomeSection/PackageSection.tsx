@@ -2,7 +2,7 @@ import React from "react";
 import CommonHeading from "../Common/CommonHeading";
 import Container from "../Container";
 import Section from "../Container/Section";
-import PackageCard from "../Packages/PackageCard";
+import PackageCard from "../Cards/PackageCard";
 import CommonSlider from "../Common/CommonSlider";
 import { PACKAGES } from "@/lib/constant";
 

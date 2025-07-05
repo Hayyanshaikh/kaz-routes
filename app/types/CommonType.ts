@@ -113,3 +113,10 @@ export interface CommonSliderProps {
   showPagination?: boolean;
   breakpoints?: Record<number, any>;
 }
+
+// Define the props interface for DestinationCard
+export interface DestinationCardProps {
+  imageUrl: string;
+  imageAlt: string;
+  buttonText: string;
+}

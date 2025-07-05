@@ -168,3 +168,46 @@ export const PACKAGES = [
     price: 549,
   },
 ];
+
+export const DESTINATION_DATA = [
+  {
+    imageUrl: "/images/destinations/paris.jpg",
+    imageAlt: "Eiffel Tower in Paris",
+    buttonText: "Book Paris Trip",
+  },
+  {
+    imageUrl: "/images/destinations/tokyo.jpg",
+    imageAlt: "Tokyo Cityscape",
+    buttonText: "Book Tokyo Trip",
+  },
+  {
+    imageUrl: "/images/destinations/new-york.jpg",
+    imageAlt: "New York City Skyline",
+    buttonText: "Book NYC Trip",
+  },
+  {
+    imageUrl: "/images/destinations/rome.jpg",
+    imageAlt: "Colosseum in Rome",
+    buttonText: "Book Rome Trip",
+  },
+  {
+    imageUrl: "/images/destinations/london.jpg",
+    imageAlt: "Big Ben in London",
+    buttonText: "Book London Trip",
+  },
+  {
+    imageUrl: "/images/destinations/dubai.jpg",
+    imageAlt: "Burj Khalifa in Dubai",
+    buttonText: "Book Dubai Trip",
+  },
+  {
+    imageUrl: "/images/destinations/sydney.jpg",
+    imageAlt: "Opera House in Sydney",
+    buttonText: "Book Sydney Trip",
+  },
+  {
+    imageUrl: "/images/destinations/istanbul.jpg",
+    imageAlt: "Blue Mosque in Istanbul",
+    buttonText: "Book Istanbul Trip",
+  },
+];
