@@ -6,16 +6,7 @@ import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-
-type CommonSliderProps = {
-  items: React.ReactNode[];
-  slidesPerView?: number;
-  spaceBetween?: number;
-  loop?: boolean;
-  autoplay?: boolean;
-  showNavigation?: boolean;
-  showPagination?: boolean;
-};
+import { CommonSliderProps } from "@/app/types/CommonType";
 
 const CommonSlider = ({
   items,
@@ -25,6 +16,7 @@ const CommonSlider = ({
   autoplay = false,
   showNavigation = true,
   showPagination = false,
+  breakpoints,
 }: CommonSliderProps) => {
   return (
     <Swiper
@@ -36,6 +28,7 @@ const CommonSlider = ({
       autoplay={autoplay ? { delay: 3000, disableOnInteraction: false } : false}
       navigation={showNavigation}
       pagination={showPagination ? { clickable: true } : false}
+      breakpoints={breakpoints}
       className="!p-2 !pb-3"
     >
       {items.map((item, index) => (

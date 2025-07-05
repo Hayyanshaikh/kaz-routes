@@ -113,7 +113,7 @@ export const PACKAGE_TYPE_OPTIONS = [
 ];
 export const PACKAGES = [
   {
-    imageUrl: "https://placehold.co/400x200/cccccc/333333?text=Package+1",
+    imageUrl: "/images/packages/adventure-in-the-mountains.jpg",
     rating: 4.5,
     title: "Adventure in the Mountains",
     description:
@@ -124,7 +124,7 @@ export const PACKAGES = [
     price: 299,
   },
   {
-    imageUrl: "https://placehold.co/400x200/cccccc/333333?text=Package+2",
+    imageUrl: "/images/packages/cultural-heritage-tour.jpg",
     rating: 4.8,
     title: "Cultural Heritage Tour",
     description:
@@ -135,7 +135,7 @@ export const PACKAGES = [
     price: 499,
   },
   {
-    imageUrl: "https://placehold.co/400x200/cccccc/333333?text=Package+3",
+    imageUrl: "/images/packages/beach-retreat-snorkeling.jpg",
     rating: 4.2,
     title: "Beach Retreat & Snorkeling",
     description:
@@ -146,7 +146,7 @@ export const PACKAGES = [
     price: 399,
   },
   {
-    imageUrl: "https://placehold.co/400x200/cccccc/333333?text=Package+4",
+    imageUrl: "/images/packages/wildlife-safari-adventure.jpg",
     rating: 4.7,
     title: "Wildlife Safari Adventure",
     description:
@@ -157,7 +157,7 @@ export const PACKAGES = [
     price: 649,
   },
   {
-    imageUrl: "https://placehold.co/400x200/cccccc/333333?text=Package+5",
+    imageUrl: "/images/packages/desert-glamping-experience.jpg",
     rating: 4.9,
     title: "Desert Glamping Experience",
     description:

@@ -24,14 +24,22 @@ const PackageSection = (props: Props) => {
   ));
 
   return (
-    <Section>
+    <Section className="bg-stone-100">
       <Container>
         <div>
           <CommonHeading
             title="Ready Made Tour Packages"
             subtitle="Choose from our carefully curated selection of premium tour packages, each designed to provide unforgettable experiences."
           />
-          <CommonSlider spaceBetween={30} items={packageCards} />
+          <CommonSlider
+            breakpoints={{
+              0: { slidesPerView: 1 },
+              768: { slidesPerView: 2 },
+              1024: { slidesPerView: 3 },
+            }}
+            spaceBetween={30}
+            items={packageCards}
+          />
         </div>
       </Container>
     </Section>

@@ -102,3 +102,14 @@ export interface CommonHeadingProps {
   subtitle?: string;
   className?: string;
 }
+
+export interface CommonSliderProps {
+  items: React.ReactNode[];
+  slidesPerView?: number;
+  spaceBetween?: number;
+  loop?: boolean;
+  autoplay?: boolean;
+  showNavigation?: boolean;
+  showPagination?: boolean;
+  breakpoints?: Record<number, any>;
+}
