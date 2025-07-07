@@ -211,3 +211,38 @@ export const DESTINATION_DATA = [
     buttonText: "Book Istanbul Trip",
   },
 ];
+
+export const VEHICLE_DATA = [
+  {
+    imageUrl: "/images/cars/kia-sportage.png",
+    location: "Faisalabad, Pakistan",
+    carBrand: "KIA",
+    carModel: "Sportage AWD",
+    price: 12000,
+    features: ["Automatic", "Petrol", "11 km/l", "2.0L Engine", "Luxury SUV"],
+  },
+  {
+    imageUrl: "/images/cars/suzuki-wagon.png",
+    location: "Islamabad, Pakistan",
+    carBrand: "Suzuki",
+    carModel: "Wagon R",
+    price: 6000,
+    features: ["Automatic", "Petrol", "20 km/l", "1.0L Engine", "5 Seater"],
+  },
+  {
+    imageUrl: "/images/cars/honda-civic.png",
+    location: "Lahore, Pakistan",
+    carBrand: "Honda",
+    carModel: "Civic 2023",
+    price: 8500,
+    features: ["Manual", "Petrol", "14 km/l", "1.5L Turbo", "5 Seater"],
+  },
+  {
+    imageUrl: "/images/cars/toyota-fortuner-suv.png",
+    location: "Karachi, Pakistan",
+    carBrand: "Toyota",
+    carModel: "Fortuner SUV",
+    price: 10000,
+    features: ["Automatic", "Diesel", "12 km/l", "2.8L Engine", "7 Seater"],
+  },
+];

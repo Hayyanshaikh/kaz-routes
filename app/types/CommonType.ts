@@ -20,6 +20,7 @@ export interface CommonButtonProps {
   className?: string;
   link?: string;
   icon?: React.ReactNode;
+  iconPosition?: "left" | "right";
   ref?: React.Ref<HTMLButtonElement>;
 }
 
@@ -101,6 +102,7 @@ export interface CommonHeadingProps {
   title: string;
   subtitle?: string;
   className?: string;
+  mode?: "light" | "dark";
 }
 
 export interface CommonSliderProps {

@@ -12,13 +12,15 @@ const CommonButton: React.FC<CommonButtonProps> = ({
   className = "",
   link,
   icon,
+  iconPosition = "left",
   ref,
 }) => {
   const content = (
-    <>
-      {icon && <span className="mr-2">{icon}</span>}
+    <div className="flex items-center gap-2">
+      {iconPosition === "left" && icon && <span>{icon}</span>}
       <span>{label}</span>
-    </>
+      {iconPosition === "right" && icon && <span>{icon}</span>}
+    </div>
   );
 
   if (link) {
@@ -41,7 +43,7 @@ const CommonButton: React.FC<CommonButtonProps> = ({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`rounded-sm cursor-pointer bg-orange-500 hover:bg-orange-600 gap-0 ${className}`}
+      className={`rounded-sm cursor-pointer bg-orange-500 hover:bg-orange-600 ${className}`}
     >
       {content}
     </Button>
