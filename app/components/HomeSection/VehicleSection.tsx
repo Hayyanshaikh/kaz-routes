@@ -5,7 +5,6 @@ import Container from "../Container";
 import CommonHeading from "../Common/CommonHeading";
 import VehicleCard from "../Cards/VehicleCard";
 import { VEHICLE_DATA } from "@/lib/constant";
-import CommonButton from "../Common/CommonButton";
 
 type Props = {};
 
@@ -15,7 +14,7 @@ const VehicleSection = (props: Props) => {
       <Container>
         <div>
           <CommonHeading
-            title="Our Premium Vehicle Fleet"
+            title="Rent a Car for Your Journey"
             subtitle="Choose from our diverse collection of well-maintained, comfortable vehicles suitable for any type of journey or adventure."
           />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

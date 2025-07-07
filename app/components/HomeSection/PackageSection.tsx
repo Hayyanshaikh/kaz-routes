@@ -28,7 +28,7 @@ const PackageSection = (props: Props) => {
       <Container>
         <div>
           <CommonHeading
-            title="Ready Made Tour Packages"
+            title="Find Your Perfect Tour Package"
             subtitle="Choose from our carefully curated selection of premium tour packages, each designed to provide unforgettable experiences."
           />
           <CommonSlider

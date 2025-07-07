@@ -10,7 +10,7 @@ const CommonHeading = ({
   const isDark = mode === "dark";
 
   return (
-    <div className={`text-center ${className} mb-10`}>
+    <div className={`text-center ${className} mb-15`}>
       <h1
         className={`text-xl sm:text-2xl md:text-3xl font-bold mb-2 ${
           isDark ? "text-stone-100" : "text-stone-900"

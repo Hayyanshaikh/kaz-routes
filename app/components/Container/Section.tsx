@@ -5,8 +5,12 @@ type Props = {
   className?: string;
 };
 
-const Section = ({ children, className = "" }: Props) => {
-  return <section className={`py-10 ${className}`}>{children}</section>;
+const Section = ({ children, className = "", ...props }: Props) => {
+  return (
+    <section className={`py-20 ${className}`} {...props}>
+      {children}
+    </section>
+  );
 };
 
 export default Section;

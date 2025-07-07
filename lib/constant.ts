@@ -10,7 +10,7 @@ export const NAVIGATION_LINKS = [
 
 // Data for the slider items
 export const HERO_SLIDES_DATA = {
-  heading: "Innovate and Create",
+  heading: "Explore the World with Us",
   description: "Dive into cutting-edge technology and build the future.",
   imageUrl: "/images/hero/hero-3.jpg",
   buttonText: "Get Started",
@@ -244,5 +244,40 @@ export const VEHICLE_DATA = [
     carModel: "Fortuner SUV",
     price: 10000,
     features: ["Automatic", "Diesel", "12 km/l", "2.8L Engine", "7 Seater"],
+  },
+];
+
+export const COUNTRIES_DATA = [
+  {
+    imageUrl: "/images/sites/japan.jpg",
+    countryName: "Japan",
+  },
+  {
+    imageUrl: "/images/sites/indonesia.jpg",
+    countryName: "Indonesia",
+  },
+  {
+    imageUrl: "/images/sites/egypt.jpg",
+    countryName: "Egypt",
+  },
+  {
+    imageUrl: "/images/sites/canada.jpg",
+    countryName: "Canada",
+  },
+  {
+    imageUrl: "/images/sites/india.jpg",
+    countryName: "India",
+  },
+  {
+    imageUrl: "/images/sites/america.jpg",
+    countryName: "America",
+  },
+  {
+    imageUrl: "/images/sites/switzerland.jpg",
+    countryName: "Switzerland",
+  },
+  {
+    imageUrl: "/images/sites/hongkong.jpg",
+    countryName: "Hongkong",
   },
 ];
