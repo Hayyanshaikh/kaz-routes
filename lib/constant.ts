@@ -281,3 +281,63 @@ export const COUNTRIES_DATA = [
     countryName: "Hongkong",
   },
 ];
+
+// constants/footerData.ts
+
+// constants/footerData.ts
+export const footerData = {
+  year: new Date().getFullYear(),
+  by: "Rylic Studio",
+  columns: [
+    {
+      title: "About",
+      links: [
+        { label: "Company", href: "#" },
+        { label: "Blog", href: "#" },
+        { label: "Gallery", href: "#" },
+        { label: "Careers", href: "#" },
+        { label: "In the media", href: "#" },
+      ],
+    },
+    {
+      title: "Take Flight",
+      links: [
+        { label: "Bookings", href: "#" },
+        { label: "Festivals", href: "#" },
+        { label: "Special Occasions", href: "#" },
+        { label: "Gift Cards", href: "#" },
+      ],
+    },
+    {
+      title: "Tour Packages",
+      links: [
+        { label: "Economic", href: "#" },
+        { label: "Exclusive", href: "#" },
+        { label: "Standard", href: "#" },
+        { label: "Special package", href: "#" },
+      ],
+    },
+    {
+      title: "Quick Links",
+      links: [
+        { label: "Bookings", href: "#" },
+        { label: "Flights", href: "#" },
+        { label: "Pricing Plan", href: "#" },
+        { label: "Instructor", href: "#" },
+        { label: "Contact Us", href: "#" },
+      ],
+    },
+    {
+      title: "Legal",
+      links: [
+        { label: "Privacy Policy", href: "#" },
+        { label: "Terms of Service", href: "#" },
+      ],
+    },
+  ],
+  social: [
+    { icon: "facebook", href: "https://facebook.com" },
+    { icon: "instagram", href: "https://instagram.com" },
+    { icon: "youtube", href: "https://youtube.com" },
+  ],
+};
