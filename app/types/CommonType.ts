@@ -122,3 +122,15 @@ export interface DestinationCardProps {
   imageAlt: string;
   buttonText: string;
 }
+
+export interface TabItem {
+  label: string;
+  value: string;
+  content: React.ReactNode;
+}
+
+export interface CommonTabsProps {
+  tabs: TabItem[];
+  defaultValue: string;
+  className?: string;
+}

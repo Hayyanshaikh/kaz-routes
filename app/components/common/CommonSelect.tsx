@@ -20,7 +20,9 @@ const CommonSelect: React.FC<CommonSelectProps> = ({
       {label && (
         <label className="mb-2 block text-xs text-gray-600">{label}</label>
       )}
-      <SelectTrigger className={`cursor-pointer w-full ${className}`}>
+      <SelectTrigger
+        className={`cursor-pointer w-full text-black ${className}`}
+      >
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>

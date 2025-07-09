@@ -10,17 +10,19 @@ const CommonInput: React.FC<CommonInputProps> = ({
   className = "",
   label = "",
 }) => (
-  <>
-    {label && <label className="mb-2 text-sm text-gray-600">{label}</label>}
+  <div className="text-left w-full">
+    {label && (
+      <label className="mb-2 block text-xs text-gray-600">{label}</label>
+    )}
     <Input
       type={type}
       value={value}
       onChange={onChange}
       placeholder={placeholder}
       disabled={disabled}
-      className={className}
+      className={`text-black ${className}`}
     />
-  </>
+  </div>
 );
 
 export default CommonInput;

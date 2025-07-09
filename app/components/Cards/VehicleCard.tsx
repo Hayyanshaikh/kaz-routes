@@ -58,7 +58,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
         <div className="flex flex-wrap gap-2 mb-4">
           {features.map((feature, index) => (
             <CommonBadge
-              className="bg-stone-200 text-stone-800"
+              className="bg-gray-200 text-stone-800"
               key={index}
               label={feature}
             />

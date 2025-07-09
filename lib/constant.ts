@@ -1,11 +1,18 @@
 export const NAVIGATION_LINKS = [
   { href: "/", label: "Home" },
-  { href: "/sites", label: "Sites" },
-  { href: "/restaurants", label: "Restaurants" },
-  { href: "/packages", label: "Packages" },
-  { href: "/foods", label: "Foods" },
+  { href: "/search?category=sites", label: "Sites" },
+  { href: "/search?category=restaurants", label: "Restaurants" },
+  { href: "/search?category=packages", label: "Packages" },
+  { href: "/search?category=foods", label: "Foods" },
   // { href: "/about", label: "About" },
   // { href: "/contact", label: "Contact" },
+];
+
+export const CATEGORIES = [
+  { value: "sites", label: "Sites" },
+  { value: "restaurants", label: "Restaurants" },
+  { value: "packages", label: "Packages" },
+  { value: "foods", label: "Foods" },
 ];
 
 // Data for the slider items
@@ -281,9 +288,6 @@ export const COUNTRIES_DATA = [
     countryName: "Hongkong",
   },
 ];
-
-// constants/footerData.ts
-
 // constants/footerData.ts
 export const footerData = {
   year: new Date().getFullYear(),
@@ -341,3 +345,38 @@ export const footerData = {
     { icon: "youtube", href: "https://youtube.com" },
   ],
 };
+
+// Sample options
+export const COUNTRY_OPTIONS = [
+  { label: "Pakistan", value: "pakistan" },
+  { label: "Turkey", value: "turkey" },
+  { label: "UAE", value: "uae" },
+];
+
+export const CITY_OPTIONS = [
+  {
+    country: "pakistan",
+    label: "Karachi",
+    value: "karachi",
+  },
+  {
+    country: "pakistan",
+    label: "Lahore",
+    value: "lahore",
+  },
+  {
+    country: "pakistan",
+    label: "Islamabad",
+    value: "islamabad",
+  },
+  {
+    country: "turkey",
+    label: "Istanbul",
+    value: "istanbul",
+  },
+  {
+    country: "uae",
+    label: "Dubai",
+    value: "dubai",
+  },
+];

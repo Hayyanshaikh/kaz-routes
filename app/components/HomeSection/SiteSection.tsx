@@ -10,7 +10,7 @@ type Props = {};
 
 const SiteSection = (props: Props) => {
   return (
-    <Section className="bg-stone-100">
+    <Section className="bg-gray-100">
       <Container>
         <div>
           <CommonHeading
