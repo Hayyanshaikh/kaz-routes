@@ -43,7 +43,7 @@ const CommonButton: React.FC<CommonButtonProps> = ({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`rounded-sm cursor-pointer bg-orange-500 hover:bg-orange-600 ${className}`}
+      className={`rounded-sm cursor-pointer bg-orange-500 hover:bg-orange-600 shadow-none ${className}`}
     >
       {content}
     </Button>

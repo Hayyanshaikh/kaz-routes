@@ -118,6 +118,7 @@ export const PACKAGE_TYPE_OPTIONS = [
     value: "cultural",
   },
 ];
+
 export const PACKAGES = [
   {
     imageUrl: "/images/packages/adventure-in-the-mountains.jpg",
@@ -378,5 +379,70 @@ export const CITY_OPTIONS = [
     country: "uae",
     label: "Dubai",
     value: "dubai",
+  },
+];
+
+export const FILTERS = [
+  {
+    id: "destination",
+    label: "Destination",
+    type: "select",
+    options: CATEGORIES,
+  },
+  {
+    id: "roomStatus",
+    label: "Room Status",
+    type: "checkbox",
+    options: [
+      { label: "All Rooms", value: "all" },
+      { label: "Available Rooms", value: "available" },
+    ],
+  },
+  {
+    id: "budget",
+    label: "Budget Range",
+    type: "checkbox",
+    options: [
+      { label: "PKR 1000-3000", value: "1000-3000" },
+      { label: "PKR 3001-6000", value: "3001-6000" },
+      { label: "PKR 6001-10000", value: "6001-10000" },
+      { label: "PKR 10001-15000", value: "10001-15000" },
+      { label: "PKR 15001-20000", value: "15001-20000" },
+    ],
+  },
+  {
+    id: "services",
+    label: "Hotel Services",
+    type: "checkbox",
+    options: [
+      { label: "Free WiFi", value: "wifi" },
+      { label: "Gym", value: "gym" },
+      { label: "Room Service", value: "room_service" },
+      { label: "Spa", value: "spa" },
+    ],
+  },
+  {
+    id: "beds",
+    label: "Room Beds",
+    type: "checkbox",
+    options: [
+      { label: "Single", value: "single" },
+      { label: "Double", value: "double" },
+      { label: "Twin", value: "twin" },
+      { label: "King", value: "king" },
+    ],
+  },
+  {
+    id: "facilities",
+    label: "Room Facilities",
+    type: "checkbox",
+    options: [
+      { label: "AC", value: "ac" },
+      { label: "TV", value: "tv" },
+      { label: "Mini Bar", value: "minibar" },
+      { label: "Balcony", value: "balcony" },
+      { label: "Safe", value: "safe" },
+      { label: "Hair Dryer", value: "hairdryer" },
+    ],
   },
 ];

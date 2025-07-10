@@ -13,7 +13,9 @@ const CommonCheckbox: React.FC<CommonCheckboxProps> = ({
       checked={checked}
       onCheckedChange={onCheckedChange}
     />
-    {label && <span className="user-select-none">{label}</span>}
+    {label && (
+      <span className="user-select-none text-sm text-gray-600">{label}</span>
+    )}
   </label>
 );
 
