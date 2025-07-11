@@ -2,8 +2,8 @@
 
 import React from "react";
 import { MapPin, ArrowRight } from "lucide-react";
-import CommonButton from "../Common/CommonButton";
-import CommonBadge from "../Common/CommonBadge";
+import CommonButton from "../common/CommonButton";
+import CommonBadge from "../common/CommonBadge";
 import Image from "next/image";
 
 interface VehicleCardProps {

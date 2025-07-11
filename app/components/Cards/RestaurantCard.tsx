@@ -1,7 +1,7 @@
 "use client";
 import { Check, Star, Users } from "lucide-react";
-import CommonBadge from "../Common/CommonBadge";
-import CommonButton from "../Common/CommonButton";
+import CommonBadge from "../common/CommonBadge";
+import CommonButton from "../common/CommonButton";
 import Image from "next/image";
 
 interface RestaurantCardProps {

@@ -2,7 +2,7 @@
 import React from "react";
 import Section from "../Container/Section";
 import Container from "../Container";
-import CommonHeading from "../Common/CommonHeading";
+import CommonHeading from "../common/CommonHeading";
 import SiteCard from "../Cards/SiteCard";
 import { COUNTRIES_DATA } from "@/lib/constant";
 

@@ -3,7 +3,7 @@
 import React from "react";
 import Container from "../Container";
 import Section from "../Container/Section";
-import CommonButton from "../Common/CommonButton";
+import CommonButton from "../common/CommonButton";
 
 const CTASection = () => {
   return (

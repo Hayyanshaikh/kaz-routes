@@ -1,9 +1,9 @@
 import React from "react";
-import CommonHeading from "../Common/CommonHeading";
+import CommonHeading from "../common/CommonHeading";
 import Container from "../Container";
 import Section from "../Container/Section";
 import PackageCard from "../Cards/PackageCard";
-import CommonSlider from "../Common/CommonSlider";
+import CommonSlider from "../common/CommonSlider";
 import { PACKAGES } from "@/lib/constant";
 
 type Props = {};

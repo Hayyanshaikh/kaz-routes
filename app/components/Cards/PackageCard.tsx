@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
 import { Star, Clock, Users, Plus } from "lucide-react"; // Icons ke liye
-import CommonBadge from "../Common/CommonBadge";
-import CommonButton from "../Common/CommonButton";
+import CommonBadge from "../common/CommonBadge";
+import CommonButton from "../common/CommonButton";
 import Image from "next/image";
 
 type PackageCardProps = {

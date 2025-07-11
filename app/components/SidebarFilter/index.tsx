@@ -2,8 +2,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import CommonCheckbox from "../Common/CommonCheckbox";
-import CommonSelect from "../Common/CommonSelect";
+import CommonCheckbox from "../common/CommonCheckbox";
+import CommonSelect from "../common/CommonSelect";
 import { SidebarFilterProps } from "@/app/types/CommonType";
 
 const SidebarFilter = ({

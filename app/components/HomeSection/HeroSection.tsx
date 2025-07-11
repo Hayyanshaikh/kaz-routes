@@ -7,8 +7,8 @@ import {
   HOTEL_PREFERENCE_OPTIONS,
 } from "@/lib/constant";
 import { SearchIcon } from "lucide-react";
-import CommonSelect from "../Common/CommonSelect";
-import CommonButton from "../Common/CommonButton";
+import CommonSelect from "../common/CommonSelect";
+import CommonButton from "../common/CommonButton";
 import SearchBar from "../SearchBar";
 
 type Props = {

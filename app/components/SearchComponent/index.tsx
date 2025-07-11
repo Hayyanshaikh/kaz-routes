@@ -2,7 +2,7 @@
 import React from "react";
 import SearchCard from "../Cards/SearchCard";
 import { CATEGORIES, FILTERS, PACKAGES } from "@/lib/constant";
-import CommonButton from "../Common/CommonButton";
+import CommonButton from "../common/CommonButton";
 import SidebarFilter from "../SidebarFilter";
 import { useSearchParams } from "next/navigation";
 

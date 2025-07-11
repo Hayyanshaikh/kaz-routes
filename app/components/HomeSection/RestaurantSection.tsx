@@ -3,7 +3,7 @@ import React from "react";
 import RestaurantCard from "../Cards/RestaurantCard";
 import Section from "../Container/Section";
 import Container from "../Container";
-import CommonHeading from "../Common/CommonHeading";
+import CommonHeading from "../common/CommonHeading";
 
 type Props = {};
 

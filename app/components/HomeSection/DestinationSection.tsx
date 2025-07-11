@@ -3,9 +3,9 @@ import React from "react";
 import DestinationCard from "../Cards/DestinationCard";
 import Section from "../Container/Section";
 import Container from "../Container";
-import CommonHeading from "../Common/CommonHeading";
+import CommonHeading from "../common/CommonHeading";
 import { DESTINATION_DATA } from "@/lib/constant";
-import CommonSlider from "../Common/CommonSlider";
+import CommonSlider from "../common/CommonSlider";
 
 type Props = {};
 

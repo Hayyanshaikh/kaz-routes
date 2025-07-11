@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import CommonButton from "../Common/CommonButton";
+import CommonButton from "../common/CommonButton";
 import { Menu } from "lucide-react";
 import {
   Sheet,

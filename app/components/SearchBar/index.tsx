@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import CommonSelect from "../Common/CommonSelect";
-import CommonButton from "../Common/CommonButton";
+import CommonSelect from "../common/CommonSelect";
+import CommonButton from "../common/CommonButton";
 import { SearchIcon } from "lucide-react";
 import { CITY_OPTIONS, COUNTRY_OPTIONS } from "@/lib/constant";
 
