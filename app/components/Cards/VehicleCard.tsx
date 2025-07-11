@@ -4,6 +4,7 @@ import React from "react";
 import { MapPin, ArrowRight } from "lucide-react";
 import CommonButton from "../Common/CommonButton";
 import CommonBadge from "../Common/CommonBadge";
+import Image from "next/image";
 
 interface VehicleCardProps {
   imageUrl: string;
@@ -26,7 +27,8 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
     <div className="group bg-white rounded-lg shadow-sm overflow-hidden flex flex-col md:flex-row w-full border border-gray-200 hover:border-primary transition">
       {/* Image Section */}
       <div className="relative w-full md:w-2/4 h-full border-r flex items-center justify-center p-4 group-hover:bg-primary/10 group-hover:border-primary transition">
-        <img
+        <Image
+          fill
           src={imageUrl}
           alt={`${carBrand} ${carModel}`}
           className="w-full h-full object-contain group-hover:scale-105 transition"

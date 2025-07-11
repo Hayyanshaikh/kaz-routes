@@ -13,10 +13,13 @@ const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
     rules: {
-      "@typescript-eslint/no-empty-object-type": "off",
-      "@typescript-eslint/no-unused-vars": "off",
-      "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/no-unsafe-function-type": "off",
+      "@next/next/no-img-element": "off",
+      "react/jsx-key": "off",
+      "react/react-in-jsx-scope": "off",
+      // // sab kuch disable karne ke liye:
+      "no-unused-vars": "off",
+      "no-console": "off",
+      "no-empty": "off",
     },
   },
 ];

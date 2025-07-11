@@ -4,25 +4,7 @@
 import { useEffect, useState } from "react";
 import CommonCheckbox from "../Common/CommonCheckbox";
 import CommonSelect from "../Common/CommonSelect";
-
-type FilterOption = {
-  label: string;
-  value: string;
-};
-
-type FilterConfig = {
-  id: string;
-  label: string;
-  type: "checkbox" | "select" | "custom";
-  options?: FilterOption[];
-  customRender?: () => React.ReactNode;
-};
-
-type SidebarFilterProps = {
-  filters: FilterConfig[];
-  onChange?: (data: Record<string, string | string[]>) => void;
-  initialValues?: Record<string, string | string[]>;
-};
+import { SidebarFilterProps } from "@/app/types/CommonType";
 
 const SidebarFilter = ({
   filters,

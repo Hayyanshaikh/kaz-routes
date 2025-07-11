@@ -2,6 +2,7 @@
 
 import { DestinationCardProps } from "@/app/types/CommonType";
 import { ArrowUpRight } from "lucide-react";
+import Image from "next/image";
 import React from "react";
 
 // DestinationCard component now accepts props
@@ -13,7 +14,8 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
   return (
     <div className="relative w-full bg-white rounded-xl shadow-lg overflow-hidden">
       {/* Image section, using props for src and alt */}
-      <img
+      <Image
+        fill
         src={imageUrl}
         alt={imageAlt}
         className="w-full h-60 md:h-72 object-cover rounded-t-xl"

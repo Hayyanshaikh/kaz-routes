@@ -3,6 +3,7 @@ import React from "react";
 import { Star, Clock, Users, Plus } from "lucide-react"; // Icons ke liye
 import CommonBadge from "../Common/CommonBadge";
 import CommonButton from "../Common/CommonButton";
+import Image from "next/image";
 
 type PackageCardProps = {
   imageUrl: string;
@@ -29,7 +30,8 @@ const PackageCard: React.FC<PackageCardProps> = ({
     <div className="flex flex-col bg-white rounded-xl shadow-lg overflow-hidden transform duration-300 h-full">
       {/* Image Section */}
       <div className="relative h-60 overflow-hidden w-full">
-        <img
+        <Image
+          fill
           src={imageUrl}
           alt={title}
           className="rounded-t-xl w-full h-full object-cover duration-300 "

@@ -1,3 +1,5 @@
+import { FilterConfig } from "@/app/types/CommonType";
+
 export const NAVIGATION_LINKS = [
   { href: "/", label: "Home" },
   { href: "/search?category=sites", label: "Sites" },
@@ -382,7 +384,7 @@ export const CITY_OPTIONS = [
   },
 ];
 
-export const FILTERS = [
+export const FILTERS: FilterConfig[] = [
   {
     id: "destination",
     label: "Destination",

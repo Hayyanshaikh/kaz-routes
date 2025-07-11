@@ -134,3 +134,22 @@ export interface CommonTabsProps {
   defaultValue: string;
   className?: string;
 }
+
+export interface FilterOption {
+  label: string;
+  value: string;
+}
+
+export interface FilterConfig {
+  id: string;
+  label: string;
+  type: "checkbox" | "select" | "custom";
+  options?: FilterOption[];
+  customRender?: () => React.ReactNode;
+}
+
+export interface SidebarFilterProps {
+  filters: FilterConfig[];
+  onChange?: (data: Record<string, string | string[]>) => void;
+  initialValues?: Record<string, string | string[]>;
+}

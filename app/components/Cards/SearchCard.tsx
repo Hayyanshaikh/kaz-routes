@@ -5,6 +5,7 @@ import React from "react";
 import { MapPin, Star, Clock, Users, ArrowRight } from "lucide-react";
 import CommonButton from "../Common/CommonButton";
 import CommonBadge from "../Common/CommonBadge";
+import Image from "next/image";
 
 type SearchCardProps = {
   title: string;
@@ -32,7 +33,8 @@ const SearchCard = ({
   return (
     <div className="bg-white rounded-xl border border-gray-300 overflow-hidden flex flex-col lg:flex-row p-4">
       <div className="relative w-full lg:w-2/5 h-50 sm:h-64 lg:h-auto">
-        <img
+        <Image
+          fill
           src={imageUrl}
           alt={title}
           className="object-cover w-full h-full rounded-lg"

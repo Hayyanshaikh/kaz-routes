@@ -2,6 +2,7 @@
 import { Check, Star, Users } from "lucide-react";
 import CommonBadge from "../Common/CommonBadge";
 import CommonButton from "../Common/CommonButton";
+import Image from "next/image";
 
 interface RestaurantCardProps {
   image: string;
@@ -27,7 +28,8 @@ const RestaurantCard: React.FC<RestaurantCardProps> = ({
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden">
       <div className="relative h-50 w-full">
-        <img
+        <Image
+          fill
           src={image}
           alt="Restaurant"
           className="w-full h-full object-cover"
