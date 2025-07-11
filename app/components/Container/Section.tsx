@@ -8,7 +8,11 @@ type Props = {
 
 const Section = ({ children, className = "", style, ...props }: Props) => {
   return (
-    <section className={`py-10 ${className}`} style={style} {...props}>
+    <section
+      className={`py-10 ${className && className}`}
+      style={style}
+      {...props}
+    >
       {children}
     </section>
   );

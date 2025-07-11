@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import SearchCard from "../Cards/SearchCard";
-import { CATEGORIES, FILTERS, PACKAGES } from "@/lib/constant";
+import { CATEGORIES, FILTERS, PACKAGES, SEARCH_DATA } from "@/lib/constant";
 import CommonButton from "../common/CommonButton";
 import SidebarFilter from "../SidebarFilter";
 import { useSearchParams } from "next/navigation";
@@ -44,19 +44,15 @@ const SearchComponent = (props: Props) => {
         </div>
         <div>
           {/* Here you can map through your search results */}
-          <div className=" space-y-4">
-            {PACKAGES.map((pkg, index) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {SEARCH_DATA.map((item, index) => (
               <SearchCard
                 key={index}
-                title={pkg.title}
-                description={pkg.description}
-                imageUrl={pkg.imageUrl}
-                price={pkg.price}
-                rating={pkg.rating}
-                duration={pkg.duration}
-                maxParticipants={pkg.maxParticipants}
-                highlights={pkg.highlights}
-                onDetailClick={() => console.log(pkg.title)}
+                title={item.title}
+                description={item.description}
+                price={item.price}
+                imageUrl={item.imageUrl}
+                onDetailClick={() => {}}
               />
             ))}
           </div>

@@ -31,7 +31,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
           fill
           src={imageUrl}
           alt={`${carBrand} ${carModel}`}
-          className="w-full h-full object-contain group-hover:scale-105 transition"
+          className="!relative w-full h-full object-contain group-hover:scale-105 transition"
           onError={(e) => {
             e.currentTarget.src =
               "https://placehold.co/300x200/E5E5E5/333?text=Image+Not+Found";

@@ -40,14 +40,14 @@ const PackageCard: React.FC<PackageCardProps> = ({
           }}
         />
         {/* Rating Badge */}
-        <div className="absolute top-3 right-3 bg-white text-stone-800 px-3 py-1 rounded-full flex items-center shadow-md">
+        {/* <div className="absolute top-3 right-3 bg-white text-stone-800 px-3 py-1 rounded-full flex items-center shadow-md">
           <Star
             size={16}
             fill="currentColor"
             className="text-yellow-400 mr-1"
           />
           <span className="font-semibold text-sm">{rating.toFixed(1)}</span>
-        </div>
+        </div> */}
       </div>
 
       {/* Content Section */}
@@ -70,7 +70,7 @@ const PackageCard: React.FC<PackageCardProps> = ({
         </div>
 
         {/* Highlights */}
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <h4 className="text-stone-900 font-semibold text-sm mb-2">
             Highlights:
           </h4>
@@ -83,10 +83,10 @@ const PackageCard: React.FC<PackageCardProps> = ({
               />
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* Price and Add to Cart */}
-        <div className="flex items-center justify-between mt-auto">
+        <div className="flex items-center justify-between mt-auto border-t pt-5">
           <div className="text-stone-900 text-xl font-semibold">
             ${price}
             <span className="text-sm font-normal text-stone-500">/ person</span>

@@ -27,7 +27,7 @@ const DestinationSection = (props: Props) => {
           subtitle="Browse our curated destinations and start planning your journey today."
           title="Explore Our Destinations"
         />
-        <div className="hidden md:grid  md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="hidden md:grid md:grid-cols-3 lg:grid-cols-4 gap-6">
           {DESTINATION_DATA.map((destination, index) => (
             <DestinationCard
               key={index}

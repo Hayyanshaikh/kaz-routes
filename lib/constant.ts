@@ -448,3 +448,27 @@ export const FILTERS: FilterConfig[] = [
     ],
   },
 ];
+
+export const SEARCH_DATA = [
+  {
+    title: "Bali Beach Retreat",
+    description:
+      "Relax on the serene beaches of Bali with this all-inclusive retreat package.",
+    price: 199.99,
+    imageUrl: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
+  },
+  {
+    title: "Desert Safari Dubai",
+    description:
+      "Experience dune bashing, camel rides, and BBQ dinner in Dubai's desert.",
+    price: 149.5,
+    imageUrl: "https://images.unsplash.com/photo-1608139748485-d7b4f79c9948",
+  },
+  {
+    title: "Northern Lights Tour",
+    description:
+      "Witness the magical Aurora Borealis in Iceland with expert guides.",
+    price: 349.0,
+    imageUrl: "https://images.unsplash.com/photo-1511497584788-876760111969",
+  },
+];

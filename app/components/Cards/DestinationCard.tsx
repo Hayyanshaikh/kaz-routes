@@ -12,17 +12,19 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
   buttonText,
 }) => {
   return (
-    <div className="relative w-full bg-white rounded-xl shadow-lg overflow-hidden">
+    <div className="relative w-full bg-white rounded-xl shadow-lg h-full overflow-hidden">
       {/* Image section, using props for src and alt */}
-      <Image
-        fill
-        src={imageUrl}
-        alt={imageAlt}
-        className="w-full h-60 md:h-72 object-cover rounded-t-xl"
-        onError={(e) => {
-          e.currentTarget.src = `https://placehold.co/400x200/cccccc/333333?text=Image+Not+Found`;
-        }}
-      />
+      <div className="w-full h-60 md:h-72">
+        <Image
+          fill
+          src={imageUrl}
+          alt={imageAlt}
+          className="relative object-cover rounded-t-xl"
+          onError={(e) => {
+            e.currentTarget.src = `https://placehold.co/400x200/cccccc/333333?text=Image+Not+Found`;
+          }}
+        />
+      </div>
 
       {/* Overlay for the button */}
       <div className="absolute bottom-3 md:bottom-5 left-3 md:left-5 right-3 md:right-5">
