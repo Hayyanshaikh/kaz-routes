@@ -19,7 +19,7 @@ const PackageSection = (props: Props) => {
     return <PageLoading />;
   }
 
-  const packageCards = packages.map((pkg, index) => (
+  const packageCards = packages.map((pkg: any, index: number) => (
     <PackageCard
       key={index}
       imageUrl={`${FILE_BASE_URL}/${pkg.images[0]}`}
