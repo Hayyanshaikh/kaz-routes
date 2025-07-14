@@ -30,12 +30,12 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "http",
-        hostname: "kaz-routes-demo",
+        hostname: "kaz-routes-demo.vercel.app",
         pathname: "/**",
       },
       {
         protocol: "https",
-        hostname: "kaz-routes-demo",
+        hostname: "kaz-routes-demo.vercel.app",
         pathname: "/**",
       },
     ],
