@@ -28,6 +28,16 @@ const nextConfig: NextConfig = {
         hostname: "kaz-routes.com",
         pathname: "/**",
       },
+      {
+        protocol: "http",
+        hostname: "kaz-routes-demo",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "kaz-routes-demo",
+        pathname: "/**",
+      },
     ],
   },
   eslint: {
