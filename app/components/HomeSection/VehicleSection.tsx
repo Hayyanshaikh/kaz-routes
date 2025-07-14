@@ -27,7 +27,7 @@ const VehicleSection = (props: Props) => {
               subtitle="Choose from our diverse collection of well-maintained, comfortable vehicles suitable for any type of journey or adventure."
             />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {cars?.map((car, index) => {
+              {cars?.map((car: any, index: number) => {
                 const features = [
                   car.fuel_type,
                   car.transmission,
@@ -41,7 +41,7 @@ const VehicleSection = (props: Props) => {
                     carModel={`${car?.model} - ${car?.year}`}
                     features={features}
                     imageUrl={`${FILE_BASE_URL}/${
-                      car.images.find((img) => img.is_featured).image_path
+                      car.images.find((img: any) => img.is_featured).image_path
                     }`}
                     location=""
                     price={car?.daily_rate}
