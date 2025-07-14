@@ -61,7 +61,7 @@ const PackageCard: React.FC<PackageCardProps> = ({
         <div className="flex items-center justify-between text-stone-500 text-sm mb-4">
           <div className="flex items-center space-x-1">
             <Clock size={16} />
-            <span>{duration}</span>
+            <span>{duration} Days</span>
           </div>
           <div className="flex items-center space-x-1">
             <Users size={16} />

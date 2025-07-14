@@ -1,5 +1,8 @@
 import { FilterConfig } from "@/app/types/CommonType";
 
+export const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+export const FILE_BASE_URL = process.env.NEXT_PUBLIC_FILE_BASE_URL;
+
 export const NAVIGATION_LINKS = [
   { href: "/", label: "Home" },
   { href: "/search?category=sites", label: "Sites" },
@@ -472,3 +475,51 @@ export const SEARCH_DATA = [
     imageUrl: "https://images.unsplash.com/photo-1511497584788-876760111969",
   },
 ];
+
+export const SINGLE_HOTEL = {
+  name: "Almaty Hotel Complex",
+  description:
+    "Almaty hotel complex is a historical and architectural monument located in the city center near administrative buildings, theaters, supermarkets, and other cultural centers.",
+  services: ["Free WiFi", "Gym", "Room Service", "Spa"],
+  images: [
+    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80",
+  ],
+  rooms: [
+    {
+      type: "Standard",
+      size: 16, // ✅ Added
+      description:
+        "Standard room is 16 sq Mts in size with all the modern amenities",
+      bed_type: "Double",
+      meal_plan: "Breakfast",
+      attached_bath: true,
+      facilities: ["AC", "TV", "Mini Bar", "Safe"],
+      pricing: {
+        single: 31000,
+        double: 37000,
+        extra_bed: 0,
+        child_no_bed: 0,
+      },
+    },
+    {
+      type: "Superior",
+      size: 32, // ✅ Added
+      description:
+        "Superior Room is about 32 sq mts in size with all the modern amenities and premium quality products",
+      bed_type: "Double",
+      meal_plan: "Breakfast",
+      attached_bath: true,
+      facilities: ["AC", "TV", "Mini Bar", "Balcony", "Safe", "Hair Dryer"],
+      pricing: {
+        single: 34000,
+        double: 42000,
+        extra_bed: 19000,
+        child_no_bed: 0,
+      },
+    },
+  ],
+};

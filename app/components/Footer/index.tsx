@@ -6,7 +6,7 @@ import Logo from "../Header/Logo";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-950 text-white py-12 pb-6">
+    <footer className="bg-gray-950 text-white py-12 pb-6 mt-auto">
       <Container>
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-5 gap-10">
           {/* 4 Columns from Constants */}

@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 import HeroSection from "../components/HomeSection/HeroSection";
 import PackageSection from "../components/HomeSection/PackageSection";

@@ -3,6 +3,7 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import Providers from "./providers";
 
 // Poppins font config
 const poppins = Poppins({
@@ -23,10 +24,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${poppins.variable} font-sans antialiased`}>
-        <Header />
-        <main>{children}</main>
-        <Footer />
+      <body
+        className={`${poppins.variable} font-sans antialiased min-h-screen flex flex-col`}
+      >
+        <Providers>
+          <Header />
+          <main>{children}</main>
+          <Footer />
+        </Providers>
       </body>
     </html>
   );

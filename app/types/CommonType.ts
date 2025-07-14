@@ -13,7 +13,7 @@ export interface CommonAlertProps {
 
 // Common Button Props
 export interface CommonButtonProps {
-  label: string;
+  label?: string;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
@@ -131,7 +131,7 @@ export interface TabItem {
 
 export interface CommonTabsProps {
   tabs: TabItem[];
-  defaultValue: string;
+  defaultValue?: string;
   className?: string;
 }
 
@@ -152,4 +152,24 @@ export interface SidebarFilterProps {
   filters: FilterConfig[];
   onChange?: (data: Record<string, string | string[]>) => void;
   initialValues?: Record<string, string | string[]>;
+}
+
+export interface RoomType {
+  type: string;
+  size: number;
+  bed_type: string;
+  meal_plan: string;
+  description: string;
+  attached_bath: boolean;
+  facilities: string[];
+  pricing: {
+    single: number;
+    double: number;
+    extra_bed: number;
+    child_no_bed: number;
+  };
+}
+
+export interface PropertyDetailProps {
+  room: RoomType;
 }

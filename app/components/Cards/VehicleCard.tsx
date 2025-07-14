@@ -26,7 +26,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
   return (
     <div className="group bg-white rounded-lg shadow-sm overflow-hidden flex flex-col md:flex-row w-full border border-gray-200 hover:border-primary transition">
       {/* Image Section */}
-      <div className="relative w-full md:w-2/4 h-full border-r flex items-center justify-center p-4 group-hover:bg-primary/10 group-hover:border-primary transition">
+      <div className="relative w-full md:w-2/4 h-60 border-r flex items-center justify-center p-4 group-hover:bg-primary/10 group-hover:border-primary transition">
         <Image
           fill
           src={imageUrl}
@@ -70,10 +70,12 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
         {/* Price and Button */}
         <div className="flex items-center justify-between pt-2 border-t border-gray-200">
           <div className="text-orange-500 font-semibold text-lg">
-            PKR {price.toLocaleString()}
-            <span className="text-xs text-gray-500 ml-1 font-normal">
-              /onwards
-            </span>
+            {Number(price).toLocaleString("en-PK", {
+              style: "currency",
+              currency: "PKR",
+              minimumFractionDigits: 2,
+            })}
+            <span className="text-xs text-gray-500 ml-1 font-normal">/Day</span>
           </div>
           <CommonButton
             iconPosition="right"

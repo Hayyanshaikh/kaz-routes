@@ -4,23 +4,31 @@ import DestinationCard from "../Cards/DestinationCard";
 import Section from "../Container/Section";
 import Container from "../Container";
 import CommonHeading from "../common/CommonHeading";
-import { DESTINATION_DATA } from "@/lib/constant";
+import { FILE_BASE_URL } from "@/lib/constant";
 import CommonSlider from "../common/CommonSlider";
+import { useControllerGetFindAllCountries } from "@/app/hooks/api";
+import PageLoading from "../common/PageLoading";
 
 type Props = {};
 
 const DestinationSection = (props: Props) => {
-  // Items for slider
-  const items = DESTINATION_DATA.map((destination, index) => (
+  const { data, isLoading } = useControllerGetFindAllCountries();
+  const destinations = data?.data;
+
+  if (isLoading) {
+    return <PageLoading />;
+  }
+
+  const items = destinations?.map((destination: any, index: number) => (
     <DestinationCard
       key={index}
-      imageUrl={destination.imageUrl}
-      imageAlt={destination.imageAlt}
-      buttonText={destination.buttonText}
+      imageUrl={`${FILE_BASE_URL}/${destination?.image}`}
+      imageAlt={destination.name}
+      buttonText={destination.name}
     />
   ));
 
-  return (
+  return destinations?.length > 0 ? (
     <Section>
       <Container>
         <CommonHeading
@@ -28,12 +36,12 @@ const DestinationSection = (props: Props) => {
           title="Explore Our Destinations"
         />
         <div className="hidden md:grid md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {DESTINATION_DATA.map((destination, index) => (
+          {destinations?.map((destination: any, index: number) => (
             <DestinationCard
               key={index}
-              imageUrl={destination.imageUrl}
-              imageAlt={destination.imageAlt}
-              buttonText={destination.buttonText}
+              imageUrl={`${FILE_BASE_URL}/${destination?.image}`}
+              imageAlt={destination?.name}
+              buttonText={destination?.name}
             />
           ))}
         </div>
@@ -55,7 +63,7 @@ const DestinationSection = (props: Props) => {
         </div>
       </Container>
     </Section>
-  );
+  ) : null;
 };
 
 export default DestinationSection;

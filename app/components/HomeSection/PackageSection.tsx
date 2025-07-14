@@ -1,29 +1,41 @@
+"use client";
 import React from "react";
 import CommonHeading from "../common/CommonHeading";
 import Container from "../Container";
 import Section from "../Container/Section";
 import PackageCard from "../Cards/PackageCard";
 import CommonSlider from "../common/CommonSlider";
-import { PACKAGES } from "@/lib/constant";
+import { FILE_BASE_URL, PACKAGES } from "@/lib/constant";
+import { useControllerGetFindAllPackages } from "@/app/hooks/api";
+import PageLoading from "../common/PageLoading";
 
 type Props = {};
 
 const PackageSection = (props: Props) => {
-  const packageCards = PACKAGES.map((pkg, index) => (
+  const { data, isLoading } = useControllerGetFindAllPackages();
+  const packages = data?.data;
+
+  if (isLoading) {
+    return <PageLoading />;
+  }
+
+  const packageCards = packages.map((pkg, index) => (
     <PackageCard
       key={index}
-      imageUrl={pkg.imageUrl}
+      imageUrl={`${FILE_BASE_URL}/${pkg.images[0]}`}
       rating={pkg.rating}
-      title={pkg.title}
+      title={pkg.name}
       description={pkg.description}
-      duration={pkg.duration}
-      maxParticipants={pkg.maxParticipants}
+      duration={pkg.days}
+      maxParticipants={
+        Number(pkg.adults) + Number(pkg.children) + Number(pkg.infants)
+      }
       highlights={pkg.highlights}
       price={pkg.price}
     />
   ));
 
-  return (
+  return packages?.length > 0 ? (
     <Section className="bg-gray-100">
       <Container>
         <div>
@@ -43,7 +55,7 @@ const PackageSection = (props: Props) => {
         </div>
       </Container>
     </Section>
-  );
+  ) : null;
 };
 
 export default PackageSection;

@@ -17,8 +17,8 @@ const DestinationCard: React.FC<DestinationCardProps> = ({
       <div className="w-full h-60 md:h-72">
         <Image
           fill
-          src={imageUrl}
-          alt={imageAlt}
+          src={imageUrl || "https://placehold.co/400x300?text=No+Image"}
+          alt={imageAlt || "Image"}
           className="relative object-cover rounded-t-xl"
           onError={(e) => {
             e.currentTarget.src = `https://placehold.co/400x200/cccccc/333333?text=Image+Not+Found`;

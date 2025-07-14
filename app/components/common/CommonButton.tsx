@@ -18,7 +18,7 @@ const CommonButton: React.FC<CommonButtonProps> = ({
   const content = (
     <div className="flex items-center gap-2">
       {iconPosition === "left" && icon && <span>{icon}</span>}
-      <span>{label}</span>
+      {label && <span>{label}</span>}
       {iconPosition === "right" && icon && <span>{icon}</span>}
     </div>
   );

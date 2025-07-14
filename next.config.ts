@@ -13,6 +13,21 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/**", // Ya specific path agar zaroorat ho
       },
+      {
+        protocol: "https",
+        hostname: "placehold.co",
+        pathname: "/**", // Ya specific path agar zaroorat ho
+      },
+      {
+        protocol: "http",
+        hostname: "kaz-routes.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "kaz-routes.com",
+        pathname: "/**",
+      },
     ],
   },
   eslint: {

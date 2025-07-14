@@ -13,10 +13,14 @@ const CommonTabs: React.FC<CommonTabsProps> = ({
   className = "",
 }) => {
   return (
-    <Tabs defaultValue={defaultValue} className={className}>
-      <TabsList>
+    <Tabs defaultValue={defaultValue || tabs[0]?.value} className={className}>
+      <TabsList className="rounded-sm">
         {tabs.map((tab) => (
-          <TabsTrigger key={tab.value} value={tab.value}>
+          <TabsTrigger
+            className="rounded-sm px-4 py-2 text-sm font-medium transition cursor-pointer data-[state=active]:bg-primary data-[state=active]:text-white"
+            key={tab.value}
+            value={tab.value}
+          >
             {tab.label}
           </TabsTrigger>
         ))}
