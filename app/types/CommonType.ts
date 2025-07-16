@@ -149,18 +149,19 @@ export interface FilterConfig {
 }
 
 export interface SidebarFilterProps {
-  filters: FilterConfig[];
+  filters: FilterConfig[] | [];
   onChange?: (data: Record<string, string | string[]>) => void;
   initialValues?: Record<string, string | string[]>;
 }
 
 export interface RoomType {
-  type: string;
+  name: string;
   size: number;
   bed_type: string;
   meal_plan: string;
   description: string;
-  attached_bath: boolean;
+  status: string;
+  has_attached_bath: boolean;
   facilities: string[];
   pricing: {
     single: number;

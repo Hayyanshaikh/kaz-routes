@@ -37,6 +37,7 @@ const VehicleSection = (props: Props) => {
                 return (
                   <VehicleCard
                     key={index}
+                    id={car?.id}
                     carBrand={car?.brand?.name}
                     carModel={`${car?.model} - ${car?.year}`}
                     features={features}

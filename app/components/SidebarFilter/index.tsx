@@ -48,11 +48,6 @@ const SidebarFilter = ({
     setSelectState((prev) => ({ ...prev, [filterId]: value }));
   };
 
-  const handleClearFilters = () => {
-    setCheckboxState({});
-    setSelectState({});
-  };
-
   const handleClearSection = (filterId: string, type: string) => {
     if (type === "checkbox") {
       setCheckboxState((prev) => {
@@ -95,44 +90,47 @@ const SidebarFilter = ({
           Clear All Filters
         </button>
       </div> */}
-      {filters.map((filter) => (
-        <div key={filter.id} className="border-b pb-4">
-          <div className="flex justify-between items-center mb-2">
-            <span className="font-semibold">{filter.label}</span>
-            <button
-              onClick={() => handleClearSection(filter.id, filter.type)}
-              className="text-xs text-gray-500 underline hover:text-gray-700"
-            >
-              Clear
-            </button>
-          </div>
-          <div className="space-y-2">
-            {filter.type === "checkbox" &&
-              filter.options?.map((opt) => (
-                <CommonCheckbox
-                  key={opt.value}
-                  checked={checkboxState[filter.id]?.has(opt.value) || false}
-                  onCheckedChange={() =>
-                    handleCheckboxChange(filter.id, opt.value)
+      {filters?.length > 0 &&
+        filters.map((filter) => (
+          <div key={filter.id} className="border-b pb-4">
+            <div className="flex justify-between items-center mb-2">
+              <span className="font-semibold">{filter.label}</span>
+              <button
+                onClick={() => handleClearSection(filter.id, filter.type)}
+                className="text-xs text-gray-500 underline hover:text-gray-700"
+              >
+                Clear
+              </button>
+            </div>
+            <div className="space-y-2">
+              {filter.type === "checkbox" &&
+                filter.options?.map((opt) => (
+                  <CommonCheckbox
+                    key={opt.value}
+                    checked={checkboxState[filter.id]?.has(opt.value) || false}
+                    onCheckedChange={() =>
+                      handleCheckboxChange(filter.id, opt.value)
+                    }
+                    label={opt.label}
+                  />
+                ))}
+
+              {filter.type === "select" && (
+                <CommonSelect
+                  onValueChange={(value) =>
+                    handleSelectChange(filter.id, value)
                   }
-                  label={opt.label}
+                  value={selectState[filter.id] || ""}
+                  options={filter.options || []}
                 />
-              ))}
+              )}
 
-            {filter.type === "select" && (
-              <CommonSelect
-                onValueChange={(value) => handleSelectChange(filter.id, value)}
-                value={selectState[filter.id] || ""}
-                options={filter.options || []}
-              />
-            )}
-
-            {filter.type === "custom" &&
-              filter.customRender &&
-              filter.customRender()}
+              {filter.type === "custom" &&
+                filter.customRender &&
+                filter.customRender()}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
     </aside>
   );
 };

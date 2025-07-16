@@ -3,12 +3,14 @@ import { FilterConfig } from "@/app/types/CommonType";
 export const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 export const FILE_BASE_URL = process.env.NEXT_PUBLIC_FILE_BASE_URL;
 
+export const DISPLAY_DATE = "MMMM DD, YYYY";
+
 export const NAVIGATION_LINKS = [
   { href: "/", label: "Home" },
   { href: "/search?category=sites", label: "Sites" },
   { href: "/search?category=restaurants", label: "Restaurants" },
   { href: "/search?category=packages", label: "Packages" },
-  { href: "/search?category=foods", label: "Foods" },
+  { href: "/search?category=hotels", label: "Hotels" },
   // { href: "/about", label: "About" },
   // { href: "/contact", label: "Contact" },
 ];
@@ -17,7 +19,8 @@ export const CATEGORIES = [
   { value: "sites", label: "Sites" },
   { value: "restaurants", label: "Restaurants" },
   { value: "packages", label: "Packages" },
-  { value: "foods", label: "Foods" },
+  { value: "hotels", label: "Hotels" },
+  { value: "cars", label: "Cars" },
 ];
 
 // Data for the slider items
@@ -388,12 +391,6 @@ export const CITY_OPTIONS = [
 ];
 
 export const FILTERS: FilterConfig[] = [
-  {
-    id: "destination",
-    label: "Destination",
-    type: "select",
-    options: CATEGORIES,
-  },
   {
     id: "roomStatus",
     label: "Room Status",

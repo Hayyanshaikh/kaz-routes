@@ -6,7 +6,8 @@ type ImageGalleryProps = {
 };
 
 const ImagesGallery: React.FC<ImageGalleryProps> = ({ images }) => {
-  if (!images || images.length === 0) return null;
+  if (!images || images.length === 0)
+    return <div className="flex-1 lg:w-1/2 flex flex-col gap-4"></div>;
 
   const [mainImage, ...subImages] = images;
 
@@ -14,7 +15,16 @@ const ImagesGallery: React.FC<ImageGalleryProps> = ({ images }) => {
     <section className="flex-1 lg:w-1/2 flex flex-col gap-4">
       {/* Main Image */}
       <div className="relative w-full h-64 sm:h-96 rounded-2xl overflow-hidden shadow-lg">
-        <Image src={mainImage} alt="Main Image" fill className="object-cover" />
+        <Image
+          src={mainImage}
+          alt="Main Image"
+          fill
+          className="object-cover"
+          onError={(e) => {
+            e.currentTarget.src =
+              "https://placehold.co/300x200/E5E5E5/333?text=Image+Not+Found";
+          }}
+        />
       </div>
 
       {/* Sub Images */}
@@ -29,6 +39,10 @@ const ImagesGallery: React.FC<ImageGalleryProps> = ({ images }) => {
                 src={img}
                 alt={`Sub Image ${i + 1}`}
                 fill
+                onError={(e) => {
+                  e.currentTarget.src =
+                    "https://placehold.co/300x200/E5E5E5/333?text=Image+Not+Found";
+                }}
                 className="object-cover"
               />
             </div>

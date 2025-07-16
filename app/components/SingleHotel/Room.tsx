@@ -2,18 +2,23 @@ import React from "react";
 import CommonButton from "../common/CommonButton";
 import { Bath, Bed, Calendar, CookingPot } from "lucide-react";
 import { PropertyDetailProps } from "@/app/types/CommonType";
+import CommonBadge from "../common/CommonBadge";
 
 const Room = ({ room }: PropertyDetailProps) => {
   return (
     <div className="w-full mt-5 pb-6 space-y-6">
       <div className="flex items-center justify-between gap-4">
-        <h3 className="text-xl font-bold">{room.type} Room</h3>
+        <div className="flex items-center gap-2">
+          <h3 className="text-xl font-bold">{room.name} Room</h3>
+          <CommonBadge color="success" label={room?.status} />
+        </div>
         <p className="text-lg font-semibold text-gray-900">
-          {room.pricing.single.toLocaleString("en-PK", {
-            style: "currency",
-            currency: "PKR",
-            minimumFractionDigits: 2,
-          })}
+          {room.pricing.single &&
+            Number(room.pricing.single).toLocaleString("en-PK", {
+              style: "currency",
+              currency: "PKR",
+              minimumFractionDigits: 2,
+            })}
           <span className="text-gray-500 text-sm font-normal"> / Single</span>
         </p>
       </div>
@@ -37,7 +42,7 @@ const Room = ({ room }: PropertyDetailProps) => {
           <Bath size={20} />
           <span className="text-sm">
             <strong className="font-medium">Attached Bath:</strong>{" "}
-            {room.attached_bath ? "Yes" : "No"}
+            {room.has_attached_bath ? "Yes" : "No"}
           </span>
         </div>
       </div>
@@ -59,7 +64,8 @@ const Room = ({ room }: PropertyDetailProps) => {
               <strong className="font-semibold">Double:</strong>{" "}
               {room.pricing.double === 0
                 ? "Free"
-                : room.pricing.double.toLocaleString("en-PK", {
+                : room.pricing.double &&
+                  Number(room.pricing.double).toLocaleString("en-PK", {
                     style: "currency",
                     currency: "PKR",
                     minimumFractionDigits: 2,
@@ -70,7 +76,8 @@ const Room = ({ room }: PropertyDetailProps) => {
               <strong className="font-semibold">Extra Bed:</strong>{" "}
               {room.pricing.extra_bed === 0
                 ? "Free"
-                : room.pricing.extra_bed.toLocaleString("en-PK", {
+                : room.pricing.extra_bed &&
+                  Number(room.pricing.extra_bed).toLocaleString("en-PK", {
                     style: "currency",
                     currency: "PKR",
                     minimumFractionDigits: 2,
@@ -81,7 +88,8 @@ const Room = ({ room }: PropertyDetailProps) => {
               <strong className="font-semibold">Child (No Bed):</strong>{" "}
               {room.pricing.child_no_bed === 0
                 ? "Free"
-                : room.pricing.child_no_bed.toLocaleString("en-PK", {
+                : room.pricing.child_no_bed &&
+                  Number(room.pricing.child_no_bed).toLocaleString("en-PK", {
                     style: "currency",
                     currency: "PKR",
                     minimumFractionDigits: 2,
@@ -91,13 +99,7 @@ const Room = ({ room }: PropertyDetailProps) => {
         </div>
       </div>
 
-      <div className="flex self-stretch items-start gap-4 border border-gray-300 p-2 rounded-full">
-        <CommonButton
-          label="Check Availability"
-          className="justify-start flex-1 !pl-4 bg-transparent p-0 min-h-0 text-gray-900 hover:bg-transparent"
-        />
-        <CommonButton icon={<Calendar />} className="rounded-full" />
-      </div>
+      <CommonButton label="Book Now" className="h-10 rounded-full w-full" />
     </div>
   );
 };

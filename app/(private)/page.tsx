@@ -3,9 +3,9 @@ import HeroSection from "../components/HomeSection/HeroSection";
 import PackageSection from "../components/HomeSection/PackageSection";
 import DestinationSection from "../components/HomeSection/DestinationSection";
 import VehicleSection from "../components/HomeSection/VehicleSection";
-import SiteSection from "../components/HomeSection/SiteSection";
 import CTASection from "../components/HomeSection/CTASection";
 import RestaurantSection from "../components/HomeSection/RestaurantSection";
+import HotelSection from "../components/HomeSection/HotelSection";
 
 type Props = {};
 
@@ -16,7 +16,7 @@ const Home = (props: Props) => {
       <DestinationSection />
       <PackageSection />
       <VehicleSection />
-      <SiteSection />
+      <HotelSection />
       <RestaurantSection />
       <CTASection />
     </div>

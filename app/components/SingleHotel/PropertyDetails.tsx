@@ -22,8 +22,8 @@ const PropertyDetails = ({ hotel }: Props) => {
   const [showFull, setShowFull] = useState(false);
 
   const tabs = hotel.rooms.map((room, index) => ({
-    value: room?.type,
-    label: room?.type,
+    value: room?.name,
+    label: room?.name,
     content: <Room room={room} key={index} />,
   }));
 
