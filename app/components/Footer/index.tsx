@@ -58,7 +58,7 @@ const Footer = () => {
             <div key={idx}>
               <h3 className="text-white font-semibold mb-3">{column.title}</h3>
               <ul className="space-y-2 text-sm text-gray-400">
-                {column.links.map((link, i) => (
+                {column.links.map((link: any, i: number) => (
                   <li key={i}>
                     <a
                       href={link.href}
