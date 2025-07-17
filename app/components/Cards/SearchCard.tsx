@@ -49,11 +49,11 @@ const SearchCard = ({
         <div className="flex items-center gap-2 text-sm justify-between font-medium mb-2 text-gray-500">
           <span className="flex items-center gap-2">
             <User size={16} />
-            {formatCurrencyPKR(adultPrice)}
+            {formatCurrencyPKR(Number(adultPrice))}
           </span>
           <span className="flex items-center gap-2">
             <Baby size={16} />
-            {formatCurrencyPKR(childPrice)}
+            {formatCurrencyPKR(Number(childPrice))}
           </span>
         </div>
         <CommonButton link={link} label="View Details" className="w-full" />
