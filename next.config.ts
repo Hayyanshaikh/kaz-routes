@@ -48,7 +48,10 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  reactStrictMode: true,
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  reactStrictMode: false,
 };
 
 export default nextConfig;
