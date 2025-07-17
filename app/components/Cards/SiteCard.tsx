@@ -1,3 +1,4 @@
+import { FILE_BASE_URL } from "@/lib/constant";
 import Image from "next/image";
 import React from "react";
 
@@ -11,7 +12,7 @@ const SiteCard: React.FC<SiteCardProps> = ({ imageUrl, countryName }) => {
     <div className="relative w-full h-40 sm:h-52 md:h-60 rounded-xl overflow-hidden shadow-md group">
       <Image
         fill
-        src={imageUrl}
+        src={`${FILE_BASE_URL}/${imageUrl}`}
         alt={countryName}
         className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
         onError={(e) => {

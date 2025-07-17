@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "@/lib/axios";
 
 // ✅ GET /packages → Find All Packages
@@ -140,3 +140,21 @@ export const useControllerGetFindOneSite = (id: string | number) =>
     },
     enabled: !!id,
   });
+
+// ✅ POST /car-bookings → Create Car Booking
+export const useControllerPostCreateCarBooking = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (payload: any) => {
+      const res = await axios.post("/car-bookings", payload);
+      return res.data;
+    },
+    onSuccess: () => {
+      // Invalidate related queries if needed
+      queryClient.invalidateQueries({
+        queryKey: ["ControllerGetFindAllCarBookings"],
+      });
+    },
+  });
+};

@@ -15,18 +15,21 @@ import CommonButton from "./CommonButton";
 const CommonModal: React.FC<CommonModalProps> = ({
   open,
   title,
+  loading,
   children,
   description,
   onOpenChange,
   footer = true,
   className = "",
   cancelText = "Cancel",
+  destroyOnClose = true,
   confirmText = "Confirm",
   onConfirm = () => {},
 }) => {
   const handleConfirm = () => {
     onConfirm();
-    onOpenChange(false);
+
+    if (destroyOnClose) onOpenChange(false);
   };
 
   useEffect(() => {
@@ -45,12 +48,14 @@ const CommonModal: React.FC<CommonModalProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={className}>
+      <DialogContent className={`w-[calc(100%_-_20px)] ${className}`}>
         <DialogHeader>
           {title && <DialogTitle>{title}</DialogTitle>}
           {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
-        {children}
+        <div className="max-h-[calc(100vh_-_200px)] overflow-auto">
+          {children}
+        </div>
         {footer && (
           <DialogFooter>
             <DialogClose asChild>
@@ -60,7 +65,11 @@ const CommonModal: React.FC<CommonModalProps> = ({
                 onClick={() => onOpenChange(false)}
               />
             </DialogClose>
-            <CommonButton onClick={handleConfirm} label={confirmText} />
+            <CommonButton
+              loading={loading}
+              onClick={handleConfirm}
+              label={confirmText}
+            />
           </DialogFooter>
         )}
       </DialogContent>

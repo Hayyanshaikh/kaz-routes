@@ -46,9 +46,10 @@ const SearchComponent = () => {
 
   // ✅ Render per category-specific card
   const getCardByCategory = (item: any, index: number) => {
-    const image = item.images?.[0]
-      ? `${FILE_BASE_URL}/${item.images[0]}`
-      : "https://placehold.co/600x400?text=No+Image";
+    const image =
+      item.images?.length > 0
+        ? `${FILE_BASE_URL}/${item.images[0]}`
+        : "https://placehold.co/600x400?text=No+Image";
 
     switch (category) {
       case "hotels":
@@ -61,6 +62,7 @@ const SearchComponent = () => {
         return (
           <PackageCard
             key={index}
+            id={item?.id}
             imageUrl={`${FILE_BASE_URL}/${item.images[0]}`}
             rating={item.rating}
             title={item.name}
@@ -89,16 +91,29 @@ const SearchComponent = () => {
             carBrand={item?.brand?.name}
             carModel={`${item?.model} - ${item?.year}`}
             features={features}
-            imageUrl={`${FILE_BASE_URL}/${
-              item.images.find((img: any) => img.is_featured).image_path
-            }`}
-            location=""
+            imageUrl={
+              item.images?.find((img: any) => img.is_featured)?.image_path
+                ? `${FILE_BASE_URL}/${
+                    item.images.find((img: any) => img.is_featured)?.image_path
+                  }`
+                : "https://placehold.co/600x400?text=No+Image"
+            }
+            isAvailable={item?.availability?.status}
             price={item?.daily_rate}
           />
         );
 
       case "sites":
-        return <SearchCard key={index} {...item} />;
+        return (
+          <SearchCard
+            link={`sites/${item?.id}`}
+            key={index}
+            imageUrl={image}
+            adultPrice={item?.price_adult}
+            childPrice={item?.price_boy}
+            {...item}
+          />
+        );
 
       default:
         return null;
@@ -114,9 +129,9 @@ const SearchComponent = () => {
         /> */}
       </aside>
 
-      <main className="flex-1 space-y-6">
+      <main className="flex-1 space-y-6 w-full">
         {/* Categories Tab */}
-        <div className="flex gap-2">
+        <div className="flex w-full gap-3 overflow-auto">
           {CATEGORIES.map((cat) => (
             <CommonButton
               key={cat.value}
@@ -132,8 +147,10 @@ const SearchComponent = () => {
         </div>
 
         {/* Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {list.map((item, index) => getCardByCategory(item, index))}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+          {list.map((item: any, index: number) =>
+            getCardByCategory(item, index)
+          )}
         </div>
       </main>
     </div>

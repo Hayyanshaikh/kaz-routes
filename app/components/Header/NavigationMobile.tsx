@@ -40,8 +40,8 @@ const NavigationMobile = ({ className, navigationLinks = [] }: Props) => {
               onItemClick={() => document.body.click()} // auto-close
             />
             <CommonButton
-              label="Get Started"
-              link="/get-started"
+              label="Create Plan"
+              link="/plan/create"
               className="w-full mt-auto px-4 mb-4"
             />
           </div>

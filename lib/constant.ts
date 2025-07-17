@@ -297,63 +297,6 @@ export const COUNTRIES_DATA = [
     countryName: "Hongkong",
   },
 ];
-// constants/footerData.ts
-export const footerData = {
-  year: new Date().getFullYear(),
-  by: "Rylic Studio",
-  columns: [
-    {
-      title: "About",
-      links: [
-        { label: "Company", href: "#" },
-        { label: "Blog", href: "#" },
-        { label: "Gallery", href: "#" },
-        { label: "Careers", href: "#" },
-        { label: "In the media", href: "#" },
-      ],
-    },
-    {
-      title: "Take Flight",
-      links: [
-        { label: "Bookings", href: "#" },
-        { label: "Festivals", href: "#" },
-        { label: "Special Occasions", href: "#" },
-        { label: "Gift Cards", href: "#" },
-      ],
-    },
-    {
-      title: "Tour Packages",
-      links: [
-        { label: "Economic", href: "#" },
-        { label: "Exclusive", href: "#" },
-        { label: "Standard", href: "#" },
-        { label: "Special package", href: "#" },
-      ],
-    },
-    {
-      title: "Quick Links",
-      links: [
-        { label: "Bookings", href: "#" },
-        { label: "Flights", href: "#" },
-        { label: "Pricing Plan", href: "#" },
-        { label: "Instructor", href: "#" },
-        { label: "Contact Us", href: "#" },
-      ],
-    },
-    {
-      title: "Legal",
-      links: [
-        { label: "Privacy Policy", href: "#" },
-        { label: "Terms of Service", href: "#" },
-      ],
-    },
-  ],
-  social: [
-    { icon: "facebook", href: "https://facebook.com" },
-    { icon: "instagram", href: "https://instagram.com" },
-    { icon: "youtube", href: "https://youtube.com" },
-  ],
-};
 
 // Sample options
 export const COUNTRY_OPTIONS = [
@@ -518,5 +461,28 @@ export const SINGLE_HOTEL = {
         child_no_bed: 0,
       },
     },
+  ],
+};
+
+// constants/footerData.ts
+export const footerData = {
+  year: "sda",
+  by: "Kaz Routes",
+  columns: [
+    {
+      title: "About",
+      links: [
+        { label: "Packages", href: "search?category=packages" },
+        { label: "Sites", href: "search?category=sites" },
+        { label: "Cars", href: "search?category=cars" },
+        { label: "Hotels", href: "search?category=hotels" },
+        { label: "Restaurants", href: "search?category=restaurants" },
+      ],
+    },
+  ],
+  social: [
+    { icon: "facebook", href: "https://facebook.com" },
+    { icon: "instagram", href: "https://instagram.com" },
+    { icon: "youtube", href: "https://youtube.com" },
   ],
 };

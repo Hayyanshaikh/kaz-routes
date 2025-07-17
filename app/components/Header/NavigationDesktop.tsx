@@ -25,9 +25,9 @@ const NavigationDesktop = ({ className, navigationLinks = [] }: Props) => {
 
       {/* CTA Button */}
       <CommonButton
-        className="hidden md:flex"
-        label="Get Started"
-        link="/get-started"
+        label="Create Plan"
+        className="md:flex hidden"
+        link="/plan/create "
       />
     </div>
   );

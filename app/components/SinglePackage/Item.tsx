@@ -5,75 +5,73 @@ import { PropertyDetailProps } from "@/app/types/CommonType";
 import CommonBadge from "../common/CommonBadge";
 import { formatCurrencyPKR } from "@/lib/utils";
 
-const Room = ({ room }: PropertyDetailProps) => {
+interface Props {
+  item: any;
+}
+
+const Item = ({ item }: Props) => {
   return (
     <div className="w-full mt-5 pb-6 space-y-6">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
-          <h3 className="text-xl font-bold">{room.name} Room</h3>
-          <CommonBadge color="success" label={room?.status} />
+          {/* <h3 className="text-xl font-bold">{item.name} item</h3> */}
+          {/* <CommonBadge color="success" label={item?.status} /> */}
         </div>
         <p className="text-lg font-semibold text-gray-900">
-          {room.pricing.single &&
-            Number(room.pricing.single).toLocaleString("en-PK", {
-              style: "currency",
-              currency: "PKR",
-              minimumFractionDigits: 2,
-            })}
-          <span className="text-gray-500 text-sm font-normal"> / Single</span>
+          {formatCurrencyPKR(item.price)}
         </p>
       </div>
 
-      <p className="text-sm text-gray-700">{room?.description}</p>
+      <p className="text-sm text-gray-700">{item?.description}</p>
 
       <div className="flex items-center space-x-6 text-gray-700 border-y py-5">
         <div className="flex items-start flex-col gap-2">
           <CookingPot size={20} />
           <span className="text-sm">
-            <strong className="font-medium">Meal:</strong> {room.meal_plan}
+            <strong className="font-medium">Meal:</strong> {item.meal_plan}
           </span>
         </div>
         <div className="flex items-start flex-col gap-2">
           <Bed size={20} />
           <span className="text-sm">
-            <strong className="font-medium">Bed:</strong> {room.bed_type}
+            <strong className="font-medium">Bed:</strong> {item.bed_type}
           </span>
         </div>
         <div className="flex items-start flex-col gap-2">
           <Bath size={20} />
           <span className="text-sm">
             <strong className="font-medium">Attached Bath:</strong>{" "}
-            {room.has_attached_bath ? "Yes" : "No"}
+            {item.has_attached_bath ? "Yes" : "No"}
           </span>
         </div>
       </div>
 
       <div className="flex items-start gap-16 border-b pb-5">
-        <div className="">
+        {/* <div className="">
           <p className="font-semibold text-gray-900 mb-3">Facilities:</p>
           <ul className="list-disc list-inside text-sm text-gray-700">
-            {room.facilities.map((facility: string, i: number) => (
+            {item.facilities.map((facility: string, i: number) => (
               <li key={i}>{facility}</li>
             ))}
           </ul>
-        </div>
+        </div> */}
 
-        <div className="">
+        {/* <div className="">
           <p className="font-semibold text-gray-900 mb-3">Pricing List:</p>
           <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
             <li>
               <strong className="font-semibold">Double:</strong>{" "}
-              {room.pricing.double === 0
+              {item.pricing.double === 0
                 ? "Free"
-                : room.pricing.double && formatCurrencyPKR(room.pricing.double)}
+                : item.pricing.double && formatCurrencyPKR(item.pricing.double)}
             </li>
 
             <li>
               <strong className="font-semibold">Extra Bed:</strong>{" "}
-              {room.pricing.extra_bed === 0
+              {item.pricing.extra_bed === 0
                 ? "Free"
-                : room.pricing.extra_bed &&
-                  Number(room.pricing.extra_bed).toLocaleString("en-PK", {
+                : item.pricing.extra_bed &&
+                  Number(item.pricing.extra_bed).toLocaleString("en-PK", {
                     style: "currency",
                     currency: "PKR",
                     minimumFractionDigits: 2,
@@ -82,17 +80,17 @@ const Room = ({ room }: PropertyDetailProps) => {
 
             <li>
               <strong className="font-semibold">Child (No Bed):</strong>{" "}
-              {room.pricing.child_no_bed === 0
+              {item.pricing.child_no_bed === 0
                 ? "Free"
-                : room.pricing.child_no_bed &&
-                  Number(room.pricing.child_no_bed).toLocaleString("en-PK", {
+                : item.pricing.child_no_bed &&
+                  Number(item.pricing.child_no_bed).toLocaleString("en-PK", {
                     style: "currency",
                     currency: "PKR",
                     minimumFractionDigits: 2,
                   })}
             </li>
           </ul>
-        </div>
+        </div> */}
       </div>
 
       <CommonButton label="Book Now" className="h-10 rounded-full w-full" />
@@ -100,4 +98,4 @@ const Room = ({ room }: PropertyDetailProps) => {
   );
 };
 
-export default Room;
+export default Item;

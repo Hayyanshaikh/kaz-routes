@@ -27,3 +27,15 @@ export const convertFiltersToArray = (filterObj: Record<string, any>) => {
     };
   });
 };
+
+export const formatCurrencyPKR = (
+  amount: number,
+  options: Intl.NumberFormatOptions = {}
+): string => {
+  return Number(amount).toLocaleString("en-PK", {
+    style: "currency",
+    currency: "PKR",
+    minimumFractionDigits: 2,
+    ...options,
+  });
+};

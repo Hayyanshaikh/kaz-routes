@@ -41,10 +41,16 @@ const VehicleSection = (props: Props) => {
                     carBrand={car?.brand?.name}
                     carModel={`${car?.model} - ${car?.year}`}
                     features={features}
-                    imageUrl={`${FILE_BASE_URL}/${
-                      car.images.find((img: any) => img.is_featured).image_path
-                    }`}
-                    location=""
+                    imageUrl={
+                      car.images?.find((img: any) => img.is_featured)
+                        ?.image_path
+                        ? `${FILE_BASE_URL}/${
+                            car.images.find((img: any) => img.is_featured)
+                              ?.image_path
+                          }`
+                        : "https://placehold.co/600x400?text=No+Image"
+                    }
+                    isAvailable={car?.availability?.status}
                     price={car?.daily_rate}
                   />
                 );

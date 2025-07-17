@@ -38,6 +38,11 @@ const nextConfig: NextConfig = {
         hostname: "kaz-routes-demo.vercel.app",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "placehold.co",
+        pathname: "/**",
+      },
     ],
   },
   eslint: {

@@ -9,10 +9,11 @@ const CommonInput: React.FC<CommonInputProps> = ({
   disabled = false,
   className = "",
   label = "",
+  error,
 }) => (
   <div className="text-left w-full">
     {label && (
-      <label className="mb-2 block text-xs text-gray-600">{label}</label>
+      <label className="mb-1 block text-xs text-gray-600">{label}</label>
     )}
     <Input
       type={type}
@@ -20,8 +21,11 @@ const CommonInput: React.FC<CommonInputProps> = ({
       onChange={onChange}
       placeholder={placeholder}
       disabled={disabled}
-      className={`text-black ${className}`}
+      className={`text-black text-sm ${
+        error ? "border-red-500" : ""
+      } ${className}`}
     />
+    {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
   </div>
 );
 

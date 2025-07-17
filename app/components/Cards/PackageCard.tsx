@@ -1,14 +1,16 @@
 "use client";
 import React from "react";
-import { Star, Clock, Users, Plus } from "lucide-react"; // Icons ke liye
+import { Star, Clock, Users, Plus, ArrowRight } from "lucide-react"; // Icons ke liye
 import CommonBadge from "../common/CommonBadge";
 import CommonButton from "../common/CommonButton";
 import Image from "next/image";
+import { formatCurrencyPKR } from "@/lib/utils";
 
 type PackageCardProps = {
   imageUrl: string;
   rating: number;
   title: string;
+  id: string;
   description: string;
   duration: string;
   maxParticipants: number;
@@ -24,6 +26,7 @@ const PackageCard: React.FC<PackageCardProps> = ({
   duration,
   maxParticipants,
   highlights,
+  id,
   price,
 }) => {
   return (
@@ -55,7 +58,9 @@ const PackageCard: React.FC<PackageCardProps> = ({
         {/* Title */}
         <h3 className="text-xl font-semibold text-stone-800 mb-2">{title}</h3>
         {/* Description */}
-        <p className="text-stone-600 text-sm mb-4">{description}</p>
+        <p className="text-stone-600 text-sm mb-4 line-clamp-3">
+          {description}
+        </p>
 
         {/* Duration & Participants */}
         <div className="flex items-center justify-between text-stone-500 text-sm mb-4">
@@ -87,11 +92,15 @@ const PackageCard: React.FC<PackageCardProps> = ({
 
         {/* Price and Add to Cart */}
         <div className="flex items-center justify-between mt-auto border-t pt-5">
-          <div className="text-stone-900 text-xl font-semibold">
-            ${price}
-            <span className="text-sm font-normal text-stone-500">/ person</span>
+          <div className="text-stone-900 font-semibold">
+            {formatCurrencyPKR(price)}
           </div>
-          <CommonButton label="Add to Cart" icon={<Plus size={18} />} />
+          <CommonButton
+            link={`packages/${id}`}
+            label="Details"
+            iconPosition="right"
+            icon={<ArrowRight size={18} />}
+          />
         </div>
       </div>
     </div>

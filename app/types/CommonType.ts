@@ -22,6 +22,7 @@ export interface CommonButtonProps {
   icon?: React.ReactNode;
   iconPosition?: "left" | "right";
   ref?: React.Ref<HTMLButtonElement>;
+  loading?: boolean;
 }
 
 // Common Input Props
@@ -33,6 +34,7 @@ export interface CommonInputProps {
   disabled?: boolean;
   className?: string;
   label?: string;
+  error?: string;
 }
 
 // Common Textarea Props
@@ -42,6 +44,7 @@ export interface CommonTextareaProps {
   placeholder?: string;
   disabled?: boolean;
   className?: string;
+  error?: string;
   label?: string;
 }
 
@@ -85,9 +88,11 @@ export interface CommonModalProps {
   children?: React.ReactNode;
   footer?: boolean;
   className?: string;
+  destroyOnClose?: boolean;
   confirmText?: string;
   cancelText?: string;
   open: boolean;
+  loading?: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm?: () => void;
 }
