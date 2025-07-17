@@ -12,7 +12,7 @@ type DishCardProps = {
   };
 };
 
-const DishCard = ({ dish }: DishCardProps) => {
+const DishCard = ({ dish }: DishCardProps | any) => {
   const image =
     dish.images?.[0] || "https://placehold.co/600x400?text=No+Image";
 
@@ -30,7 +30,7 @@ const DishCard = ({ dish }: DishCardProps) => {
 
       <div className="flex sm:flex-row flex-col gap-4">
         {/* Variants */}
-        {dish.variants.map((v, i) => (
+        {dish.variants.map((v: any, i: number) => (
           <div key={i} className="p-4 border rounded-lg flex-1 bg-gray-50">
             <p className="text-sm text-primary font-medium mb-2">
               {v.price &&

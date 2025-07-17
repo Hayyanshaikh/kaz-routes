@@ -21,6 +21,7 @@ const PackageSection = (props: Props) => {
 
   const packageCards = packages.map((pkg: any, index: number) => (
     <PackageCard
+      id={pkg.id}
       key={index}
       imageUrl={`${FILE_BASE_URL}/${pkg.images[0]}`}
       rating={pkg.rating}
