@@ -5,7 +5,7 @@ import Image from "next/image";
 import { FILE_BASE_URL } from "@/lib/constant";
 import CommonBadge from "../common/CommonBadge";
 
-const HotelCard = ({ hotelData }) => {
+const HotelCard = ({ hotelData }: any) => {
   if (!hotelData) {
     return (
       <div className="p-4 text-center text-red-500">
