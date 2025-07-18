@@ -1,20 +1,28 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "@/lib/axios";
 
-// ✅ GET /packages → Find All Packages
-export const useControllerGetFindAllPackages = (options?: {
+// 🔁 Shared options type for filtering & enabling
+type QueryOptions = {
   enabled?: boolean;
-}) =>
+  params?: Record<string, any>;
+};
+
+/* ------------------- 📦 PACKAGES ------------------- */
+
+// ✅ GET /packages
+export const useControllerGetFindAllPackages = (options?: QueryOptions) =>
   useQuery({
-    queryKey: ["ControllerGetFindAllPackages"],
+    queryKey: ["ControllerGetFindAllPackages", options?.params],
     queryFn: async () => {
-      const res = await axios.get("/packages");
+      const res = await axios.get("/packages", {
+        params: options?.params,
+      });
       return res.data;
     },
     enabled: options?.enabled ?? true,
   });
 
-// ✅ GET /packages/:id → Find One Package
+// ✅ GET /packages/:id
 export const useControllerGetFindOnePackage = (id: string | number) =>
   useQuery({
     queryKey: ["ControllerGetFindOnePackage", id],
@@ -25,7 +33,113 @@ export const useControllerGetFindOnePackage = (id: string | number) =>
     enabled: !!id,
   });
 
-// ✅ GET /countries → Find All Countries
+/* ------------------- 🚗 CARS ------------------- */
+
+// ✅ GET /cars
+export const useControllerGetFindAllCars = (options?: QueryOptions) =>
+  useQuery({
+    queryKey: ["ControllerGetFindAllCars", options?.params],
+    queryFn: async () => {
+      const res = await axios.get("/cars", {
+        params: options?.params,
+      });
+      return res.data;
+    },
+    enabled: options?.enabled ?? true,
+  });
+
+// ✅ GET /cars/:id
+export const useControllerGetFindOneCar = (id: string | number) =>
+  useQuery({
+    queryKey: ["ControllerGetFindOneCar", id],
+    queryFn: async () => {
+      const res = await axios.get(`/cars/${id}`);
+      return res.data;
+    },
+    enabled: !!id,
+  });
+
+/* ------------------- 🍽️ RESTAURANTS ------------------- */
+
+// ✅ GET /restaurants
+export const useControllerGetFindAllRestaurants = (options?: QueryOptions) =>
+  useQuery({
+    queryKey: ["ControllerGetFindAllRestaurants", options?.params],
+    queryFn: async () => {
+      const res = await axios.get("/restaurants", {
+        params: options?.params,
+      });
+      return res.data;
+    },
+    enabled: options?.enabled ?? true,
+  });
+
+// ✅ GET /restaurants/:id
+export const useControllerGetFindOneRestaurant = (id: string | number) =>
+  useQuery({
+    queryKey: ["ControllerGetFindOneRestaurant", id],
+    queryFn: async () => {
+      const res = await axios.get(`/restaurants/${id}`);
+      return res.data;
+    },
+    enabled: !!id,
+  });
+
+/* ------------------- 🏨 HOTELS ------------------- */
+
+// ✅ GET /hotels
+export const useControllerGetFindAllHotels = (options?: QueryOptions) =>
+  useQuery({
+    queryKey: ["ControllerGetFindAllHotels", options?.params],
+    queryFn: async () => {
+      const res = await axios.get("/hotels", {
+        params: options?.params,
+      });
+      return res.data;
+    },
+    enabled: options?.enabled ?? true,
+  });
+
+// ✅ GET /hotels/:id
+export const useControllerGetFindOneHotel = (id: string | number) =>
+  useQuery({
+    queryKey: ["ControllerGetFindOneHotel", id],
+    queryFn: async () => {
+      const res = await axios.get(`/hotels/${id}`);
+      return res.data;
+    },
+    enabled: !!id,
+  });
+
+/* ------------------- 🏞️ SITES ------------------- */
+
+// ✅ GET /sites
+export const useControllerGetFindAllSites = (options?: QueryOptions) =>
+  useQuery({
+    queryKey: ["ControllerGetFindAllSites", options?.params],
+    queryFn: async () => {
+      const res = await axios.get("/sites", {
+        params: options?.params,
+      });
+      return res.data;
+    },
+    enabled: options?.enabled ?? true,
+  });
+
+// ✅ GET /sites/:id
+export const useControllerGetFindOneSite = (id: string | number) =>
+  useQuery({
+    queryKey: ["ControllerGetFindOneSite", id],
+    queryFn: async () => {
+      const res = await axios.get(`/sites/${id}`);
+      return res.data;
+    },
+    enabled: !!id,
+  });
+
+/* ------------------- 🌍 COUNTRIES ------------------- */
+
+// ✅ GET /countries
 export const useControllerGetFindAllCountries = (options?: {
   enabled?: boolean;
 }) =>
@@ -38,7 +152,7 @@ export const useControllerGetFindAllCountries = (options?: {
     enabled: options?.enabled ?? true,
   });
 
-// ✅ GET /countries/:id → Find One Country
+// ✅ GET /countries/:id
 export const useControllerGetFindOneCountry = (id: string | number) =>
   useQuery({
     queryKey: ["ControllerGetFindOneCountry", id],
@@ -49,99 +163,9 @@ export const useControllerGetFindOneCountry = (id: string | number) =>
     enabled: !!id,
   });
 
-// ✅ GET /cars → Find All Cars
-export const useControllerGetFindAllCars = (options?: { enabled?: boolean }) =>
-  useQuery({
-    queryKey: ["ControllerGetFindAllCars"],
-    queryFn: async () => {
-      const res = await axios.get("/cars");
-      return res.data;
-    },
-    enabled: options?.enabled ?? true,
-  });
+/* ------------------- ✅ POST BOOKING ------------------- */
 
-// ✅ GET /cars/:id → Find One Car
-export const useControllerGetFindOneCar = (id: string | number) =>
-  useQuery({
-    queryKey: ["ControllerGetFindOneCar", id],
-    queryFn: async () => {
-      const res = await axios.get(`/cars/${id}`);
-      return res.data;
-    },
-    enabled: !!id,
-  });
-
-// ✅ GET /restaurants → Find All Restaurants
-export const useControllerGetFindAllRestaurants = (options?: {
-  enabled?: boolean;
-}) =>
-  useQuery({
-    queryKey: ["ControllerGetFindAllRestaurants"],
-    queryFn: async () => {
-      const res = await axios.get("/restaurants");
-      return res.data;
-    },
-    enabled: options?.enabled ?? true,
-  });
-
-// ✅ GET /restaurants/:id → Find One Restaurant
-export const useControllerGetFindOneRestaurant = (id: string | number) =>
-  useQuery({
-    queryKey: ["ControllerGetFindOneRestaurant", id],
-    queryFn: async () => {
-      const res = await axios.get(`/restaurants/${id}`);
-      return res.data;
-    },
-    enabled: !!id,
-  });
-
-// ✅ GET /hotels → Find All Hotels
-export const useControllerGetFindAllHotels = (options?: {
-  enabled?: boolean;
-}) =>
-  useQuery({
-    queryKey: ["ControllerGetFindAllHotels"],
-    queryFn: async () => {
-      const res = await axios.get("/hotels");
-      return res.data;
-    },
-    enabled: options?.enabled ?? true,
-  });
-
-// ✅ GET /hotels/:id → Find One Hotel
-export const useControllerGetFindOneHotel = (id: string | number) =>
-  useQuery({
-    queryKey: ["ControllerGetFindOneHotel", id],
-    queryFn: async () => {
-      const res = await axios.get(`/hotels/${id}`);
-      return res.data;
-    },
-    enabled: !!id,
-  });
-
-// ✅ GET /sites → Find All Sites
-export const useControllerGetFindAllSites = (options?: { enabled?: boolean }) =>
-  useQuery({
-    queryKey: ["ControllerGetFindAllSites"],
-    queryFn: async () => {
-      const res = await axios.get("/sites");
-      return res.data;
-    },
-    enabled: options?.enabled ?? true,
-  });
-
-// ✅ GET /sites/:id → Find One Site
-export const useControllerGetFindOneSite = (id: string | number) =>
-  useQuery({
-    queryKey: ["ControllerGetFindOneSite", id],
-    queryFn: async () => {
-      const res = await axios.get(`/sites/${id}`);
-      return res.data;
-    },
-    enabled: !!id,
-  });
-
-// ✅ POST /car-bookings → Create Car Booking
+// ✅ POST /car-bookings
 export const useControllerPostCreateCarBooking = () => {
   const queryClient = useQueryClient();
 
@@ -151,7 +175,6 @@ export const useControllerPostCreateCarBooking = () => {
       return res.data;
     },
     onSuccess: () => {
-      // Invalidate related queries if needed
       queryClient.invalidateQueries({
         queryKey: ["ControllerGetFindAllCarBookings"],
       });

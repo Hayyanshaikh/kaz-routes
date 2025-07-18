@@ -1,137 +1,80 @@
-// components/SidebarFilter.tsx
 "use client";
-
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import CommonCheckbox from "../common/CommonCheckbox";
-import CommonSelect from "../common/CommonSelect";
-import { SidebarFilterProps } from "@/app/types/CommonType";
+import { useSearchParams, useRouter } from "next/navigation";
 
-const SidebarFilter = ({
-  filters,
-  onChange,
-  initialValues = {},
-}: SidebarFilterProps) => {
+type FilterItem = {
+  id: string;
+  label: string;
+  type: "checkbox";
+  options: string[];
+};
+
+type SidebarFilterProps = {
+  filters: FilterItem[];
+};
+
+const SidebarFilter: React.FC<SidebarFilterProps> = ({ filters }) => {
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const [checkboxState, setCheckboxState] = useState<
     Record<string, Set<string>>
   >({});
-  const [selectState, setSelectState] = useState<Record<string, string>>({});
 
+  // ✅ Load from URL
   useEffect(() => {
-    const checkboxInit: Record<string, Set<string>> = {};
-    const selectInit: Record<string, string> = {};
+    const initState: Record<string, Set<string>> = {};
 
-    Object.entries(initialValues).forEach(([key, value]) => {
-      if (Array.isArray(value)) {
-        checkboxInit[key] = new Set(value);
-      } else {
-        selectInit[key] = value;
+    for (const [key, value] of searchParams.entries()) {
+      const matchedFilter = filters.find((f) => f.id === key);
+      if (matchedFilter?.type === "checkbox") {
+        initState[key] = new Set(value.split(","));
       }
-    });
-
-    setCheckboxState(checkboxInit);
-    setSelectState(selectInit);
-  }, [initialValues]);
-
-  const handleCheckboxChange = (filterId: string, value: string) => {
-    setCheckboxState((prev) => {
-      const currentSet = new Set(prev[filterId] || []);
-      if (currentSet.has(value)) {
-        currentSet.delete(value);
-      } else {
-        currentSet.add(value);
-      }
-      return { ...prev, [filterId]: currentSet };
-    });
-  };
-
-  const handleSelectChange = (filterId: string, value: string) => {
-    setSelectState((prev) => ({ ...prev, [filterId]: value }));
-  };
-
-  const handleClearSection = (filterId: string, type: string) => {
-    if (type === "checkbox") {
-      setCheckboxState((prev) => {
-        const updated = { ...prev };
-        delete updated[filterId];
-        return updated;
-      });
     }
-    if (type === "select") {
-      setSelectState((prev) => {
-        const updated = { ...prev };
-        delete updated[filterId];
-        return updated;
-      });
+
+    setCheckboxState(initState);
+  }, [searchParams.toString(), filters]);
+
+  // ✅ Toggle and update URL instantly
+  const handleCheckboxChange = (filterId: string, option: string) => {
+    const current = new Set(checkboxState[filterId] || []);
+    current.has(option) ? current.delete(option) : current.add(option);
+
+    const newCheckboxState = { ...checkboxState, [filterId]: current };
+    setCheckboxState(newCheckboxState);
+
+    const newParams = new URLSearchParams(searchParams.toString());
+
+    // update URL
+    if (current.size === 0) {
+      newParams.delete(filterId);
+    } else {
+      newParams.set(filterId, Array.from(current).join(","));
     }
+
+    router.push(`?${String(newParams).replace(" ", "+")}`);
   };
-
-  useEffect(() => {
-    if (!onChange) return;
-    const combined: Record<string, string | string[]> = {};
-
-    Object.entries(checkboxState).forEach(([key, set]) => {
-      combined[key] = Array.from(set);
-    });
-
-    Object.entries(selectState).forEach(([key, val]) => {
-      combined[key] = val;
-    });
-
-    onChange(combined);
-  }, [checkboxState, selectState, onChange]);
 
   return (
-    <aside className="w-full bg-white p-5 rounded-xl border border-gray-300 space-y-4">
-      {/* <div className="flex justify-end">
-        <button
-          onClick={handleClearFilters}
-          className="text-sm text-red-600 underline hover:text-red-800"
-        >
-          Clear All Filters
-        </button>
-      </div> */}
-      {filters?.length > 0 &&
-        filters.map((filter) => (
-          <div key={filter.id} className="border-b pb-4">
-            <div className="flex justify-between items-center mb-2">
-              <span className="font-semibold">{filter.label}</span>
-              <button
-                onClick={() => handleClearSection(filter.id, filter.type)}
-                className="text-xs text-gray-500 underline hover:text-gray-700"
-              >
-                Clear
-              </button>
-            </div>
-            <div className="space-y-2">
-              {filter.type === "checkbox" &&
-                filter.options?.map((opt) => (
-                  <CommonCheckbox
-                    key={opt.value}
-                    checked={checkboxState[filter.id]?.has(opt.value) || false}
-                    onCheckedChange={() =>
-                      handleCheckboxChange(filter.id, opt.value)
-                    }
-                    label={opt.label}
-                  />
-                ))}
-
-              {filter.type === "select" && (
-                <CommonSelect
-                  onValueChange={(value) =>
-                    handleSelectChange(filter.id, value)
-                  }
-                  value={selectState[filter.id] || ""}
-                  options={filter.options || []}
-                />
-              )}
-
-              {filter.type === "custom" &&
-                filter.customRender &&
-                filter.customRender()}
-            </div>
+    <div className="p-4 border rounded-xl space-y-4">
+      {filters.map((filter) => (
+        <div key={filter.id}>
+          <h3 className="font-semibold text-sm text-gray-700 mb-2">
+            {filter.label}
+          </h3>
+          <div className="flex flex-col gap-2">
+            {filter.options.map((option) => (
+              <CommonCheckbox
+                key={`${filter.id}-${option}`} // ✅ unique key
+                label={option}
+                checked={checkboxState[filter.id]?.has(option) || false}
+                onChange={() => handleCheckboxChange(filter.id, option)}
+              />
+            ))}
           </div>
-        ))}
-    </aside>
+        </div>
+      ))}
+    </div>
   );
 };
 

@@ -23,16 +23,33 @@ const SearchComponent = () => {
   const searchParams = useSearchParams();
   const category = searchParams.get("category");
 
+  // ✅ Extract filters from URL
+
+  const filtersOnly = Object.fromEntries(searchParams.entries());
+  delete filtersOnly.category;
+
+  // ✅ Dynamic Query Hooks with Filters
   const queries = {
-    hotels: useControllerGetFindAllHotels({ enabled: category === "hotels" }),
+    hotels: useControllerGetFindAllHotels({
+      enabled: category === "hotels",
+      params: filtersOnly,
+    }),
     restaurants: useControllerGetFindAllRestaurants({
       enabled: category === "restaurants",
+      params: filtersOnly,
     }),
     packages: useControllerGetFindAllPackages({
       enabled: category === "packages",
+      params: filtersOnly,
     }),
-    cars: useControllerGetFindAllCars({ enabled: category === "cars" }),
-    sites: useControllerGetFindAllSites({ enabled: category === "sites" }),
+    cars: useControllerGetFindAllCars({
+      enabled: category === "cars",
+      params: filtersOnly,
+    }),
+    sites: useControllerGetFindAllSites({
+      enabled: category === "sites",
+      params: filtersOnly,
+    }),
   };
 
   const activeQuery = queries[category as keyof typeof queries];
@@ -44,7 +61,7 @@ const SearchComponent = () => {
 
   if (isLoading) return <PageLoading />;
 
-  // ✅ Render per category-specific card
+  // ✅ Render Card per category
   const getCardByCategory = (item: any, index: number) => {
     const image =
       item.images?.length > 0
@@ -81,7 +98,7 @@ const SearchComponent = () => {
           item.fuel_type,
           item.transmission,
           `${item.seating_capacity} Seating`,
-          item.category.name,
+          item.category?.name,
         ];
         return (
           <VehicleCard
@@ -119,18 +136,17 @@ const SearchComponent = () => {
         return null;
     }
   };
+
   return (
     <div className="flex flex-col items-start md:flex-row p-6 gap-8">
+      {/* Sidebar Filter */}
       <aside className="flex-[0_0_300px] hidden md:block sticky top-6">
-        {/* <SidebarFilter
-          filters={formattedFilters}
-          initialValues={{}}
-          onChange={(data) => console.log("Active Filters:", data)}
-        /> */}
+        <SidebarFilter filters={formattedFilters} />
       </aside>
 
+      {/* Main Content */}
       <main className="flex-1 space-y-6 w-full">
-        {/* Categories Tab */}
+        {/* Categories Tabs */}
         <div className="flex w-full gap-3 overflow-auto">
           {CATEGORIES.map((cat) => (
             <CommonButton
@@ -146,7 +162,7 @@ const SearchComponent = () => {
           ))}
         </div>
 
-        {/* Cards */}
+        {/* Card Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
           {list.map((item: any, index: number) =>
             getCardByCategory(item, index)

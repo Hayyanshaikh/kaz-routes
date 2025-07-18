@@ -61,7 +61,7 @@ export interface CommonSelectProps {
 // Common Checkbox Props
 export interface CommonCheckboxProps {
   checked: boolean;
-  onCheckedChange: (checked: boolean) => void;
+  onChange: (checked: boolean) => void;
   label?: string;
   className?: string;
 }

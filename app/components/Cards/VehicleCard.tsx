@@ -52,7 +52,19 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
     useControllerPostCreateCarBooking();
 
   const onSubmit = () => {
-    carBooking(formData)
+    const payload = {
+      car_id: id || "",
+      customer_name: formData?.name || "",
+      customer_email: formData?.email || "",
+      customer_phone: formData?.phone || "",
+      start_date: formData?.pickupDate || "",
+      end_date: formData?.dropOffDate || "",
+      pickup_location: formData?.pickupLocation || "",
+      dropoff_location: formData?.dropOffLocation || "",
+      special_requests: formData?.specialRequests || "",
+    };
+
+    carBooking(payload)
       .then(() => {
         console.log("Submit");
         showSuccess({

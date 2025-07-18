@@ -1,11 +1,66 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import CommonButton from "../common/CommonButton";
-import { Bath, Bed, Calendar, CookingPot } from "lucide-react";
+import { Bath, Bed, CookingPot } from "lucide-react";
 import { PropertyDetailProps } from "@/app/types/CommonType";
 import CommonBadge from "../common/CommonBadge";
 import { formatCurrencyPKR } from "@/lib/utils";
+import CommonModal from "../common/CommonModal";
+import HotelBookingForm from "../HotelForm";
+import useForm from "@/app/hooks/useForm";
+import { showError, showSuccess } from "../common/CommonSonner";
 
 const Room = ({ room }: PropertyDetailProps) => {
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const { formData, errors, handleChange, handleSubmit, resetForm } = useForm([
+    "name",
+    "email",
+    "phone",
+    "checkInDate",
+    "checkOutDate",
+    "city",
+    "hotelName",
+    "roomName",
+    "bedType",
+    "mealPlan",
+    "roomCount",
+    "guestCount",
+    "specialRequests",
+  ]);
+
+  const handleConfirm = () => {
+    handleSubmit(async (data) => {
+      setLoading(true);
+
+      const message = "Booking Confirmed";
+      const description =
+        "Your booking request has been successfully submitted. We will get back to you shortly.";
+
+      try {
+        console.log("Booking Data:", data);
+        // ✅ API call ya processing yahan kro
+        showSuccess({
+          message,
+          description,
+        });
+        setOpen(false);
+        resetForm();
+      } catch (err) {
+        console.error("Booking Error:", err);
+        showError({
+          message: "Booking Failed",
+          description:
+            "Something went wrong while processing your booking. Please try again.",
+        });
+      } finally {
+        setLoading(false);
+      }
+    });
+  };
+
   return (
     <div className="w-full mt-5 pb-6 space-y-6">
       <div className="flex items-center justify-between gap-4">
@@ -67,35 +122,46 @@ const Room = ({ room }: PropertyDetailProps) => {
                 ? "Free"
                 : room.pricing.double && formatCurrencyPKR(room.pricing.double)}
             </li>
-
             <li>
               <strong className="font-semibold">Extra Bed:</strong>{" "}
               {room.pricing.extra_bed === 0
                 ? "Free"
                 : room.pricing.extra_bed &&
-                  Number(room.pricing.extra_bed).toLocaleString("en-PK", {
-                    style: "currency",
-                    currency: "PKR",
-                    minimumFractionDigits: 2,
-                  })}
+                  formatCurrencyPKR(room.pricing.extra_bed)}
             </li>
-
             <li>
               <strong className="font-semibold">Child (No Bed):</strong>{" "}
               {room.pricing.child_no_bed === 0
                 ? "Free"
                 : room.pricing.child_no_bed &&
-                  Number(room.pricing.child_no_bed).toLocaleString("en-PK", {
-                    style: "currency",
-                    currency: "PKR",
-                    minimumFractionDigits: 2,
-                  })}
+                  formatCurrencyPKR(room.pricing.child_no_bed)}
             </li>
           </ul>
         </div>
       </div>
 
-      <CommonButton label="Book Now" className="h-10 rounded-full w-full" />
+      <CommonButton
+        label="Book Now"
+        className="h-10 rounded-full w-full"
+        onClick={() => setOpen(true)}
+      />
+
+      {/* ✅ Modal With Form */}
+      <CommonModal
+        open={open}
+        onOpenChange={setOpen}
+        title="Hotel Booking"
+        confirmText="Submit Booking"
+        className="!max-w-3xl"
+        loading={loading}
+        onConfirm={handleConfirm}
+      >
+        <HotelBookingForm
+          formData={formData}
+          errors={errors}
+          handleChange={handleChange}
+        />
+      </CommonModal>
     </div>
   );
 };

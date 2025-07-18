@@ -3,7 +3,7 @@ import { Checkbox } from "@/shadcn/components/ui/checkbox";
 
 const CommonCheckbox: React.FC<CommonCheckboxProps> = ({
   checked,
-  onCheckedChange,
+  onChange,
   label,
   className = "",
 }) => (
@@ -11,7 +11,7 @@ const CommonCheckbox: React.FC<CommonCheckboxProps> = ({
     <Checkbox
       className="cursor-pointer"
       checked={checked}
-      onCheckedChange={onCheckedChange}
+      onCheckedChange={onChange}
     />
     {label && (
       <span className="user-select-none text-sm text-gray-600">{label}</span>
