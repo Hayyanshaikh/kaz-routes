@@ -5,6 +5,10 @@ import CommonButton from "../common/CommonButton";
 import Services from "./Services";
 import dayjs from "dayjs";
 import { DISPLAY_DATE } from "@/lib/constant";
+import CommonModal from "../common/CommonModal";
+import useForm from "@/app/hooks/useForm";
+import SiteForm from "../SiteForm";
+import { showError, showSuccess } from "../common/CommonSonner";
 
 type SiteType = {
   name: string;
@@ -35,9 +39,57 @@ type Props = {
 };
 
 const SitesDetail = ({ site }: Props) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [showFull, setShowFull] = useState(false);
+  const { formData, errors, handleChange, resetForm, handleSubmit } = useForm([
+    "bookingDate",
+    "bookingTime",
+    "referenceNumber",
+    "numberOfBoys",
+    "numberOfChildren",
+    "numberOfAdults",
+    "specialRequest",
+    "customerName",
+    "customerPhone",
+    "customerEmail",
+  ]);
 
   const hasActivities = site.activities && site.activities.length > 0;
+
+  const onSubmit = () => {
+    try {
+      const payload = {
+        site_id: site.name, // Assuming site.name is the unique identifier
+        booking_date: formData.bookingDate,
+        booking_time: formData.bookingTime,
+        reference_number: formData.referenceNumber,
+        number_of_boys: formData.numberOfBoys,
+        number_of_children: formData.numberOfChildren,
+        number_of_adults: formData.numberOfAdults,
+        special_request: formData.specialRequest,
+        customer_name: formData.customerName,
+        customer_phone: formData.customerPhone,
+        customer_email: formData.customerEmail,
+      };
+
+      // Here you would typically call an API to submit the booking
+      console.log("Booking payload:", payload);
+
+      // Simulating a successful submission
+      setIsModalOpen(false);
+      resetForm();
+      showSuccess({
+        message: "Booking Successful",
+        description: "Your booking has been confirmed successfully.",
+      });
+    } catch (error) {
+      showError({
+        message: "Submission Error",
+        description: "Error submitting form. Please try again later.",
+      });
+      console.error("Error submitting form:", error);
+    }
+  };
 
   return (
     <section className="flex flex-col items-start flex-1 lg:w-1/2">
@@ -109,7 +161,37 @@ const SitesDetail = ({ site }: Props) => {
           </div>
         )}
       </div>
-      <CommonButton label="Book Now" className="h-10 rounded-full w-full" />
+      <CommonButton
+        onClick={() => setIsModalOpen(true)}
+        label="Book Now"
+        className="h-10 rounded-full w-full"
+      />
+
+      <CommonModal
+        open={isModalOpen}
+        onOpenChange={setIsModalOpen}
+        title={`Book Site Visit at ${site.name}`}
+        description="Please fill out the form below to book your site visit."
+        confirmText="Confirm Booking"
+        cancelText="Cancel"
+        onConfirm={() => handleSubmit(onSubmit)}
+        destroyOnClose={false}
+        // loading={isLoading}
+        className="!max-w-4xl"
+      >
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+          }}
+        >
+          {/* Yahan aap apna form component lagayenge */}
+          <SiteForm
+            formData={formData}
+            errors={errors}
+            handleChange={handleChange}
+          />
+        </form>
+      </CommonModal>
     </section>
   );
 };

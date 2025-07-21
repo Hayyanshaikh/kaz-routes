@@ -150,7 +150,9 @@ const Room = ({ room }: PropertyDetailProps) => {
       <CommonModal
         open={open}
         onOpenChange={setOpen}
-        title="Hotel Booking"
+        title={`Hotel Booking ${
+          room.name.charAt(0).toUpperCase() + room.name.slice(1)
+        } Room`}
         confirmText="Submit Booking"
         className="!max-w-3xl"
         loading={loading}

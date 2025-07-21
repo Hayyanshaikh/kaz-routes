@@ -1,4 +1,10 @@
 import Image from "next/image";
+import { useState } from "react";
+import CommonModal from "../common/CommonModal";
+import RestaurantForm from "../RestaurantForm";
+import useForm from "@/app/hooks/useForm";
+import { showError, showSuccess } from "../common/CommonSonner";
+import CommonButton from "../common/CommonButton";
 
 type DishCardProps = {
   dish: {
@@ -13,6 +19,47 @@ type DishCardProps = {
 };
 
 const DishCard = ({ dish }: DishCardProps | any) => {
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const { formData, errors, handleChange, handleSubmit, resetForm } = useForm([
+    "name",
+    "email",
+    "phone",
+    "bookingDate",
+    "bookingTime",
+    "guestCount",
+    "referenceNumber",
+    "specialRequest",
+  ]);
+
+  const onSubmit = () => {
+    try {
+      // create payload
+      const payload = {
+        ...formData,
+        selectedDishes:
+          (formData.selectedDishes?.length > 0 &&
+            formData.selectedDishes.split(", ")) ||
+          [],
+      };
+      showSuccess({
+        message: "Booking Confirmed",
+        description:
+          "Your booking request has been successfully submitted. We will get back to you shortly.",
+      });
+      setOpen(false);
+      resetForm();
+      console.log("Booking Data:", payload);
+    } catch (error) {
+      console.error("Booking Error:", error);
+      showError({
+        message: "Booking Failed",
+        description: "Something went wrong while processing your booking.",
+      });
+    }
+  };
+
   const image =
     dish.images?.[0] || "https://placehold.co/600x400?text=No+Image";
 
@@ -44,6 +91,32 @@ const DishCard = ({ dish }: DishCardProps | any) => {
           </div>
         ))}
       </div>
+      <CommonButton label="Book Now" onClick={() => setOpen(true)} />
+      <CommonModal
+        open={open}
+        onOpenChange={setOpen}
+        title={`Restaurant Booking ${dish.name}`}
+        confirmText="Submit Booking"
+        className="!max-w-3xl"
+        destroyOnClose={false}
+        loading={loading}
+        onConfirm={() => {
+          handleSubmit(onSubmit);
+        }}
+      >
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+          }}
+        >
+          <RestaurantForm
+            dishItems={dish.variants}
+            errors={errors}
+            formData={formData}
+            handleChange={handleChange}
+          />
+        </form>
+      </CommonModal>
     </div>
   );
 };
