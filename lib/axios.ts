@@ -7,4 +7,13 @@ const axiosInstance = axios.create({
   },
 });
 
+// 🔐 Add token dynamically before each request
+axiosInstance.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token"); // or sessionStorage
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 export default axiosInstance;
