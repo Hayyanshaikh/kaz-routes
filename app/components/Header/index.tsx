@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { NAVIGATION_LINKS } from "@/lib/constant";
+import { NAVIGATION_LINKS, TOKEN_CREDENTIALS } from "@/lib/constant";
 import Container from "../Container";
 import NavigationDesktop from "./NavigationDesktop";
 import NavigationMobile from "./NavigationMobile";
+import { usePostToken } from "@/app/hooks/api";
 
 const Header = () => {
   const pathname = usePathname();
@@ -14,6 +15,7 @@ const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [hidden, setHidden] = useState(false);
+  const { mutateAsync: login } = usePostToken();
 
   useEffect(() => {
     if (!isHome) return;
@@ -28,6 +30,24 @@ const Header = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY, isHome]);
+
+  useEffect(() => {
+    login(
+      {
+        email: TOKEN_CREDENTIALS?.email,
+        password: TOKEN_CREDENTIALS?.password,
+      },
+      {
+        onSuccess: (data) => {
+          localStorage.setItem("token", data?.token);
+          console.log("Login success:", data);
+        },
+        onError: (error) => {
+          console.error("Login failed", error);
+        },
+      }
+    );
+  }, []);
 
   return (
     <header

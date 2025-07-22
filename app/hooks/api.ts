@@ -181,3 +181,13 @@ export const useControllerPostCreateCarBooking = () => {
     },
   });
 };
+
+// ✅ POST /token
+export const usePostToken = () => {
+  return useMutation({
+    mutationFn: async (payload: { email: string; password: string }) => {
+      const res = await axios.post("/token", payload);
+      return res.data; // usually token, refresh token, user info, etc.
+    },
+  });
+};

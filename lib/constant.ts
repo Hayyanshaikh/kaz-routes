@@ -5,6 +5,11 @@ export const FILE_BASE_URL = process.env.NEXT_PUBLIC_FILE_BASE_URL;
 
 export const DISPLAY_DATE = "MMMM DD, YYYY";
 
+export const TOKEN_CREDENTIALS = {
+  email: "api@email.com",
+  password: "api123",
+};
+
 export const NAVIGATION_LINKS = [
   { href: "/", label: "Home" },
   { href: "/search?category=sites", label: "Sites" },
@@ -486,3 +491,69 @@ export const footerData = {
     { icon: "youtube", href: "https://youtube.com" },
   ],
 };
+
+export const ABOUT_CONTENT = [
+  "Founded in 2020, Your Company has emerged as a leader in innovative technology solutions, dedicated to empowering businesses and individuals worldwide. Our journey began with a simple yet powerful vision: to harness the potential of cutting-edge technology to create meaningful impact. Over the years, we have grown into a dynamic organization, driven by a passion for creativity, excellence, and collaboration.",
+
+  "At Your Company, we believe that technology is more than just tools—it's a catalyst for change. Our team of dedicated professionals works tirelessly to design solutions that address real-world challenges. From developing intuitive software to pioneering advancements in artificial intelligence, we strive to push the boundaries of what's possible. Our commitment to innovation is matched only by our dedication to our clients, ensuring that every project we undertake is tailored to their unique needs.",
+
+  "Our core values—integrity, innovation, and impact—guide everything we do. We take pride in fostering a culture of transparency and trust, where every team member is empowered to contribute ideas and drive progress. This collaborative spirit has enabled us to build lasting relationships with our clients, partners, and communities. Whether it's streamlining business operations or creating tools that enhance everyday life, we are committed to delivering results that matter.",
+
+  "Over the past five years, we’ve had the privilege of working with diverse industries, from startups to global enterprises. Our portfolio includes groundbreaking projects that have transformed how businesses operate and how individuals interact with technology. We’ve helped small businesses scale with custom software, empowered educators with innovative learning platforms, and supported healthcare providers with secure, efficient systems. Each project is a testament to our belief that technology can make the world a better place.",
+
+  "Sustainability is at the heart of our mission. We are committed to minimizing our environmental footprint through eco-friendly practices and sustainable development. From optimizing our workflows to reduce energy consumption to partnering with organizations that share our values, we aim to create a positive impact on the planet. Our goal is to build solutions that not only meet today’s needs but also pave the way for a brighter, more sustainable future.",
+
+  "Community engagement is another cornerstone of our philosophy. We actively support local initiatives, from STEM education programs to charitable organizations, to give back to the communities that inspire us. Our annual hackathons and innovation challenges bring together bright minds to solve pressing problems, fostering a spirit of collaboration and creativity. We believe that by investing in people, we can drive meaningful change both locally and globally.",
+
+  "Looking ahead, we are excited about the possibilities that lie before us. Our research and development team is exploring new frontiers in machine learning, cloud computing, and user experience design. We are constantly evolving, adapting to the ever-changing technological landscape to stay ahead of the curve. Our vision for the future is bold: to create a world where technology empowers everyone, everywhere, to achieve their fullest potential.",
+
+  "At Your Company, we don’t just build products—we build possibilities. Our commitment to excellence drives us to deliver solutions that are not only functional but also intuitive and impactful. We invite you to join us on this journey, whether as a client, partner, or team member, as we continue to innovate, inspire, and transform the world through technology.",
+
+  "Our global presence allows us to serve clients across continents, with offices in North America, Europe, and Asia. This diversity strengthens our ability to understand and address the unique needs of different markets. We pride ourselves on our ability to adapt and deliver solutions that resonate with users worldwide, from localized applications to global platforms.",
+
+  "Thank you for taking the time to learn about Your Company. We are more than just a technology provider—we are a partner in progress, a catalyst for change, and a champion of innovation. If you’d like to learn more about our work or explore how we can collaborate, please reach out to us at info@yourcompany.com. Together, we can build a future that is smarter, more connected, and full of possibilities.",
+];
+
+export const PRIVACY_POLICY_CONTENT = [
+  "At Your Company, we take your privacy seriously. This Privacy Policy outlines how we collect, use, disclose, and protect your personal information when you interact with our website, applications, and services.",
+
+  "We collect information that you provide directly, such as your name, email address, phone number, and company details when you fill out forms, subscribe to newsletters, or contact us. We may also collect information automatically through cookies and tracking technologies to enhance your experience.",
+
+  "The information we collect is used to provide and improve our services, respond to inquiries, personalize content, and send you relevant updates. We may also use aggregated, non-personal data for analytics and reporting purposes.",
+
+  "We do not sell, rent, or trade your personal information to third parties. Your data may be shared with trusted service providers who assist us in delivering our services, provided they agree to strict confidentiality obligations.",
+
+  "We implement industry-standard security measures to safeguard your personal data from unauthorized access, disclosure, or destruction. However, no method of transmission over the internet is completely secure, and we cannot guarantee absolute security.",
+
+  "You have the right to access, update, or delete your personal information. To exercise these rights or to inquire about your data, please contact us at privacy@yourcompany.com.",
+
+  "Our services are not directed to children under the age of 13, and we do not knowingly collect personal information from minors. If we become aware of such data, we will take steps to delete it immediately.",
+
+  "This Privacy Policy may be updated periodically to reflect changes in our practices or legal obligations. We encourage you to review it regularly to stay informed about how we protect your privacy.",
+
+  "By using our website or services, you consent to the collection and use of your information as described in this Privacy Policy. If you do not agree with our policies, please refrain from using our services.",
+
+  "For questions or concerns about our Privacy Policy or data practices, please reach out to us at privacy@yourcompany.com. We are committed to ensuring your privacy is respected and protected.",
+];
+
+export const TERMS_AND_CONDITIONS_CONTENT = [
+  "By accessing or using the services provided by Your Company, you agree to comply with and be bound by the following terms and conditions. If you do not agree with any part of these terms, please refrain from using our services.",
+
+  "All content, trademarks, logos, and intellectual property on this website are the property of Your Company and are protected by applicable copyright and trademark laws. Unauthorized use is strictly prohibited.",
+
+  "You agree to use our services only for lawful purposes and in a manner that does not infringe the rights of others or restrict their use and enjoyment of the platform.",
+
+  "We reserve the right to suspend or terminate your access to our services at any time, without prior notice, for conduct that we believe violates these terms or is harmful to other users or the integrity of the service.",
+
+  "Our services may contain links to third-party websites. We are not responsible for the content, privacy policies, or practices of such sites. Accessing them is at your own risk.",
+
+  "We do not guarantee that our services will be error-free, uninterrupted, or secure. All services are provided 'as is' without warranties of any kind, either express or implied.",
+
+  "Your Company shall not be held liable for any direct, indirect, incidental, or consequential damages arising from your use of or inability to use our services, even if we have been advised of the possibility of such damages.",
+
+  "We reserve the right to modify or update these terms at any time. Changes will be effective immediately upon posting. Continued use of the services constitutes acceptance of the revised terms.",
+
+  "You agree to indemnify and hold Your Company, its affiliates, and employees harmless from any claims, losses, or damages resulting from your violation of these terms.",
+
+  "These terms shall be governed by and construed in accordance with the laws of the jurisdiction in which Your Company is registered. Any disputes shall be subject to the exclusive jurisdiction of the local courts.",
+];
