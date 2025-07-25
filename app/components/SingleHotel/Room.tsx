@@ -8,56 +8,66 @@ import CommonBadge from "../common/CommonBadge";
 import { formatCurrencyPKR } from "@/lib/utils";
 import CommonModal from "../common/CommonModal";
 import HotelBookingForm from "../HotelForm";
+import { useControllerPostCreateHotelBooking } from "@/app/hooks/api";
 import useForm from "@/app/hooks/useForm";
 import { showError, showSuccess } from "../common/CommonSonner";
+import dayjs from "dayjs";
 
-const Room = ({ room }: PropertyDetailProps) => {
+const Room = ({ room, hotelDetail }: PropertyDetailProps) => {
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
 
+  // Initialize form with pre-filled values from room and hotelDetail, including adults, infants, and children
   const { formData, errors, handleChange, handleSubmit, resetForm } = useForm([
     "name",
     "email",
     "phone",
     "checkInDate",
-    "checkOutDate",
-    "city",
-    "hotelName",
-    "roomName",
-    "bedType",
-    "mealPlan",
+    "nights",
     "roomCount",
-    "guestCount",
     "specialRequests",
+    "adults",
+    "children",
+    "infants",
   ]);
 
-  const handleConfirm = () => {
-    handleSubmit(async (data) => {
-      setLoading(true);
+  // Use the hotel booking mutation hook
+  const { mutateAsync: createHotelBooking, isPending } =
+    useControllerPostCreateHotelBooking();
 
-      const message = "Booking Confirmed";
-      const description =
-        "Your booking request has been successfully submitted. We will get back to you shortly.";
+  // Handle form submission
+  const onSubmit = () => {
+    const payload = {
+      customer_name: formData.name || "",
+      customer_email: formData.email || "",
+      customer_phone: formData.phone || "",
+      hotel_id: hotelDetail?.id || "",
+      room_id: room?.id || "",
+      check_in: formData.checkInDate || "",
+      nights: Number(formData.nights) || 0,
+      total_rooms: Number(formData.roomCount) || 1,
+      total_adults: Number(formData.adults) || 0,
+      total_children: Number(formData.children) || 0,
+      total_infants: Number(formData.infants) || 0,
+      special_request: formData.specialRequests || "",
+      meal_preference: formData.mealPlan || room?.meal_plan || "",
+    };
 
-      try {
-        console.log("Booking Data:", data);
-        // ✅ API call ya processing yahan kro
+    createHotelBooking(payload, {
+      onSuccess: (response) => {
         showSuccess({
-          message,
-          description,
+          message: "Booking Successful",
+          description: "Your hotel booking has been successfully created.",
         });
-        setOpen(false);
         resetForm();
-      } catch (err) {
-        console.error("Booking Error:", err);
+        setOpen(false);
+      },
+      onError: (error: any) => {
         showError({
           message: "Booking Failed",
           description:
-            "Something went wrong while processing your booking. Please try again.",
+            error?.response?.data?.message || "Something went wrong!",
         });
-      } finally {
-        setLoading(false);
-      }
+      },
     });
   };
 
@@ -104,7 +114,7 @@ const Room = ({ room }: PropertyDetailProps) => {
       </div>
 
       <div className="flex items-start gap-16 border-b pb-5">
-        <div className="">
+        <div>
           <p className="font-semibold text-gray-900 mb-3">Facilities:</p>
           <ul className="list-disc list-inside text-sm text-gray-700">
             {room.facilities.map((facility: string, i: number) => (
@@ -113,7 +123,7 @@ const Room = ({ room }: PropertyDetailProps) => {
           </ul>
         </div>
 
-        <div className="">
+        <div>
           <p className="font-semibold text-gray-900 mb-3">Pricing List:</p>
           <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
             <li>
@@ -141,9 +151,10 @@ const Room = ({ room }: PropertyDetailProps) => {
       </div>
 
       <CommonButton
-        label="Book Now"
+        label={isPending ? "Submitting..." : "Book Now"}
         className="h-10 rounded-full w-full"
         onClick={() => setOpen(true)}
+        disabled={isPending}
       />
 
       {/* ✅ Modal With Form */}
@@ -153,10 +164,13 @@ const Room = ({ room }: PropertyDetailProps) => {
         title={`Hotel Booking ${
           room.name.charAt(0).toUpperCase() + room.name.slice(1)
         } Room`}
-        confirmText="Submit Booking"
+        confirmText={isPending ? "Submitting..." : "Submit Booking"}
         className="!max-w-3xl"
-        loading={loading}
-        onConfirm={handleConfirm}
+        destroyOnClose={false}
+        onConfirm={() => {
+          handleSubmit(onSubmit);
+        }}
+        loading={isPending}
       >
         <HotelBookingForm
           formData={formData}

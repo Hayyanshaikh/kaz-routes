@@ -49,52 +49,61 @@ const HotelBookingForm: React.FC<HotelBookingFormProps> = ({
       />
 
       <CommonInput
+        type="number"
+        label="Nights"
+        placeholder="1"
+        value={formData.nights}
+        error={errors.nights}
+        onChange={(e) => handleChange("nights", e.target.value)}
+      />
+
+      {/* <CommonInput
         type="date"
         label="Check-out Date"
         value={formData.checkOutDate}
         error={errors.checkOutDate}
         onChange={(e) => handleChange("checkOutDate", e.target.value)}
-      />
+      /> */}
 
-      <CommonInput
+      {/* <CommonInput
         label="City"
         placeholder="City Name"
         value={formData.city}
         error={errors.city}
         onChange={(e) => handleChange("city", e.target.value)}
-      />
+      /> */}
 
-      <CommonInput
+      {/* <CommonInput
         label="Hotel Name"
         placeholder="Hotel Name"
         value={formData.hotelName}
         error={errors.hotelName}
         onChange={(e) => handleChange("hotelName", e.target.value)}
-      />
+      /> */}
 
-      <CommonInput
+      {/* <CommonInput
         label="Room Type"
         placeholder="Room Name or Type"
         value={formData.roomName}
         error={errors.roomName}
         onChange={(e) => handleChange("roomName", e.target.value)}
-      />
+      /> */}
 
-      <CommonInput
+      {/* <CommonInput
         label="Bed Type"
         placeholder="e.g. Double, Twin, King"
         value={formData.bedType}
         error={errors.bedType}
         onChange={(e) => handleChange("bedType", e.target.value)}
-      />
+      /> */}
 
-      <CommonInput
+      {/* <CommonInput
         label="Meal Plan"
         placeholder="e.g. Breakfast Only, Half Board"
         value={formData.mealPlan}
         error={errors.mealPlan}
         onChange={(e) => handleChange("mealPlan", e.target.value)}
-      />
+      /> */}
 
       <CommonInput
         type="number"
@@ -107,11 +116,29 @@ const HotelBookingForm: React.FC<HotelBookingFormProps> = ({
 
       <CommonInput
         type="number"
-        label="Number of Guests"
-        placeholder="Total Guests"
-        value={formData.guestCount}
-        error={errors.guestCount}
-        onChange={(e) => handleChange("guestCount", e.target.value)}
+        label="Adults"
+        placeholder="Number of Adults"
+        value={formData.adults}
+        error={errors.adults}
+        onChange={(e) => handleChange("adults", e.target.value)}
+      />
+
+      <CommonInput
+        type="number"
+        label="Children"
+        placeholder="Number of Children"
+        value={formData.children}
+        error={errors.children}
+        onChange={(e) => handleChange("children", e.target.value)}
+      />
+
+      <CommonInput
+        type="number"
+        label="Infants"
+        placeholder="Number of Infants"
+        value={formData.infants}
+        error={errors.infants}
+        onChange={(e) => handleChange("infants", e.target.value)}
       />
 
       <div className="col-span-1 md:col-span-2">

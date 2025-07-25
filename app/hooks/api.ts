@@ -7,6 +7,16 @@ type QueryOptions = {
   params?: Record<string, any>;
 };
 
+// ✅ POST /token
+export const usePostToken = () => {
+  return useMutation({
+    mutationFn: async (payload: { email: string; password: string }) => {
+      const res = await axios.post("/token", payload);
+      return res.data; // usually token, refresh token, user info, etc.
+    },
+  });
+};
+
 /* ------------------- 📦 PACKAGES ------------------- */
 
 // ✅ GET /packages
@@ -182,12 +192,21 @@ export const useControllerPostCreateCarBooking = () => {
   });
 };
 
-// ✅ POST /token
-export const usePostToken = () => {
+/* ------------------- 🏨 HOTEL BOOKINGS ------------------- */
+
+// ✅ POST /hotel-bookings
+export const useControllerPostCreateHotelBooking = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: async (payload: { email: string; password: string }) => {
-      const res = await axios.post("/token", payload);
-      return res.data; // usually token, refresh token, user info, etc.
+    mutationFn: async (payload: any) => {
+      const res = await axios.post("/hotel-bookings", payload);
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["ControllerGetFindAllHotelBookings"],
+      });
     },
   });
 };

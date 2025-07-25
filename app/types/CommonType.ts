@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { Hotel } from "../components/SingleHotel/PropertyDetails";
 
 export interface VariantProps {
   variant: "success" | "warning" | "error";
@@ -160,6 +161,7 @@ export interface SidebarFilterProps {
 }
 
 export interface RoomType {
+  id: string;
   name: string;
   size: number;
   bed_type: string;
@@ -178,4 +180,5 @@ export interface RoomType {
 
 export interface PropertyDetailProps {
   room: RoomType;
+  hotelDetail: Hotel;
 }

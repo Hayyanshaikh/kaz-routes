@@ -7,8 +7,9 @@ import CommonTabs from "../common/CommonTabs";
 import Room from "./Room";
 import { RoomType } from "@/app/types/CommonType";
 
-type Hotel = {
+export type Hotel = {
   name: string;
+  id: string;
   description: string;
   services: string[];
   rooms: RoomType[];
@@ -24,7 +25,7 @@ const PropertyDetails = ({ hotel }: Props) => {
   const tabs = hotel.rooms.map((room, index) => ({
     value: room?.name,
     label: room?.name,
-    content: <Room room={room} key={index} />,
+    content: <Room room={room} hotelDetail={hotel} key={index} />,
   }));
 
   return (
