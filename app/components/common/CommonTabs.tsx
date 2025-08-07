@@ -14,17 +14,19 @@ const CommonTabs: React.FC<CommonTabsProps> = ({
 }) => {
   return (
     <Tabs defaultValue={defaultValue || tabs[0]?.value} className={className}>
-      <TabsList className="rounded-sm">
-        {tabs.map((tab) => (
-          <TabsTrigger
-            className="rounded-sm px-4 py-2 text-sm font-medium transition cursor-pointer data-[state=active]:bg-primary data-[state=active]:text-white"
-            key={tab.value}
-            value={tab.value}
-          >
-            {tab.label}
-          </TabsTrigger>
-        ))}
-      </TabsList>
+      <div className="tabs overflow-auto overflow-y-hidden">
+        <TabsList className=" rounded-sm  h-10 justify-start">
+          {tabs.map((tab) => (
+            <TabsTrigger
+              className="rounded-sm px-4 py-2 text-sm font-medium transition cursor-pointer data-[state=active]:bg-primary data-[state=active]:text-white"
+              key={tab.value}
+              value={tab.value}
+            >
+              {tab.label}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </div>
 
       {tabs.map((tab) => (
         <TabsContent key={tab.value} value={tab.value}>

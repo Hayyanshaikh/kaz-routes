@@ -1,5 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "@/lib/axios";
+import {
+  CreatePackagePayload,
+  PackageItemPayload,
+  RestaurantBookingPayload,
+  SiteBookingPayload,
+} from "../types/CommonType";
 
 // 🔁 Shared options type for filtering & enabling
 type QueryOptions = {
@@ -173,6 +179,32 @@ export const useControllerGetFindOneCountry = (id: string | number) =>
     enabled: !!id,
   });
 
+/* ------------------- 🏙️ CITIES ------------------- */
+
+// ✅ GET /cities
+export const useControllerGetFindAllCities = (options?: QueryOptions) =>
+  useQuery({
+    queryKey: ["ControllerGetFindAllCities", options?.params],
+    queryFn: async () => {
+      const res = await axios.get("/cities", {
+        params: options?.params,
+      });
+      return res.data;
+    },
+    enabled: options?.enabled ?? true,
+  });
+
+// ✅ GET /cities/:id
+export const useControllerGetFindOneCity = (id: string | number) =>
+  useQuery({
+    queryKey: ["ControllerGetFindOneCity", id],
+    queryFn: async () => {
+      const res = await axios.get(`/cities/${id}`);
+      return res.data;
+    },
+    enabled: !!id,
+  });
+
 /* ------------------- ✅ POST BOOKING ------------------- */
 
 // ✅ POST /car-bookings
@@ -208,5 +240,179 @@ export const useControllerPostCreateHotelBooking = () => {
         queryKey: ["ControllerGetFindAllHotelBookings"],
       });
     },
+  });
+};
+
+// ✅ POST /api/restaurant-bookings
+export const useControllerPostCreateRestaurantBooking = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (payload: RestaurantBookingPayload) => {
+      const res = await axios.post("/restaurant-bookings", payload);
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["ControllerGetFindAllRestaurantBookings"],
+      });
+    },
+  });
+};
+
+/* ------------------- 🏞️ SITE BOOKINGS ------------------- */
+
+// ✅ POST /api/site-bookings
+export const useControllerPostCreateSiteBooking = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (payload: SiteBookingPayload) => {
+      const res = await axios.post("/site-bookings", payload);
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["ControllerGetFindAllSiteBookings"],
+      });
+    },
+  });
+};
+
+// ✅ POST /api/agent-packages
+
+export const useControllerPostCreatePackage = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (payload: CreatePackagePayload) => {
+      const res = await axios.post("/agent-packages", payload);
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["ControllerGetFindAllPackages"],
+      });
+    },
+  });
+};
+
+// ✅ POST /agent-package-items
+export const useControllerCreatePackageItem = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (payload: PackageItemPayload) => {
+      const res = await axios.post("/agent-package-items", payload);
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["ControllerGetFindAllAgentPackageItems"],
+      });
+    },
+  });
+};
+
+// ✅ GET /travel-guides
+export const useControllerGetFindAllTravelGuides = (options?: QueryOptions) =>
+  useQuery({
+    queryKey: ["ControllerGetFindAllTravelGuides", options?.params],
+    queryFn: async () => {
+      const res = await axios.get("/travel-guides", {
+        params: options?.params,
+      });
+      return res.data;
+    },
+    enabled: options?.enabled ?? true,
+  });
+
+// ✅ GET /page-content
+export const useControllerGetFindAllPageContents = (options?: QueryOptions) =>
+  useQuery({
+    queryKey: ["ControllerGetFindAllPageContents", options?.params],
+    queryFn: async () => {
+      const res = await axios.get("/page-content", {
+        params: options?.params,
+      });
+      return res.data;
+    },
+    enabled: options?.enabled ?? true,
+  });
+
+// ✅ GET /api/agent-package-items/find
+
+export const useControllerGetFindAllAgentPackageItems = (
+  params: {
+    package_id: number;
+    item_date: string;
+  },
+  enabled: boolean = true
+) =>
+  useQuery({
+    queryKey: ["ControllerGetAgentPackageItemsByDate", params],
+    queryFn: async () => {
+      const res = await axios.get("/package-items/find", {
+        params,
+      });
+      return res.data;
+    },
+    enabled: enabled && !!params?.package_id && !!params?.item_date,
+  });
+
+export const useControllerGetAgentPackageItemsByPackageId = (
+  packageId: number,
+  enabled: boolean = true
+) =>
+  useQuery({
+    queryKey: ["ControllerGetAgentPackageItemsByPackageId", packageId],
+    queryFn: async () => {
+      const res = await axios.get("/agent-package-items", {
+        params: {
+          package_id: packageId,
+        },
+      });
+      return res.data;
+    },
+    enabled: enabled && !!packageId,
+  });
+
+export const useCreateItinerary = () => {
+  return useMutation({
+    mutationFn: async (payload: any) => {
+      const response = await axios.post("/itinerary", payload);
+      return response.data;
+    },
+  });
+};
+
+// ✅ POST /itineraries
+export const useControllerPostCreateItinerary = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (payload: any) => {
+      const res = await axios.post("/itineraries", payload);
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["ControllerGetFindAllItineraries"],
+      });
+    },
+  });
+};
+// ✅ GET /itineraries/:id
+export const useControllerGetFindOneItinerary = (
+  id: string | number,
+  enabled = true
+) => {
+  return useQuery({
+    queryKey: ["ControllerGetFindOneItinerary", id],
+    queryFn: async () => {
+      const res = await axios.get(`/itineraries/${id}`);
+      return res.data;
+    },
+    enabled: !!id && enabled, // tabhi chale jab id ho
   });
 };

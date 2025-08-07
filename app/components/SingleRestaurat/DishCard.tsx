@@ -5,6 +5,8 @@ import RestaurantForm from "../RestaurantForm";
 import useForm from "@/app/hooks/useForm";
 import { showError, showSuccess } from "../common/CommonSonner";
 import CommonButton from "../common/CommonButton";
+import { useControllerPostCreateRestaurantBooking } from "@/app/hooks/api";
+import { RestaurantBookingPayload } from "@/app/types/CommonType";
 
 type DishCardProps = {
   dish: {
@@ -18,9 +20,8 @@ type DishCardProps = {
   };
 };
 
-const DishCard = ({ dish }: DishCardProps | any) => {
+const DishCard = ({ dish, restaurantDetail }: DishCardProps | any) => {
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   const { formData, errors, handleChange, handleSubmit, resetForm } = useForm([
     "name",
@@ -33,31 +34,44 @@ const DishCard = ({ dish }: DishCardProps | any) => {
     "specialRequest",
   ]);
 
-  const onSubmit = () => {
-    try {
-      // create payload
-      const payload = {
-        ...formData,
-        selectedDishes:
-          (formData.selectedDishes?.length > 0 &&
-            formData.selectedDishes.split(", ")) ||
-          [],
-      };
-      showSuccess({
-        message: "Booking Confirmed",
-        description:
-          "Your booking request has been successfully submitted. We will get back to you shortly.",
+  // Use the mutation hook
+  const { mutateAsync: createBooking, isPending } =
+    useControllerPostCreateRestaurantBooking();
+
+  const onSubmit = async () => {
+    // Create payload with required fields matching the API structure
+    const payload: RestaurantBookingPayload = {
+      restaurant_id: restaurantDetail?.id, // Replace with dynamic restaurant ID if available
+      booking_date: formData.bookingDate,
+      booking_time: formData.bookingTime,
+      guests: parseInt(formData.guestCount, 10) || 1,
+      special_request: formData.specialRequest || "None",
+      customer_name: formData.name,
+      customer_email: formData.email,
+      customer_phone: formData.phone,
+      variant_ids: dish.variants.map((v: any) => parseInt(v.id, 10) || 1), // Adjust based on your variant IDs logic
+    };
+
+    // Call the mutation and handle success/error
+    createBooking(payload)
+      .then(() => {
+        showSuccess({
+          message: "Booking Confirmed",
+          description:
+            "Your booking request has been successfully submitted. We will get back to you shortly.",
+        });
+        setOpen(false);
+        resetForm();
+      })
+      .catch((error) => {
+        console.error("Booking Error:", error);
+        showError({
+          message: "Booking Failed",
+          description:
+            error?.response?.data?.message ||
+            "Something went wrong while processing your booking.",
+        });
       });
-      setOpen(false);
-      resetForm();
-      console.log("Booking Data:", payload);
-    } catch (error) {
-      console.error("Booking Error:", error);
-      showError({
-        message: "Booking Failed",
-        description: "Something went wrong while processing your booking.",
-      });
-    }
   };
 
   const image =
@@ -99,7 +113,7 @@ const DishCard = ({ dish }: DishCardProps | any) => {
         confirmText="Submit Booking"
         className="!max-w-3xl"
         destroyOnClose={false}
-        loading={loading}
+        loading={isPending} // Reflect mutation loading state
         onConfirm={() => {
           handleSubmit(onSubmit);
         }}

@@ -1,15 +1,24 @@
 import React from "react";
 import CommonButton from "../common/CommonButton";
-import { Bath, Bed, Calendar, CookingPot } from "lucide-react";
+import {
+  Baby,
+  Bath,
+  Bed,
+  Calendar,
+  Clock,
+  CookingPot,
+  Users,
+} from "lucide-react";
 import { PropertyDetailProps } from "@/app/types/CommonType";
 import CommonBadge from "../common/CommonBadge";
 import { formatCurrencyPKR } from "@/lib/utils";
 
 interface Props {
   item: any;
+  packageDetail: any;
 }
 
-const Item = ({ item }: Props) => {
+const Item = ({ item, packageDetail }: Props) => {
   return (
     <div className="w-full mt-5 pb-6 space-y-6">
       <div className="flex items-center justify-between gap-4">
@@ -23,28 +32,6 @@ const Item = ({ item }: Props) => {
       </div>
 
       <p className="text-sm text-gray-700">{item?.description}</p>
-
-      <div className="flex items-center space-x-6 text-gray-700 border-y py-5">
-        <div className="flex items-start flex-col gap-2">
-          <CookingPot size={20} />
-          <span className="text-sm">
-            <strong className="font-medium">Meal:</strong> {item.meal_plan}
-          </span>
-        </div>
-        <div className="flex items-start flex-col gap-2">
-          <Bed size={20} />
-          <span className="text-sm">
-            <strong className="font-medium">Bed:</strong> {item.bed_type}
-          </span>
-        </div>
-        <div className="flex items-start flex-col gap-2">
-          <Bath size={20} />
-          <span className="text-sm">
-            <strong className="font-medium">Attached Bath:</strong>{" "}
-            {item.has_attached_bath ? "Yes" : "No"}
-          </span>
-        </div>
-      </div>
 
       <div className="flex items-start gap-16 border-b pb-5">
         {/* <div className="">

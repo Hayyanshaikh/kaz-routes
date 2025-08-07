@@ -3,7 +3,12 @@ type AboutContentProps = {
 };
 
 const AboutContent = ({ text }: AboutContentProps) => {
-  return <p className="text-gray-700 text-sm md:text-base">{text}</p>;
+  return (
+    <div
+      className="text-gray-700 text-sm md:text-base"
+      dangerouslySetInnerHTML={{ __html: text }}
+    />
+  );
 };
 
 export default AboutContent;

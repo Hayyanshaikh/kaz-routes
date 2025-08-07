@@ -1,14 +1,11 @@
 "use client";
 import AboutContent from "@/app/components/About/AboutContent";
 import CommonHeading from "@/app/components/common/CommonHeading";
-import {
-  ABOUT_CONTENT,
-  PRIVACY_POLICY_CONTENT,
-  TERMS_AND_CONDITIONS_CONTENT,
-} from "@/lib/constant";
+import usePageContentStore from "@/app/store/usePageContent";
 import Head from "next/head";
 
 const TermsAndConditions = () => {
+  const { pageContent } = usePageContentStore();
   return (
     <div className="">
       <Head>
@@ -27,13 +24,11 @@ const TermsAndConditions = () => {
       <section className="p-0">
         <div className="max-w-4xl mx-auto md:px-4">
           <CommonHeading
-            title="Terms and Conditions"
+            title={pageContent?.terms?.heading}
             className="text-left mb-6"
           />
           <div className="text-gray-700 space-y-4">
-            {TERMS_AND_CONDITIONS_CONTENT.map((para, idx) => (
-              <AboutContent key={idx} text={para} />
-            ))}
+            <AboutContent text={pageContent?.terms?.content} />
           </div>
         </div>
       </section>

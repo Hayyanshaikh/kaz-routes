@@ -20,10 +20,10 @@ const CommonButton: React.FC<CommonButtonProps> = ({
 }) => {
   const content = (
     <div className="flex items-center justify-center gap-2">
-      {loading && <Loader2 className="animate-spin h-4 w-4" />}
       {!loading && iconPosition === "left" && icon && <span>{icon}</span>}
       {label && <span>{label}</span>}
       {!loading && iconPosition === "right" && icon && <span>{icon}</span>}
+      {loading && <Loader2 className="animate-spin h-4 w-4" />}
     </div>
   );
 

@@ -1,10 +1,11 @@
 "use client";
 import AboutContent from "@/app/components/About/AboutContent";
 import CommonHeading from "@/app/components/common/CommonHeading";
-import { ABOUT_CONTENT } from "@/lib/constant";
+import usePageContentStore from "@/app/store/usePageContent";
 import Head from "next/head";
 
 const About = () => {
+  const { pageContent } = usePageContentStore();
   return (
     <div className="">
       <Head>
@@ -22,11 +23,12 @@ const About = () => {
       {/* About Us Section */}
       <section className="p-0">
         <div className="max-w-4xl mx-auto md:px-4">
-          <CommonHeading title="About Us" className="text-left mb-6" />
+          <CommonHeading
+            title={pageContent?.about?.heading}
+            className="text-left mb-6"
+          />
           <div className="text-gray-700 space-y-4">
-            {ABOUT_CONTENT.map((para, idx) => (
-              <AboutContent key={idx} text={para} />
-            ))}
+            <AboutContent text={pageContent?.about?.content} />
           </div>
         </div>
       </section>

@@ -9,8 +9,11 @@ import CommonModal from "../common/CommonModal";
 import useForm from "@/app/hooks/useForm";
 import SiteForm from "../SiteForm";
 import { showError, showSuccess } from "../common/CommonSonner";
+import { useControllerPostCreateSiteBooking } from "@/app/hooks/api";
+import { SiteBookingPayload } from "@/app/types/CommonType";
 
 type SiteType = {
+  id: string;
   name: string;
   description: string;
   categories: string[];
@@ -56,39 +59,41 @@ const SitesDetail = ({ site }: Props) => {
 
   const hasActivities = site.activities && site.activities.length > 0;
 
+  const { mutateAsync: bookSite, isPending } =
+    useControllerPostCreateSiteBooking();
+
   const onSubmit = () => {
-    try {
-      const payload = {
-        site_id: site.name, // Assuming site.name is the unique identifier
-        booking_date: formData.bookingDate,
-        booking_time: formData.bookingTime,
-        reference_number: formData.referenceNumber,
-        number_of_boys: formData.numberOfBoys,
-        number_of_children: formData.numberOfChildren,
-        number_of_adults: formData.numberOfAdults,
-        special_request: formData.specialRequest,
-        customer_name: formData.customerName,
-        customer_phone: formData.customerPhone,
-        customer_email: formData.customerEmail,
-      };
+    const payload: SiteBookingPayload = {
+      site_id: site.id,
+      booking_date: formData.bookingDate || "",
+      booking_time: formData.bookingTime || "",
+      boy_count: Number(formData.numberOfBoys) || 0,
+      child_count: Number(formData.numberOfChildren) || 0,
+      adult_count: Number(formData.numberOfAdults) || 0,
+      special_request: formData.specialRequest || "",
+      customer_name: formData.customerName || "",
+      customer_phone: formData.customerPhone || "",
+      customer_email: formData.customerEmail || "",
+    };
 
-      // Here you would typically call an API to submit the booking
-      console.log("Booking payload:", payload);
-
-      // Simulating a successful submission
-      setIsModalOpen(false);
-      resetForm();
-      showSuccess({
-        message: "Booking Successful",
-        description: "Your booking has been confirmed successfully.",
+    bookSite(payload)
+      .then(() => {
+        setIsModalOpen(false);
+        resetForm();
+        showSuccess({
+          message: "Booking Successful",
+          description: "Your booking has been confirmed successfully.",
+        });
+      })
+      .catch((error) => {
+        showError({
+          message: "Submission Error",
+          description:
+            error?.response?.data?.message ||
+            "An error occurred while submitting the form.",
+        });
+        console.error("Error submitting form:", error);
       });
-    } catch (error) {
-      showError({
-        message: "Submission Error",
-        description: "Error submitting form. Please try again later.",
-      });
-      console.error("Error submitting form:", error);
-    }
   };
 
   return (
@@ -176,7 +181,7 @@ const SitesDetail = ({ site }: Props) => {
         cancelText="Cancel"
         onConfirm={() => handleSubmit(onSubmit)}
         destroyOnClose={false}
-        // loading={isLoading}
+        loading={isPending}
         className="!max-w-4xl"
       >
         <form

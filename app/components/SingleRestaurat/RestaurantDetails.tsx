@@ -31,7 +31,7 @@ const RestaurantDetails = ({ restaurant }: Props) => {
   const tabs = restaurant.dishes.map((dish) => ({
     value: String(dish.id),
     label: dish.name,
-    content: <DishCard dish={dish} />,
+    content: <DishCard dish={dish} restaurantDetail={restaurant} />,
   }));
 
   return (

@@ -6,7 +6,11 @@ import { NAVIGATION_LINKS, TOKEN_CREDENTIALS } from "@/lib/constant";
 import Container from "../Container";
 import NavigationDesktop from "./NavigationDesktop";
 import NavigationMobile from "./NavigationMobile";
-import { usePostToken } from "@/app/hooks/api";
+import {
+  useControllerGetFindAllPageContents,
+  usePostToken,
+} from "@/app/hooks/api";
+import usePageContentStore from "@/app/store/usePageContent";
 
 const Header = () => {
   const pathname = usePathname();
@@ -16,6 +20,12 @@ const Header = () => {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [hidden, setHidden] = useState(false);
   const { mutateAsync: login } = usePostToken();
+  const { data: pageContentRes } = useControllerGetFindAllPageContents();
+  const { setPageContent } = usePageContentStore();
+
+  useEffect(() => {
+    setPageContent(pageContentRes);
+  }, [pageContentRes]);
 
   useEffect(() => {
     if (!isHome) return;

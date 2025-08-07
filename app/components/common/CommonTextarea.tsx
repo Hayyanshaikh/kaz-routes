@@ -19,7 +19,9 @@ const CommonTextarea: React.FC<CommonTextareaProps> = ({
       onChange={onChange}
       placeholder={placeholder}
       disabled={disabled}
-      className={`${className} text-sm ${error ? "border-red-500" : ""}`}
+      className={`${className} bg-white text-sm ${
+        error ? "border-red-500" : ""
+      }`}
     />
     {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
   </div>
