@@ -38,10 +38,7 @@ const HotelSection = ({ formData, handleChange, errors }: Props) => {
   const [selectedHotels, setSelectedHotels] = useState<HotelRooms[]>([]);
 
   useEffect(() => {
-    // Sync formData.hotelRooms into selectedHotels on first load
-    if (formData.hotelRooms?.length && !selectedHotels.length) {
-      setSelectedHotels(formData.hotelRooms);
-    }
+    setSelectedHotels(formData.hotelRooms || []);
   }, [formData.hotelRooms]);
 
   const updateHotelRoomData = (hotelId: string, rooms: string[]) => {

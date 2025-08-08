@@ -210,6 +210,7 @@ const CreatePlanForm = () => {
           <CommonInput
             label="Duration (Days)"
             type="number"
+            min={1}
             value={formData.duration}
             onChange={(e) => handleChange("duration", e.target.value)}
             placeholder="Duration (Days)"

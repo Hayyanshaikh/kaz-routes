@@ -9,12 +9,13 @@ import usePackageData from "@/app/store/usePackageData";
 import { useState, useMemo } from "react";
 import {
   useControllerGetAgentPackageItemsByPackageId,
+  useControllerGetFindPackageItinerariesByPackageId,
   useControllerPostCreateItinerary,
 } from "@/app/hooks/api";
 import dayjs from "dayjs";
 import { showError, showSuccess } from "../common/CommonSonner";
 
-const PlanItinerary = () => {
+const PlanItinerary = ({ setSubmited }) => {
   const { packageData } = usePackageData();
   const { data: packageItems, isLoading: isPackageItemsLoading } =
     useControllerGetAgentPackageItemsByPackageId(packageData?.id || 0);
@@ -98,6 +99,7 @@ const PlanItinerary = () => {
             customNotes: "",
           }))
         );
+        setSubmited(true);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -133,7 +135,11 @@ const PlanItinerary = () => {
             <CommonInput
               label="Start Date (Arrival)"
               type="date"
-              value={formData.startDate}
+              value={
+                packageData?.arrivalDate
+                  ? packageData?.arrivalDate
+                  : formData.startDate
+              }
               onChange={(e) => handleChange("startDate", e.target.value)}
               error={errors.startDate}
             />

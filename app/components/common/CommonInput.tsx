@@ -9,7 +9,7 @@ const CommonInput: React.FC<CommonInputProps> = ({
   disabled = false,
   className = "",
   max = 30,
-  min = 1,
+  min = 0,
   label = "",
   error,
 }) => (

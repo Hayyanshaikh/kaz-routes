@@ -402,17 +402,19 @@ export const useControllerPostCreateItinerary = () => {
     },
   });
 };
-// ✅ GET /itineraries/:id
-export const useControllerGetFindOneItinerary = (
-  id: string | number,
-  enabled = true
-) => {
-  return useQuery({
-    queryKey: ["ControllerGetFindOneItinerary", id],
+
+// ✅ GET /package-itineraries?package_id=14
+export const useControllerGetFindPackageItinerariesByPackageId = (
+  packageId: number,
+  enabled: boolean = true
+) =>
+  useQuery({
+    queryKey: ["ControllerGetFindPackageItinerariesByPackageId", packageId],
     queryFn: async () => {
-      const res = await axios.get(`/itineraries/${id}`);
+      const res = await axios.get("/package-itineraries", {
+        params: { package_id: packageId },
+      });
       return res.data;
     },
-    enabled: !!id && enabled, // tabhi chale jab id ho
+    enabled: enabled && !!packageId,
   });
-};
