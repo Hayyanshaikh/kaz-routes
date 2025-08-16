@@ -19,7 +19,11 @@ import usePackageData from "@/app/store/usePackageData";
 import { showError, showSuccess } from "../common/CommonSonner";
 import dayjs from "dayjs";
 
-const CreatePlanForm = () => {
+interface CreatePlanFormProps {
+  onCreated?: (pkg: Package) => void; // ✅ callback support
+}
+
+const CreatePlanForm = ({ onCreated }: CreatePlanFormProps) => {
   const { setPackageData, packageData } = usePackageData();
 
   const [selectedCountry, setSelectedCountry] = useState<string[] | null>(null);
@@ -33,55 +37,67 @@ const CreatePlanForm = () => {
 
   const { mutateAsync: createPackage, isPending } =
     useControllerPostCreatePackage();
+
   const countryOptions = dropdownManipulator(countriesResponse?.data || []);
   const cityOptions = dropdownManipulator(citiesResponse?.data || []);
-  const { formData, errors, handleChange, handleSubmit, resetForm } = useForm(
-    [
-      "country",
-      "city",
-      "arrivalDate",
-      "flightArrivalTime",
-      "flightDepartureTime",
-      "packageName",
-      "tagline",
-      "duration",
-      "adults",
-      "infants",
-      "children",
-      "description",
-    ],
-    packageData! || {}
-  );
 
-  console.log({ packageData });
+  const { formData, errors, handleChange, handleSubmit } = useForm(
+    [
+      { name: "country", required: true, value: packageData?.country },
+      { name: "city", required: true, value: packageData?.city },
+      { name: "arrivalDate", required: true, value: packageData?.arrivalDate },
+      {
+        name: "flightArrivalTime",
+        required: true,
+        value: packageData?.flightArrivalTime,
+      },
+      {
+        name: "flightDepartureTime",
+        required: true,
+        value: packageData?.flightDepartureTime,
+      },
+      {
+        name: "flightDepartureDate",
+        required: true,
+        value: packageData?.flightDepartureDate,
+      },
+      { name: "packageName", required: true, value: packageData?.packageName },
+      { name: "adults", required: true, value: packageData?.adults ?? 1 },
+      { name: "infants", required: false, value: packageData?.infants ?? 0 },
+      { name: "children", required: false, value: packageData?.children ?? 0 },
+      { name: "description", required: false, value: packageData?.description },
+    ],
+    packageData || {}
+  );
 
   const handleFinish = (formData: any) => {
     const payload: CreatePackagePayload = {
       name: formData.packageName,
-      tagline: formData.tagline,
       description: formData.description,
-      duration: formData.duration,
       arrival_date: formData.arrivalDate,
       flight_arrival: formData.flightArrivalTime,
       flight_departure: formData.flightDepartureTime,
+      flight_departure_date: formData.flightDepartureDate,
       adults: formData.adults,
-      children: formData.children,
-      infants: formData.infants,
+      duration: 0, // remove after backend work
+      children: formData.children || 0,
+      infants: formData.infants || 0,
       city_ids: formData.city,
       country_ids: formData.country,
     };
 
     createPackage(payload)
       .then((res) => {
-        const payload: Package = {
+        const pkg: Package = {
           id: res?.data?.id,
           packageName: res.data.name,
-          tagline: res.data.tagline,
           description: res.data.description,
-          duration: res.data.duration,
           arrivalDate: dayjs(res.data.arrival_date).format("YYYY-MM-DD"),
           flightArrivalTime: dayjs(res.data.flight_arrival).format("HH:mm"),
           flightDepartureTime: dayjs(res.data.flight_departure).format("HH:mm"),
+          flightDepartureDate: dayjs(res.data.flight_departure_date).format(
+            "YYYY-MM-DD"
+          ),
           adults: res.data.adults,
           children: res.data.children,
           infants: res.data.infants,
@@ -89,7 +105,13 @@ const CreatePlanForm = () => {
           city: formData.city,
         };
 
-        setPackageData(payload);
+        setPackageData(pkg);
+
+        // ✅ Parent callback trigger
+        if (onCreated) {
+          onCreated(pkg);
+        }
+
         showSuccess({
           message: "Package Created Successfully",
           description: "You can now add items to your package.",
@@ -107,18 +129,16 @@ const CreatePlanForm = () => {
   };
 
   const handleCountryChange = (value: string[]) => {
-    setSelectedCountry(value);
-    handleChange("country", value);
-    handleChange("city", ""); // Reset city when country changes
-  };
-
-  const handleCityChange = (value: string[]) => {
-    handleChange("city", value);
+    const cleanVal = value.filter(Boolean); // ✅ "" remove
+    setSelectedCountry(cleanVal);
+    handleChange("country", cleanVal);
+    handleChange("city", []); // Reset city on country change
   };
 
   return (
     <div>
       <CommonHeading className="text-left !mb-6" title="Create Custom Plan" />
+
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -126,55 +146,60 @@ const CreatePlanForm = () => {
         }}
         className="space-y-4"
       >
+        {/* Country & City */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <CommonMultiSelect
-            label="Select Tags"
-            value={
-              Array.isArray(formData.country)
-                ? formData.country
-                : formData.country
-                ? [formData.country]
-                : []
-            }
-            onValueChange={handleCountryChange}
-            placeholder={isCountriesLoading ? "Loading..." : "Select Country"}
-            disabled={isCountriesLoading}
+            label="Country"
             options={countryOptions}
+            value={formData.country}
+            onValueChange={(val) => {
+              const cleanVal = val.filter(Boolean); // ✅ "" remove
+              handleCountryChange(cleanVal);
+            }}
+            placeholder="Select Country"
             error={errors.country}
           />
 
           <CommonMultiSelect
-            label="Select Tags"
-            value={
-              Array.isArray(formData.city)
-                ? formData.city
-                : formData.city
-                ? [formData.city]
-                : []
-            }
-            onValueChange={handleCityChange}
-            placeholder={isCitiesLoading ? "Loading..." : "Select City"}
-            disabled={isCitiesLoading}
+            label="City"
             options={cityOptions}
+            value={formData.city}
+            onValueChange={(val) => {
+              const cleanVal = val.filter(Boolean); // ✅ "" remove
+              handleChange("city", cleanVal);
+            }}
+            placeholder="Select City"
             error={errors.city}
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Dates */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <CommonInput
             label="Arrival Date"
             type="date"
             value={formData.arrivalDate}
             onChange={(e) => handleChange("arrivalDate", e.target.value)}
-            placeholder="mm/dd/yyyy"
             error={errors.arrivalDate}
           />
           <CommonInput
+            label="Flight Departure Date"
+            type="date"
+            value={formData.flightDepartureDate}
+            onChange={(e) =>
+              handleChange("flightDepartureDate", e.target.value)
+            }
+            error={errors.flightDepartureDate}
+          />
+        </div>
+
+        {/* Times */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <CommonInput
             label="Flight Arrival Time"
             type="time"
-            value={String(formData.flightArrivalTime) || ""}
+            value={formData.flightArrivalTime}
             onChange={(e) => handleChange("flightArrivalTime", e.target.value)}
-            placeholder="--:--"
             error={errors.flightArrivalTime}
           />
           <CommonInput
@@ -184,76 +209,56 @@ const CreatePlanForm = () => {
             onChange={(e) =>
               handleChange("flightDepartureTime", e.target.value)
             }
-            placeholder="--:--"
             error={errors.flightDepartureTime}
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <CommonInput
-            label="Package Name"
-            value={formData.packageName}
-            onChange={(e) => handleChange("packageName", e.target.value)}
-            placeholder="Package Name"
-            error={errors.packageName}
-          />
-          <CommonInput
-            label="Tagline"
-            value={formData.tagline}
-            onChange={(e) => handleChange("tagline", e.target.value)}
-            placeholder="Tagline"
-            error={errors.tagline}
-          />
-        </div>
+        {/* Package Name */}
+        <CommonInput
+          label="Package Name"
+          type="text"
+          value={formData.packageName}
+          onChange={(e) => handleChange("packageName", e.target.value)}
+          placeholder="Enter Package Name"
+          error={errors.packageName}
+        />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Passengers Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <CommonInput
-            label="Duration (Days)"
-            type="number"
-            min={1}
-            value={formData.duration}
-            onChange={(e) => handleChange("duration", e.target.value)}
-            placeholder="Duration (Days)"
-            error={errors.duration}
-          />
-          <CommonInput
-            label="Number of Adults"
+            label="Adults"
             type="number"
             value={formData.adults}
             onChange={(e) => handleChange("adults", e.target.value)}
-            placeholder="Number of Adults"
             error={errors.adults}
           />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <CommonInput
-            label="Infants (Ages 0-6)"
+            label="Infants (0-6)"
             type="number"
             value={formData.infants}
             onChange={(e) => handleChange("infants", e.target.value)}
-            placeholder="Infants (Ages 0-6)"
             error={errors.infants}
           />
           <CommonInput
-            label="Children (Ages 7-18)"
+            label="Children (7-18)"
             type="number"
             value={formData.children}
             onChange={(e) => handleChange("children", e.target.value)}
-            placeholder="Children (Ages 7-18)"
             error={errors.children}
           />
         </div>
 
+        {/* Description */}
         <CommonTextarea
           label="Description"
           value={formData.description}
           onChange={(e) => handleChange("description", e.target.value)}
-          placeholder="Description"
+          placeholder="Enter description..."
           error={errors.description}
         />
 
-        <div className="flex justify-end space-x-4">
+        {/* Buttons */}
+        <div className="flex justify-end">
           <CommonButton
             loading={isPending}
             label="Save Package"

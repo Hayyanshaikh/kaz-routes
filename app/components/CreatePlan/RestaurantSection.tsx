@@ -9,39 +9,63 @@ import {
   useControllerGetFindAllSites,
 } from "@/app/hooks/api";
 
-const RestaurantSection = ({ formData, handleChange, errors }) => {
+type RestaurantData = {
+  restaurantId: string;
+  mealType: string;
+  dishes: string[];
+  variants: string[];
+};
+
+type Fields = {
+  sites: string[];
+  restaurants: string[];
+  restaurantData: RestaurantData[];
+};
+
+type Props = {
+  formData: Fields;
+  handleChange: (field: string, value: any) => void;
+  errors: Partial<Record<keyof Fields, string>>;
+};
+
+const RestaurantSection: React.FC<Props> = ({
+  formData,
+  handleChange,
+  errors,
+}) => {
   const { data: siteData } = useControllerGetFindAllSites();
   const { data: restaurantDataRes } = useControllerGetFindAllRestaurants();
 
   const siteOptions = dropdownManipulator(siteData?.data || []);
   const restaurantOptions = dropdownManipulator(restaurantDataRes?.data || []);
 
-  const [selectedRestaurants, setSelectedRestaurants] = useState([]);
+  const [selectedRestaurants, setSelectedRestaurants] = useState<
+    RestaurantData[]
+  >([]);
 
   useEffect(() => {
     const restaurantList = formData?.restaurantData || [];
     if (restaurantList.length && !selectedRestaurants.length) {
       setSelectedRestaurants(restaurantList);
     }
-  }, [formData?.restaurantData]);
+  }, [formData?.restaurantData, selectedRestaurants.length]);
 
-  // ✅ Clean array: remove "" values
-  const sanitizeArray = (arr) =>
-    Array.isArray(arr) ? arr.filter((item) => item !== "") : arr;
+  const sanitizeArray = (arr: string[] | undefined) =>
+    Array.isArray(arr) ? arr.filter((item) => item !== "") : [];
 
-  // ✅ Safe handler for all fields
-  const safeHandleChange = (field, value) => {
-    const cleaned = sanitizeArray(value);
+  const safeHandleChange = (field: string, value: any) => {
+    const cleaned = Array.isArray(value) ? sanitizeArray(value) : value;
     handleChange(field, cleaned);
   };
 
-  const handleRestaurantChange = (value) => {
+  const handleRestaurantChange = (value: string[]) => {
     const cleanedValue = sanitizeArray(value);
     safeHandleChange("restaurants", cleanedValue);
 
     const filtered = selectedRestaurants?.filter((r) =>
       cleanedValue.includes(r.restaurantId)
     );
+
     const newOnes = cleanedValue
       .filter((id) => !filtered.find((r) => r.restaurantId === id))
       .map((id) => ({
@@ -56,7 +80,11 @@ const RestaurantSection = ({ formData, handleChange, errors }) => {
     handleChange("restaurantData", updated);
   };
 
-  const updateRestaurantField = (id, field, value) => {
+  const updateRestaurantField = (
+    id: string,
+    field: keyof RestaurantData,
+    value: any
+  ) => {
     setSelectedRestaurants((prev) => {
       const updated = prev.map((rest) =>
         rest.restaurantId === id ? { ...rest, [field]: value } : rest
@@ -66,24 +94,35 @@ const RestaurantSection = ({ formData, handleChange, errors }) => {
     });
   };
 
-  const generateVariantOptions = (dishIds, restaurant) => {
-    let variants = [];
+  const generateVariantOptions = (dishIds: string[], restaurant: any) => {
     if (!restaurant?.dishes) return [];
 
+    let variants: { label: string; value: string }[] = [];
+
     dishIds?.forEach((id) => {
-      const dish = restaurant.dishes.find((d) => String(d.id) === id);
+      const dish = restaurant.dishes.find((d: any) => String(d.id) === id);
       if (dish?.variants) {
         variants.push(
-          ...dish.variants.map((v) => ({
-            id: String(v.id),
-            name: v.size,
+          ...dish.variants.map((v: any) => ({
+            label: v.size,
+            value: String(v.id),
           }))
         );
       }
     });
 
-    return variants.map((v) => ({ label: v.name, value: v.id }));
+    return variants;
   };
+
+  const mealTypeOptions = [
+    { label: "Breakfast", value: "breakfast" },
+    { label: "Brunch", value: "brunch" },
+    { label: "Lunch", value: "lunch" },
+    { label: "Tea", value: "tea" },
+    { label: "Dinner", value: "dinner" },
+    { label: "Supper", value: "supper" },
+    { label: "Snack", value: "snack" },
+  ];
 
   return (
     <div className="flex flex-col gap-6">
@@ -117,7 +156,7 @@ const RestaurantSection = ({ formData, handleChange, errors }) => {
           );
 
           const dishOptions =
-            restaurantDetails?.dishes.map((d) => ({
+            restaurantDetails?.dishes?.map((d: any) => ({
               label: d.name,
               value: String(d.id),
             })) || [];
@@ -125,6 +164,16 @@ const RestaurantSection = ({ formData, handleChange, errors }) => {
           const variantOptions = generateVariantOptions(
             rest.dishes,
             restaurantDetails
+          );
+
+          // Filter meal types to remove already selected types in other restaurants
+          const selectedMealTypes = selectedRestaurants
+            .filter((r) => r.restaurantId !== rest.restaurantId)
+            .map((r) => r.mealType)
+            .filter(Boolean);
+
+          const filteredMealOptions = mealTypeOptions.filter(
+            (option) => !selectedMealTypes.includes(option.value)
           );
 
           return (
@@ -143,20 +192,12 @@ const RestaurantSection = ({ formData, handleChange, errors }) => {
                   onValueChange={(val) =>
                     updateRestaurantField(rest.restaurantId, "mealType", val)
                   }
-                  options={[
-                    { label: "Breakfast", value: "breakfast" },
-                    { label: "Brunch", value: "brunch" },
-                    { label: "Lunch", value: "lunch" },
-                    { label: "Tea", value: "tea" },
-                    { label: "Dinner", value: "dinner" },
-                    { label: "Supper", value: "supper" },
-                    { label: "Snack", value: "snack" },
-                  ]}
+                  options={filteredMealOptions}
                 />
 
                 <CommonMultiSelect
                   label="Dishes"
-                  value={Array.isArray(rest.dishes) ? rest.dishes : []}
+                  value={rest.dishes}
                   onValueChange={(val) =>
                     updateRestaurantField(rest.restaurantId, "dishes", val)
                   }
@@ -165,7 +206,7 @@ const RestaurantSection = ({ formData, handleChange, errors }) => {
 
                 <CommonMultiSelect
                   label="Variants"
-                  value={Array.isArray(rest.variants) ? rest.variants : []}
+                  value={rest.variants}
                   onValueChange={(val) =>
                     updateRestaurantField(rest.restaurantId, "variants", val)
                   }

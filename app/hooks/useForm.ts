@@ -4,12 +4,15 @@ type FormValue = any;
 type FormState = Record<string, FormValue>;
 type ErrorState = Record<string, string>;
 
-const useForm = (
-  initialFields: string[],
-  initialValues: Partial<FormState> = {}
-) => {
+interface FieldConfig {
+  name: string;
+  required?: boolean; // optional flag
+  value?: FormValue; // ✅ default value
+}
+
+const useForm = (fields: FieldConfig[]) => {
   const initialData = Object.fromEntries(
-    initialFields.map((f) => [f, initialValues[f] ?? ""])
+    fields.map((f) => [f.name, f.value ?? ""])
   ) as FormState;
 
   const [formData, setFormData] = useState<FormState>(initialData);
@@ -23,15 +26,18 @@ const useForm = (
   const handleSubmit = (callback: (data: FormState) => void) => {
     const newErrors: ErrorState = {};
 
-    for (const field of initialFields) {
-      const value = formData[field];
-      if (
-        value === undefined ||
-        value === null ||
-        (typeof value === "string" && value.trim() === "") ||
-        (Array.isArray(value) && value.length === 0)
-      ) {
-        newErrors[field] = "Required field";
+    for (const field of fields) {
+      const value = formData[field.name];
+
+      if (field.required ?? true) {
+        if (
+          value === undefined ||
+          value === null ||
+          (typeof value === "string" && value.trim() === "") ||
+          (Array.isArray(value) && value.length === 0)
+        ) {
+          newErrors[field.name] = "Required field";
+        }
       }
     }
 

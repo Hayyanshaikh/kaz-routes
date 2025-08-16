@@ -12,23 +12,18 @@ type Props = {
   formData: Fields;
   handleChange: (field: string, value: string) => void;
   errors: Fields;
-  date: string; // currently active date
+  isArrivalDay: boolean;
+  isDepartureDay: boolean;
 };
 
-const DateSection = ({ formData, handleChange, errors, date }: Props) => {
+const DateSection = ({
+  formData,
+  handleChange,
+  errors,
+  isArrivalDay,
+  isDepartureDay,
+}: Props) => {
   const { packageData } = usePackageData();
-
-  const duration = Number(packageData?.duration) || 0;
-
-  const arrivalDate = dayjs(packageData?.arrivalDate).format("YYYY-MM-DD");
-  const departureDate = dayjs(packageData?.arrivalDate)
-    .add(duration - 1, "day")
-    .format("YYYY-MM-DD");
-
-  if (!date) return null;
-
-  const isArrivalDay = date === arrivalDate;
-  const isDepartureDay = date === departureDate;
 
   return (
     <div className="space-y-6">
@@ -39,7 +34,7 @@ const DateSection = ({ formData, handleChange, errors, date }: Props) => {
           value={
             isArrivalDay
               ? packageData?.flightArrivalTime
-              : formData?.startTime || ""
+              : formData?.startTime || "10:00"
           }
           disabled={isArrivalDay}
           onChange={(e) => handleChange("startTime", e.target.value)}
@@ -52,7 +47,7 @@ const DateSection = ({ formData, handleChange, errors, date }: Props) => {
           value={
             isDepartureDay
               ? packageData?.flightDepartureTime
-              : formData?.endTime || ""
+              : formData?.endTime || "21:30"
           }
           disabled={isDepartureDay}
           onChange={(e) => handleChange("endTime", e.target.value)}

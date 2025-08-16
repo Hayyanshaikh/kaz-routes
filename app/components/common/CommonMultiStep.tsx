@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/shadcn/components/ui/card";
 import { Separator } from "@/shadcn/components/ui/separator";
 import { cn } from "@/lib/utils";
@@ -12,6 +12,8 @@ interface MultiStepFormProps {
   onFinish: () => void;
   showNext?: boolean;
   customAction?: React.ReactNode;
+  currentStepExternal?: number; // external control
+  setCurrentStepExternal?: (step: number) => void;
 }
 
 const CommonMultiStep = ({
@@ -19,15 +21,26 @@ const CommonMultiStep = ({
   onFinish,
   showNext = true,
   customAction,
+  currentStepExternal,
+  setCurrentStepExternal,
 }: MultiStepFormProps) => {
   const [currentStep, setCurrentStep] = useState(0);
+
+  // Agar external step control hai to sync karo
+  useEffect(() => {
+    if (currentStepExternal !== undefined) setCurrentStep(currentStepExternal);
+  }, [currentStepExternal]);
 
   const isLastStep = currentStep === steps.length - 1;
   const isFirstStep = currentStep === 0;
 
   const handleNext = () => {
     if (!isLastStep) {
-      setCurrentStep((prev) => prev + 1);
+      setCurrentStep((prev) => {
+        const next = prev + 1;
+        if (setCurrentStepExternal) setCurrentStepExternal(next);
+        return next;
+      });
     } else {
       onFinish();
     }
@@ -35,7 +48,11 @@ const CommonMultiStep = ({
 
   const handleBack = () => {
     if (!isFirstStep) {
-      setCurrentStep((prev) => prev - 1);
+      setCurrentStep((prev) => {
+        const next = prev - 1;
+        if (setCurrentStepExternal) setCurrentStepExternal(next);
+        return next;
+      });
     }
   };
 
@@ -50,7 +67,7 @@ const CommonMultiStep = ({
               index === currentStep ? "text-primary" : "text-muted-foreground"
             )}
           >
-            <span className="h-8 w-8  bg-primary text-white flex items-center justify-center rounded-full mr-2">
+            <span className="h-8 w-8 bg-primary text-white flex items-center justify-center rounded-full mr-2">
               {index + 1}
             </span>
             {step.title}

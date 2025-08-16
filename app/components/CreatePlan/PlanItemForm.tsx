@@ -19,6 +19,7 @@ import dayjs from "dayjs";
 
 type Props = {
   date: string;
+  onCreated?: () => void;
 };
 
 type RoomCount = { id: string; count: number };
@@ -121,7 +122,7 @@ const transformFindOneResponse = (
 
   return {
     agent_package_id: Number(agent_package_id) || 0,
-    guide: String(travel_guide_id || ""),
+    guide: String(travel_guide_id),
     hotels,
     hotelRooms,
     sites,
@@ -130,15 +131,15 @@ const transformFindOneResponse = (
     car: carId,
     city,
     country,
-    description: description || "",
-    startTime: start_time || "",
-    endTime: end_time || "",
-    item_date: item_date || "",
+    description: description,
+    startTime: start_time || "10:00",
+    endTime: end_time || "21:30",
+    item_date: item_date,
     key: "", // Default empty as per PlanItemForm
   };
 };
 
-const PlanItemForm = ({ date }: Props) => {
+const PlanItemForm = ({ date, onCreated }: Props) => {
   const { packageData, setPackageItemData } = usePackageData();
   const { data: packageItemRes, isLoading } =
     useControllerGetFindAllAgentPackageItems(
@@ -150,25 +151,61 @@ const PlanItemForm = ({ date }: Props) => {
     );
   const transformed = transformFindOneResponse(packageItemRes?.data[0] || {});
 
+  const arrivalDate = dayjs(packageData?.arrivalDate);
+  const departureDate = dayjs(packageData?.flightDepartureDate);
+
+  const isArrivalDay = dayjs(date).isSame(arrivalDate, "day");
+  const isDepartureDay = dayjs(date).isSame(departureDate, "day");
+
   const { formData, handleChange, handleSubmit, errors, setFormData } = useForm(
     [
-      "country",
-      "city",
-      "hotels",
-      "sites",
-      "restaurants",
-      "car",
-      "hotelRooms",
-      "restaurantData",
-      "guide",
-    ],
-    transformed
+      {
+        name: "startTime",
+        value: isArrivalDay
+          ? packageData?.flightArrivalTime
+          : transformed?.startTime || "10:00",
+        required: true,
+      },
+      {
+        name: "endTime",
+        value: isDepartureDay
+          ? packageData?.flightDepartureTime
+          : transformed?.endTime || "21:30",
+        required: true,
+      },
+      { name: "country", value: transformed?.country || "", required: true },
+      { name: "city", value: transformed?.city || "", required: true },
+      {
+        name: "hotels",
+        value: transformed?.hotels || [],
+        required: isDepartureDay ? false : true,
+      },
+      { name: "sites", value: transformed?.sites || [], required: false },
+      {
+        name: "restaurants",
+        value: transformed?.restaurants || [],
+        required: false,
+      },
+      { name: "car", value: transformed?.car || "", required: false },
+      {
+        name: "hotelRooms",
+        value: transformed?.hotelRooms || [],
+        required: false,
+      },
+      {
+        name: "restaurantData",
+        value: transformed?.restaurantData || [],
+        required: false,
+      },
+      { name: "guide", value: transformed?.guide || "", required: false },
+    ]
   );
 
   useEffect(() => {
     if (!isLoading) setFormData(transformed);
   }, [isLoading]);
-  const { mutateAsync: packageItemCreate } = useControllerCreatePackageItem();
+  const { mutateAsync: packageItemCreate, isPending } =
+    useControllerCreatePackageItem();
 
   const onFinish = (data: any) => {
     const duration = Number(packageData?.duration) || 0;
@@ -205,11 +242,13 @@ const PlanItemForm = ({ date }: Props) => {
     setPackageItemData(payload);
 
     packageItemCreate(payload)
-      .then(() => {
+      .then((res) => {
         showSuccess({
-          message: "",
-          description: "",
+          message: "Item Created",
+          description: "The item has been successfully created.",
         });
+
+        if (onCreated) onCreated();
       })
       .catch((error) => {
         showError({
@@ -234,7 +273,8 @@ const PlanItemForm = ({ date }: Props) => {
         className="space-y-4"
       >
         <DateSection
-          date={dayjs(date).format("YYYY-MM-DD")}
+          isArrivalDay={isArrivalDay}
+          isDepartureDay={isDepartureDay}
           formData={formData}
           handleChange={handleChange}
           errors={errors}
@@ -260,7 +300,7 @@ const PlanItemForm = ({ date }: Props) => {
           errors={errors}
         />
         <div className="flex justify-end space-x-4">
-          <CommonButton loading={false} label="Save Item" type="submit" />
+          <CommonButton loading={isPending} label="Save Item" type="submit" />
         </div>
       </form>
     </div>

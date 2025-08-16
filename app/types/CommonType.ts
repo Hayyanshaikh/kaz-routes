@@ -258,14 +258,14 @@ export interface Step {
 }
 
 export interface Package {
+  id?: stirng;
   country: string;
   city: string;
   arrivalDate: string; // ISO format date
   flightArrivalTime: string; // HH:mm
   flightDepartureTime: string; // HH:mm
   packageName: string;
-  tagline: string;
-  duration: string;
+  flightDepartureDate: string;
   adults: string;
   infants: string;
   children: string;
@@ -274,13 +274,12 @@ export interface Package {
 
 export interface CreatePackagePayload {
   name: string;
-  tagline: string;
   description: string;
-  duration: number;
   arrival_date: string;
   flight_arrival: string;
   flight_departure: string;
   adults: number;
+  flight_departure_date: string;
   children: number;
   infants: number;
   city_ids: number[];
@@ -290,6 +289,7 @@ export interface CreatePackagePayload {
 export interface PackageItemPayload {
   agent_package_id: number;
   travel_guide_id: number;
+  guide: string | number;
   hotels: number[];
   rooms: number[];
   sites: number[];

@@ -9,22 +9,28 @@ import usePackageData from "@/app/store/usePackageData";
 import { useState, useMemo } from "react";
 import {
   useControllerGetAgentPackageItemsByPackageId,
-  useControllerGetFindPackageItinerariesByPackageId,
   useControllerPostCreateItinerary,
 } from "@/app/hooks/api";
 import dayjs from "dayjs";
 import { showError, showSuccess } from "../common/CommonSonner";
 
-const PlanItinerary = ({ setSubmited }) => {
+const PlanItinerary = ({ setSubmited, onFinish }) => {
   const { packageData } = usePackageData();
   const { data: packageItems, isLoading: isPackageItemsLoading } =
     useControllerGetAgentPackageItemsByPackageId(packageData?.id || 0);
 
-  // Initialize mutation hook for POST /itineraries
   const { mutateAsync: createPlanItinerary, isPending: isLoading } =
     useControllerPostCreateItinerary();
 
-  // Memoize itemOptions to prevent recalculation on every render
+  // Calculate duration from arrivalDate and flightDepartureDate
+  const duration =
+    packageData?.arrivalDate && packageData?.flightDepartureDate
+      ? dayjs(packageData.flightDepartureDate).diff(
+          dayjs(packageData.arrivalDate),
+          "day"
+        ) + 1
+      : 1;
+
   const itemOptions = useMemo(() => {
     if (!packageItems?.data) return [];
     return packageItems.data.map((item) => ({
@@ -36,26 +42,30 @@ const PlanItinerary = ({ setSubmited }) => {
     }));
   }, [packageItems?.data]);
 
-  const initialFields = ["itineraryTitle", "startDate", "notes"];
+  const { formData, errors, handleChange, handleSubmit, resetForm } = useForm([
+    {
+      name: "itineraryTitle",
+      required: true,
+      value: packageData?.packageName,
+    },
+    {
+      name: "startDate",
+      required: true,
+      value: packageData?.arrivalDate,
+    },
+    { name: "notes", required: false, value: "" },
+  ]);
 
-  const { formData, errors, handleChange, handleSubmit, resetForm } =
-    useForm(initialFields);
-
-  // Initialize day data as an array of objects
-  const [dayData, setDayData] = useState(() => {
-    const duration = Number(packageData?.duration || 1);
-    const startDate = packageData?.arrivalDate || "";
-    return Array.from({ length: duration }, () => ({
+  const [dayData, setDayData] = useState(() =>
+    Array.from({ length: duration }, () => ({
       dayTitle: "",
       packageItem: "",
       customNotes: "",
-    }));
-  });
+    }))
+  );
 
-  // Update dayData with matched package items once itemOptions is available
   useMemo(() => {
     if (itemOptions.length > 0) {
-      const duration = Number(packageData?.duration || 1);
       const startDate = packageData?.arrivalDate || "";
       const updatedDayData = Array.from({ length: duration }, (_, i) => {
         const dayDate = dayjs(startDate).add(i, "day").format("YYYY-MM-DD");
@@ -70,10 +80,10 @@ const PlanItinerary = ({ setSubmited }) => {
       });
       setDayData(updatedDayData);
     }
-  }, [itemOptions, packageData?.duration, packageData?.arrivalDate]);
+  }, [itemOptions, duration, packageData?.arrivalDate]);
 
   const handleDayChange = (index: number, field: string, value: string) => {
-    const newDayData: any = [...dayData];
+    const newDayData = [...dayData];
     newDayData[index][field] = value;
     setDayData(newDayData);
   };
@@ -84,22 +94,22 @@ const PlanItinerary = ({ setSubmited }) => {
       days: dayData,
     };
 
-    // Use createPlanItinerary with then/catch for API call
     createPlanItinerary(finalData)
-      .then((response) => {
+      .then(() => {
         showSuccess({
           message: "Itinerary Created",
           description: "Your itinerary has been successfully saved!",
         });
-        resetForm(); // Reset form fields
+        resetForm();
         setDayData(
-          Array.from({ length: Number(packageData?.duration || 1) }, () => ({
+          Array.from({ length: duration }, () => ({
             dayTitle: "",
             packageItem: "",
             customNotes: "",
           }))
         );
         setSubmited(true);
+        if (onFinish) onFinish(true, finalData);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -108,6 +118,7 @@ const PlanItinerary = ({ setSubmited }) => {
           description:
             error.message || "An error occurred while saving the itinerary.",
         });
+        if (onFinish) onFinish(false, error);
       });
   };
 
@@ -127,7 +138,11 @@ const PlanItinerary = ({ setSubmited }) => {
           <div className="flex space-x-4">
             <CommonInput
               label="Itinerary Title"
-              value={formData.itineraryTitle}
+              value={
+                packageData?.packageName
+                  ? packageData?.packageName
+                  : formData.itineraryTitle
+              }
               onChange={(e) => handleChange("itineraryTitle", e.target.value)}
               placeholder="e.g. Summer Vacation 2025"
               error={errors.itineraryTitle}
@@ -135,9 +150,10 @@ const PlanItinerary = ({ setSubmited }) => {
             <CommonInput
               label="Start Date (Arrival)"
               type="date"
+              disabled
               value={
                 packageData?.arrivalDate
-                  ? packageData?.arrivalDate
+                  ? packageData.arrivalDate
                   : formData.startDate
               }
               onChange={(e) => handleChange("startDate", e.target.value)}
@@ -172,7 +188,7 @@ const PlanItinerary = ({ setSubmited }) => {
                 />
                 <CommonSelect
                   label="Select Package Item"
-                  value={day.packageItem} // Treat as string
+                  value={day.packageItem}
                   onValueChange={(value) =>
                     handleDayChange(index, "packageItem", value)
                   }

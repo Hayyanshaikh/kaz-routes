@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import CommonMultiSelect from "../common/CommonMultiSelect";
+import CommonSelect from "../common/CommonSelect";
+import CommonMultiSelect from "../common/CommonMultiSelect"; // room multi-select
 import CommonInput from "../common/CommonInput";
 import { useControllerGetFindAllHotels } from "@/app/hooks/api";
 import dropdownManipulator from "@/app/manipulators/dropdownManipulator";
@@ -14,8 +15,10 @@ type HotelRooms = {
 };
 
 type Fields = {
-  hotels: string[];
+  hotels: string[]; // single hotel stored as array with 0 index
   hotelRooms: HotelRooms[];
+  country?: string;
+  city?: string;
 };
 
 type Props = {
@@ -32,136 +35,120 @@ const HotelSection = ({ formData, handleChange, errors }: Props) => {
     },
     enabled: !!formData?.country && !!formData?.city,
   });
-  const hotelOptions = dropdownManipulator(hotelDataRes?.data || []);
-  console.log({ formData });
 
-  const [selectedHotels, setSelectedHotels] = useState<HotelRooms[]>([]);
+  const hotelOptions = dropdownManipulator(hotelDataRes?.data || []);
+
+  const [selectedHotel, setSelectedHotel] = useState<HotelRooms | null>(
+    formData.hotelRooms[0] || null
+  );
 
   useEffect(() => {
-    setSelectedHotels(formData.hotelRooms || []);
+    setSelectedHotel(formData.hotelRooms[0] || null);
   }, [formData.hotelRooms]);
 
-  const updateHotelRoomData = (hotelId: string, rooms: string[]) => {
-    const updated = [...selectedHotels];
-    const index = updated.findIndex((h) => h.hotelId === hotelId);
+  const handleHotelChange = (hotelId: string) => {
+    const newHotelRoom: HotelRooms = {
+      hotelId,
+      rooms: [],
+      roomCounts: [],
+    };
+    setSelectedHotel(newHotelRoom);
+    handleChange("hotels", [hotelId]); // single hotel stored as array
+    handleChange("hotelRooms", [newHotelRoom]);
+  };
+
+  const updateHotelRoomData = (rooms: string[]) => {
+    if (!selectedHotel) return;
 
     const newCounts = rooms.map((id) => {
-      const old =
-        index > -1 ? updated[index].roomCounts.find((r) => r.id === id) : null;
+      const old = selectedHotel.roomCounts.find((r) => r.id === id);
       return old || { id, count: 1 };
     });
 
+    const updated = { ...selectedHotel, rooms, roomCounts: newCounts };
+    setSelectedHotel(updated);
+    handleChange("hotelRooms", [updated]);
+  };
+
+  const updateRoomCount = (roomId: string, count: number) => {
+    if (!selectedHotel) return;
+
+    const roomCounts = [...selectedHotel.roomCounts];
+    const index = roomCounts.findIndex((r) => r.id === roomId);
+
     if (index > -1) {
-      updated[index] = { ...updated[index], rooms, roomCounts: newCounts };
+      roomCounts[index].count = count;
     } else {
-      updated.push({ hotelId, rooms, roomCounts: newCounts });
+      roomCounts.push({ id: roomId, count });
     }
 
-    setSelectedHotels(updated);
-    handleChange("hotelRooms", updated);
+    const updated = { ...selectedHotel, roomCounts };
+    setSelectedHotel(updated);
+    handleChange("hotelRooms", [updated]);
   };
 
-  const updateRoomCount = (hotelId: string, roomId: string, count: number) => {
-    const updated = [...selectedHotels];
-    const index = updated.findIndex((h) => h.hotelId === hotelId);
-    if (index > -1) {
-      const roomCounts = [...updated[index].roomCounts];
-      const roomIndex = roomCounts.findIndex((r) => r.id === roomId);
-      if (roomIndex > -1) {
-        roomCounts[roomIndex].count = count;
-      } else {
-        roomCounts.push({ id: roomId, count });
-      }
-      updated[index].roomCounts = roomCounts;
-      setSelectedHotels(updated);
-      handleChange("hotelRooms", updated);
-    }
-  };
-
-  const handleHotelChange = (value: string[]) => {
-    handleChange("hotels", value);
-    const filtered = selectedHotels.filter((h) => value.includes(h.hotelId));
-    const newOnes = value
-      .filter((id) => !filtered.find((h) => h.hotelId === id))
-      .map((id) => ({
-        hotelId: id,
-        rooms: [],
-        roomCounts: [],
-      }));
-
-    const updated = [...filtered, ...newOnes];
-    setSelectedHotels(updated);
-    handleChange("hotelRooms", updated);
-  };
+  const roomOptions = selectedHotel?.hotelId
+    ? hotelDataRes?.data
+        ?.find((h) => String(h.id) === selectedHotel.hotelId)
+        ?.rooms.map((room: any) => ({
+          label: room.room_name,
+          value: String(room.id),
+        })) || []
+    : [];
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Hotel Select */}
-      <CommonMultiSelect
-        label="Select Hotels"
-        value={Array.isArray(formData.hotels) ? formData.hotels : []}
-        onValueChange={handleHotelChange}
+      {/* Hotel Select (single select) */}
+      <CommonSelect
+        label="Select Hotel"
+        value={selectedHotel?.hotelId || ""}
+        onValueChange={(value) => handleHotelChange(value)}
         options={hotelOptions}
         error={errors.hotels}
       />
 
-      {/* Hotel-wise Room & Input Fields */}
-      {selectedHotels.map((hotelRoom) => {
-        const hotelData = hotelDataRes?.data?.find(
-          (h) => String(h.id) === hotelRoom.hotelId
-        );
-        const roomOptions =
-          hotelData?.rooms.map((room: any) => ({
-            label: room.room_name,
-            value: String(room.id),
-          })) || [];
+      {/* Rooms & Count */}
+      {selectedHotel && (
+        <div className="border p-4 rounded-md shadow bg-white space-y-4">
+          <h3 className="font-semibold text-lg mb-2">
+            Hotel:{" "}
+            {
+              hotelDataRes?.data?.find(
+                (h) => String(h.id) === selectedHotel.hotelId
+              )?.hotel_name
+            }
+          </h3>
 
-        return (
-          <div
-            key={hotelRoom.hotelId}
-            className="border p-4 rounded-md shadow bg-white space-y-4"
-          >
-            <h3 className="font-semibold text-lg mb-2">
-              Hotel: {hotelData?.hotel_name || "Selected Hotel"}
-            </h3>
+          <CommonMultiSelect
+            label="Select Rooms"
+            value={selectedHotel.rooms}
+            onValueChange={updateHotelRoomData}
+            options={roomOptions}
+          />
 
-            <CommonMultiSelect
-              label="Select Rooms"
-              value={Array.isArray(hotelRoom.rooms) ? hotelRoom.rooms : []}
-              onValueChange={(value) =>
-                updateHotelRoomData(hotelRoom.hotelId, value)
-              }
-              options={roomOptions}
-              error={undefined}
-            />
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {selectedHotel.rooms.map((roomId) => {
+              const roomName =
+                roomOptions.find((r) => r.value === roomId)?.label || "Room";
+              const count =
+                selectedHotel.roomCounts.find((r) => r.id === roomId)?.count ||
+                1;
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {hotelRoom.rooms.map((roomId) => {
-                const roomName =
-                  roomOptions.find((r) => r.value === roomId)?.label || "Room";
-                const count =
-                  hotelRoom.roomCounts.find((r) => r.id === roomId)?.count || 1;
-
-                return (
-                  <CommonInput
-                    key={roomId}
-                    label={`Room Count for "${roomName}"`}
-                    value={String(count)}
-                    type="number"
-                    onChange={(e) =>
-                      updateRoomCount(
-                        hotelRoom.hotelId,
-                        roomId,
-                        Number(e.target.value)
-                      )
-                    }
-                  />
-                );
-              })}
-            </div>
+              return (
+                <CommonInput
+                  key={roomId}
+                  label={`Room Count for "${roomName}"`}
+                  value={String(count)}
+                  type="number"
+                  onChange={(e) =>
+                    updateRoomCount(roomId, Number(e.target.value))
+                  }
+                />
+              );
+            })}
           </div>
-        );
-      })}
+        </div>
+      )}
     </div>
   );
 };
