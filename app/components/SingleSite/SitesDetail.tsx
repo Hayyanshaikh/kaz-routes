@@ -47,14 +47,13 @@ const SitesDetail = ({ site }: Props) => {
   const { formData, errors, handleChange, resetForm, handleSubmit } = useForm([
     { name: "bookingDate", required: true },
     { name: "bookingTime", required: true },
-    { name: "referenceNumber" },
-    { name: "numberOfBoys" },
-    { name: "numberOfChildren" },
-    { name: "numberOfAdults" },
-    { name: "specialRequest" },
+    { name: "numberOfBoys", required: false },
+    { name: "numberOfChildren", required: false },
+    { name: "numberOfAdults", required: true },
+    { name: "specialRequest", required: false },
     { name: "customerName", required: true },
     { name: "customerPhone", required: true },
-    { name: "customerEmail" },
+    { name: "customerEmail", required: true },
   ]);
 
   const hasActivities = site.activities && site.activities.length > 0;

@@ -25,10 +25,13 @@ const CreatePlan = () => {
   const [currentStep, setCurrentStep] = useState(0);
 
   const { data: summaryData } =
-    useControllerGetFindPackageItinerariesByPackageId(1, true);
+    useControllerGetFindPackageItinerariesByPackageId(
+      packageData?.id,
+      submited
+    );
   const { data, error, isLoading } =
     useControllerGetFindPackageItinerariesByPackageId(
-      packageData?.id || 0,
+      packageData?.id,
       Boolean(packageData)
     );
 
@@ -106,7 +109,7 @@ const CreatePlan = () => {
           onFinish={(success) => {
             if (success) setCurrentStep((prev) => prev + 1); // move to Summary step
           }}
-          data={data}
+          data={summaryData?.data}
           setSubmited={setSubmited}
           submited={submited}
           isLoading={isLoading}
@@ -122,9 +125,9 @@ const CreatePlan = () => {
 
   const handleFinish = () => {
     generatePdf("myContent");
-    setPackageData(null);
-    setPackageItemData(null);
-    setTimeout(() => router.push("/"), 1000);
+    // setPackageData(null);
+    // setPackageItemData(null);
+    // setTimeout(() => router.push("/"), 1000);
   };
 
   return (

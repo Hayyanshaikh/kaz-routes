@@ -29,9 +29,8 @@ const DishCard = ({ dish, restaurantDetail }: DishCardProps | any) => {
     { name: "phone", required: true },
     { name: "bookingDate", required: true },
     { name: "bookingTime", required: true },
-    { name: "guestCount", value: 1 }, // default 1 guest
-    { name: "referenceNumber" },
-    { name: "specialRequest" },
+    { name: "guestCount", value: 1, required: false },
+    { name: "specialRequest", required: false },
   ]);
 
   // Use the mutation hook

@@ -24,7 +24,7 @@ const Room = ({ room, hotelDetail }: PropertyDetailProps) => {
     { name: "checkInDate", required: true },
     { name: "nights", value: 1 },
     { name: "roomCount", value: 1 },
-    { name: "specialRequests" },
+    { name: "specialRequests", required: false },
     { name: "adults", value: 1 },
     { name: "children", value: 0 },
     { name: "infants", value: 0 },

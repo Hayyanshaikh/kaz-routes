@@ -16,69 +16,6 @@ const SiteForm: React.FC<SiteFormProps> = ({
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <CommonInput
-        type="date"
-        label="Booking Date"
-        placeholder="mm/dd/yyyy"
-        value={formData.bookingDate}
-        error={errors.bookingDate}
-        onChange={(e) => handleChange("bookingDate", e.target.value)}
-      />
-
-      <CommonInput
-        type="time"
-        label="Booking Time"
-        placeholder="--:--"
-        value={formData.bookingTime}
-        error={errors.bookingTime}
-        onChange={(e) => handleChange("bookingTime", e.target.value)}
-      />
-
-      <CommonInput
-        label="Reference Number"
-        placeholder="Leave blank to auto-generate"
-        value={formData.referenceNumber}
-        error={errors.referenceNumber}
-        onChange={(e) => handleChange("referenceNumber", e.target.value)}
-      />
-
-      <CommonInput
-        type="number"
-        label="Number of Boys (Age 0 - 7)"
-        placeholder="0"
-        value={formData.numberOfBoys}
-        error={errors.numberOfBoys}
-        onChange={(e) => handleChange("numberOfBoys", e.target.value)}
-      />
-
-      <CommonInput
-        type="number"
-        label="Number of Children (Age 8 - 12)"
-        placeholder="0"
-        value={formData.numberOfChildren}
-        error={errors.numberOfChildren}
-        onChange={(e) => handleChange("numberOfChildren", e.target.value)}
-      />
-
-      <CommonInput
-        type="number"
-        label="Number of Adults (Age 13+)"
-        placeholder="0"
-        value={formData.numberOfAdults}
-        error={errors.numberOfAdults}
-        onChange={(e) => handleChange("numberOfAdults", e.target.value)}
-      />
-
-      <div className="col-span-1 md:col-span-2">
-        <CommonTextarea
-          label="Special Request"
-          placeholder=""
-          value={formData.specialRequest}
-          error={errors.specialRequest}
-          onChange={(e) => handleChange("specialRequest", e.target.value)}
-        />
-      </div>
-
-      <CommonInput
         label="Customer Name"
         placeholder=""
         value={formData.customerName}
@@ -102,6 +39,59 @@ const SiteForm: React.FC<SiteFormProps> = ({
         error={errors.customerEmail}
         onChange={(e) => handleChange("customerEmail", e.target.value)}
       />
+      <CommonInput
+        type="date"
+        label="Booking Date"
+        placeholder="mm/dd/yyyy"
+        value={formData.bookingDate}
+        error={errors.bookingDate}
+        onChange={(e) => handleChange("bookingDate", e.target.value)}
+      />
+
+      <CommonInput
+        type="time"
+        label="Booking Time"
+        placeholder="--:--"
+        value={formData.bookingTime}
+        error={errors.bookingTime}
+        onChange={(e) => handleChange("bookingTime", e.target.value)}
+      />
+      <CommonInput
+        type="number"
+        label="Number of Adults (Age 13+)"
+        placeholder="0"
+        value={formData.numberOfAdults}
+        error={errors.numberOfAdults}
+        onChange={(e) => handleChange("numberOfAdults", e.target.value)}
+      />
+
+      <CommonInput
+        type="number"
+        label="Number of Boys (Age 0 - 7)"
+        placeholder="0"
+        value={formData.numberOfBoys}
+        error={errors.numberOfBoys}
+        onChange={(e) => handleChange("numberOfBoys", e.target.value)}
+      />
+
+      <CommonInput
+        type="number"
+        label="Number of Children (Age 8 - 12)"
+        placeholder="0"
+        value={formData.numberOfChildren}
+        error={errors.numberOfChildren}
+        onChange={(e) => handleChange("numberOfChildren", e.target.value)}
+      />
+
+      <div className="col-span-1 md:col-span-2">
+        <CommonTextarea
+          label="Special Request"
+          placeholder=""
+          value={formData.specialRequest}
+          error={errors.specialRequest}
+          onChange={(e) => handleChange("specialRequest", e.target.value)}
+        />
+      </div>
     </div>
   );
 };

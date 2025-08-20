@@ -62,13 +62,6 @@ const RestaurantForm: React.FC<RestaurantFormProps> = ({
         error={errors.guestCount}
         onChange={(e) => handleChange("guestCount", e.target.value)}
       />
-      <CommonInput
-        label="Reference Number"
-        placeholder="Reference Number"
-        value={formData.referenceNumber}
-        error={errors.referenceNumber}
-        onChange={(e) => handleChange("referenceNumber", e.target.value)}
-      />
       <div className="col-span-1 md:col-span-2">
         <CommonTextarea
           label="Special Request"

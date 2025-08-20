@@ -433,3 +433,21 @@ export const useCurrencySettings = (options?: QueryOptions) =>
     },
     enabled: options?.enabled ?? true,
   });
+
+// ✅ POST /contact
+export const useControllerContactSubmit = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (payload: any) => {
+      const res = await axios.post("v1/contact", payload);
+      return res.data;
+    },
+    onSuccess: () => {
+      // Agar future me GET /contacts ho to invalidateQueries use kr skte ho
+      queryClient.invalidateQueries({
+        queryKey: ["ControllerGetFindAllContacts"],
+      });
+    },
+  });
+};

@@ -1,7 +1,7 @@
 import React from "react";
 
 const PackageSummary: React.FC<{ data: any }> = ({ data }) => {
-  if (!data) {
+  if (!data || !data[0]) {
     return (
       <div
         style={{
@@ -29,15 +29,16 @@ const PackageSummary: React.FC<{ data: any }> = ({ data }) => {
     adults,
     children,
     infants,
-    items,
-  } = data[0];
+    items = [],
+  } = data?.[0] ?? {};
+
+  console.log({ data: data?.[0] });
 
   const containerStyle = {
     border: "1px solid #E5E7EB",
     borderRadius: 8,
     padding: 24,
     fontFamily: "'Arial', sans-serif",
-    display: "none",
     color: "#1F2937",
     fontSize: 14,
     maxWidth: "100%",
@@ -63,14 +64,8 @@ const PackageSummary: React.FC<{ data: any }> = ({ data }) => {
     gap: "8px 24px",
   };
 
-  const labelStyle = {
-    fontWeight: 600,
-    padding: "4px 0",
-  };
-
-  const valueStyle = {
-    padding: "4px 0",
-  };
+  const labelStyle = { fontWeight: 600, padding: "4px 0" };
+  const valueStyle = { padding: "4px 0" };
 
   const tableStyle = {
     width: "100%",
@@ -87,10 +82,7 @@ const PackageSummary: React.FC<{ data: any }> = ({ data }) => {
     textAlign: "left" as const,
   };
 
-  const tdStyle = {
-    padding: "6px 8px",
-    border: "1px solid #ccc",
-  };
+  const tdStyle = { padding: "6px 8px", border: "1px solid #ccc" };
 
   const sectionHeaderStyle = {
     fontWeight: 600,
@@ -117,15 +109,30 @@ const PackageSummary: React.FC<{ data: any }> = ({ data }) => {
           <h2 style={sectionHeaderStyle}>Package Details</h2>
           <div style={gridStyle}>
             {[
-              ["Name", name],
-              ["Tagline", tagline],
-              ["Duration", `${duration} days`],
-              ["Arrival Date", new Date(arrival_date).toLocaleDateString()],
-              ["Flight Arrival", new Date(flight_arrival).toLocaleString()],
-              ["Flight Departure", new Date(flight_departure).toLocaleString()],
-              ["Adults", adults],
-              ["Children", children],
-              ["Infants", infants],
+              ["Name", name ?? "-"],
+              ["Tagline", tagline ?? "-"],
+              ["Duration", duration ? `${duration} days` : "-"],
+              [
+                "Arrival Date",
+                arrival_date
+                  ? new Date(arrival_date).toLocaleDateString()
+                  : "-",
+              ],
+              [
+                "Flight Arrival",
+                flight_arrival
+                  ? new Date(flight_arrival).toLocaleString()
+                  : "-",
+              ],
+              [
+                "Flight Departure",
+                flight_departure
+                  ? new Date(flight_departure).toLocaleString()
+                  : "-",
+              ],
+              ["Adults", adults ?? 0],
+              ["Children", children ?? 0],
+              ["Infants", infants ?? 0],
             ].map(([label, value], idx) => (
               <React.Fragment key={idx}>
                 <div style={labelStyle}>{label}</div>
@@ -136,7 +143,7 @@ const PackageSummary: React.FC<{ data: any }> = ({ data }) => {
         </section>
 
         {/* Items */}
-        {items.map((item: any, index: number) => (
+        {items?.map((item: any, index: number) => (
           <section
             key={index}
             style={{
@@ -162,15 +169,13 @@ const PackageSummary: React.FC<{ data: any }> = ({ data }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {item.cities.map((city: any) => (
-                    <tr key={city.id}>
-                      <td style={tdStyle}>{city.name}</td>
+                  {item?.cities?.map((city: any) => (
+                    <tr key={city?.id}>
+                      <td style={tdStyle}>{city?.name ?? "-"}</td>
                       <td style={tdStyle}>
-                        {
-                          item.countries.find(
-                            (c: any) => Number(c.id) === Number(city.country_id)
-                          )?.name
-                        }
+                        {item?.countries?.find(
+                          (c: any) => Number(c?.id) === Number(city?.country_id)
+                        )?.name ?? "-"}
                       </td>
                     </tr>
                   ))}
@@ -192,13 +197,13 @@ const PackageSummary: React.FC<{ data: any }> = ({ data }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {item.sites.map((site: any) => (
-                    <tr key={site.id}>
-                      <td style={tdStyle}>{site.name}</td>
-                      <td style={tdStyle}>{site.duration_hours}</td>
+                  {item?.sites?.map((site: any) => (
+                    <tr key={site?.id}>
+                      <td style={tdStyle}>{site?.name ?? "-"}</td>
+                      <td style={tdStyle}>{site?.duration_hours ?? "-"}</td>
                       <td style={tdStyle}>
-                        {typeof site.price_adult === "number"
-                          ? site.price_adult.toFixed(2)
+                        {typeof site?.price_adult === "number"
+                          ? site?.price_adult?.toFixed(2)
                           : "-"}
                       </td>
                     </tr>
@@ -212,11 +217,11 @@ const PackageSummary: React.FC<{ data: any }> = ({ data }) => {
               <h3 style={{ fontWeight: 600, fontSize: 16, marginBottom: 8 }}>
                 Hotels & Rooms
               </h3>
-              {item.rooms_detail.map((roomDetail: any, roomIndex: number) => (
+              {item?.rooms_detail?.map((roomDetail: any, roomIndex: number) => (
                 <div key={roomIndex} style={{ marginBottom: 16 }}>
                   <p style={{ fontWeight: 600, marginBottom: 4 }}>
-                    {roomDetail.hotel.hotel_name} (
-                    {roomDetail.hotel.hotel_rating})
+                    {roomDetail?.hotel?.hotel_name ?? "-"} (
+                    {roomDetail?.hotel?.hotel_rating ?? "-"})
                   </p>
                   <table style={tableStyle}>
                     <thead>
@@ -227,12 +232,16 @@ const PackageSummary: React.FC<{ data: any }> = ({ data }) => {
                       </tr>
                     </thead>
                     <tbody>
-                      {roomDetail.rooms.map((room: any) => (
-                        <tr key={room.id}>
-                          <td style={tdStyle}>{room.data.room_name}</td>
-                          <td style={tdStyle}>{room.count}</td>
+                      {roomDetail?.rooms?.map((room: any) => (
+                        <tr key={room?.id}>
                           <td style={tdStyle}>
-                            {Number(room.data.price_double).toFixed(2)}
+                            {room?.data?.room_name ?? "-"}
+                          </td>
+                          <td style={tdStyle}>{room?.count ?? 0}</td>
+                          <td style={tdStyle}>
+                            {room?.data?.price_double
+                              ? Number(room?.data?.price_double).toFixed(2)
+                              : "-"}
                           </td>
                         </tr>
                       ))}
@@ -254,21 +263,25 @@ const PackageSummary: React.FC<{ data: any }> = ({ data }) => {
                       Model
                     </td>
                     <td style={tdStyle}>
-                      {item.car.model} ({item.car.year})
+                      {item?.car?.model ?? "-"} ({item?.car?.year ?? "-"})
                     </td>
                   </tr>
                   <tr>
                     <td style={{ ...tdStyle, fontWeight: 600 }}>
                       Seating Capacity
                     </td>
-                    <td style={tdStyle}>{item.car.seating_capacity}</td>
+                    <td style={tdStyle}>
+                      {item?.car?.seating_capacity ?? "-"}
+                    </td>
                   </tr>
                   <tr>
                     <td style={{ ...tdStyle, fontWeight: 600 }}>
                       Daily Rate ($)
                     </td>
                     <td style={tdStyle}>
-                      {Number(item.car.daily_rate).toFixed(2)}
+                      {item?.car?.daily_rate
+                        ? Number(item?.car?.daily_rate).toFixed(2)
+                        : "-"}
                     </td>
                   </tr>
                 </tbody>
@@ -277,7 +290,12 @@ const PackageSummary: React.FC<{ data: any }> = ({ data }) => {
 
             {/* Total Price */}
             <div style={totalPriceStyle}>
-              <h3>Total Price: ${Number(item.total_price).toFixed(2)}</h3>
+              <h3>
+                Total Price: $
+                {item?.total_price
+                  ? Number(item?.total_price).toFixed(2)
+                  : "0.00"}
+              </h3>
             </div>
           </section>
         ))}
@@ -288,10 +306,10 @@ const PackageSummary: React.FC<{ data: any }> = ({ data }) => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          height: "60vh",
           fontSize: 20,
           fontWeight: 600,
           color: "#1F2937",
+          marginTop: "30px",
           padding: "0 20px",
           textAlign: "center",
         }}

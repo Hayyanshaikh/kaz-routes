@@ -10,8 +10,10 @@ import CommonButton from "@/app/components/common/CommonButton";
 import CommonHeading from "@/app/components/common/CommonHeading";
 import { Mail, MapPin, Phone } from "lucide-react";
 import usePageContentStore from "@/app/store/usePageContent";
+import { useControllerContactSubmit } from "@/app/hooks/api";
+import { showError, showSuccess } from "@/app/components/common/CommonSonner";
 
-export default function Contact() {
+const Contact = () => {
   const { formData, errors, handleChange, handleSubmit, resetForm } = useForm([
     { name: "name", required: true },
     { name: "email", required: true },
@@ -20,6 +22,8 @@ export default function Contact() {
   ]);
 
   const { pageContent } = usePageContentStore();
+
+  const { mutate: createContact, isPending } = useControllerContactSubmit();
 
   // ✅ Safe JSON parse function
   const safeParse = (jsonString: string | undefined) => {
@@ -40,11 +44,26 @@ export default function Contact() {
     map: safeParse(pageContent?.contact?.map),
   };
 
-  console.log({ parsedData });
-
   const onSubmit = () => {
-    console.log("Form Submitted", formData);
-    resetForm();
+    createContact(formData, {
+      onSuccess: () => {
+        console.log("✅ Contact created successfully!");
+        showSuccess({
+          message: "Contact created successfully!",
+          description: "We will get back to you shortly.",
+        });
+        resetForm();
+      },
+      onError: (err) => {
+        console.error("❌ Contact creation failed:", err);
+        showError({
+          message: "Contact creation failed.",
+          description:
+            err?.response?.data?.message ||
+            "An error occurred. Please try again later.",
+        });
+      },
+    });
   };
 
   return (
@@ -102,9 +121,10 @@ export default function Contact() {
                   error={errors.message}
                 />
                 <CommonButton
-                  label="Send Message"
+                  label={isPending ? "Sending..." : "Send Message"}
                   type="submit"
                   className="w-full"
+                  disabled={isPending}
                 />
               </form>
             </div>
@@ -178,4 +198,6 @@ export default function Contact() {
       )}
     </>
   );
-}
+};
+
+export default Contact;

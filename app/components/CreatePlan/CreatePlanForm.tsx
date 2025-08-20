@@ -95,7 +95,7 @@ const CreatePlanForm = ({ onCreated }: CreatePlanFormProps) => {
           arrivalDate: dayjs(res.data.arrival_date).format("YYYY-MM-DD"),
           flightArrivalTime: dayjs(res.data.flight_arrival).format("HH:mm"),
           flightDepartureTime: dayjs(res.data.flight_departure).format("HH:mm"),
-          flightDepartureDate: dayjs(res.data.flight_departure_date).format(
+          flightDepartureDate: dayjs(formData.flightDepartureDate).format(
             "YYYY-MM-DD"
           ),
           adults: res.data.adults,
