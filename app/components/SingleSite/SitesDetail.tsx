@@ -45,16 +45,16 @@ const SitesDetail = ({ site }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showFull, setShowFull] = useState(false);
   const { formData, errors, handleChange, resetForm, handleSubmit } = useForm([
-    "bookingDate",
-    "bookingTime",
-    "referenceNumber",
-    "numberOfBoys",
-    "numberOfChildren",
-    "numberOfAdults",
-    "specialRequest",
-    "customerName",
-    "customerPhone",
-    "customerEmail",
+    { name: "bookingDate", required: true },
+    { name: "bookingTime", required: true },
+    { name: "referenceNumber" },
+    { name: "numberOfBoys" },
+    { name: "numberOfChildren" },
+    { name: "numberOfAdults" },
+    { name: "specialRequest" },
+    { name: "customerName", required: true },
+    { name: "customerPhone", required: true },
+    { name: "customerEmail" },
   ]);
 
   const hasActivities = site.activities && site.activities.length > 0;

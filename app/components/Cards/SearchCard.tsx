@@ -4,8 +4,9 @@
 import React from "react";
 import Image from "next/image";
 import CommonButton from "../common/CommonButton";
-import { formatCurrencyPKR } from "@/lib/utils";
 import { Baby, User } from "lucide-react";
+import { useGetCurrency } from "@/app/hooks/useGetCurrency";
+import { formatCurrency } from "@/lib/utils";
 
 type SearchCardProps = {
   name: string;
@@ -49,11 +50,11 @@ const SearchCard = ({
         <div className="flex items-center gap-2 text-sm justify-between font-medium mb-2 text-gray-500">
           <span className="flex items-center gap-2">
             <User size={16} />
-            {formatCurrencyPKR(Number(adultPrice))}
+            {formatCurrency(Number(adultPrice))}
           </span>
           <span className="flex items-center gap-2">
             <Baby size={16} />
-            {formatCurrencyPKR(Number(childPrice))}
+            {formatCurrency(Number(childPrice))}
           </span>
         </div>
         <CommonButton link={link} label="View Details" className="w-full" />

@@ -1,12 +1,27 @@
 "use client";
 
-import Image from "next/image";
 import Container from "../Container";
-import Link from "next/link"; // Import Link for Next.js navigation
-import { Facebook, Instagram, Twitter, Youtube } from "lucide-react";
+import Link from "next/link";
+import { Facebook, Instagram, Twitter, Linkedin } from "lucide-react";
+import usePageContentStore from "@/app/store/usePageContent";
 
 const Footer = () => {
-  // Combine existing links with new pages
+  const { pageContent } = usePageContentStore();
+
+  // ✅ Safe JSON parse function
+  const safeParse = (jsonString: string | undefined) => {
+    try {
+      return jsonString ? JSON.parse(jsonString) : {};
+    } catch (e) {
+      console.error("Invalid JSON:", e);
+      return {};
+    }
+  };
+
+  // Parse social links from store
+  const socials = safeParse(pageContent?.contact?.socials);
+
+  // Parse navigation links from store (optional, else fallback)
   const navigationLinks = [
     { label: "Home", href: "/" },
     { label: "Packages", href: "search?category=packages" },
@@ -17,7 +32,6 @@ const Footer = () => {
     { label: "Privacy Policy", href: "/privacy-policy" },
     { label: "Terms & Conditions", href: "/terms-conditions" },
     { label: "About", href: "/about" },
-    { label: "Create Plan", href: "/create-plan" },
   ];
 
   return (
@@ -25,9 +39,10 @@ const Footer = () => {
       <Container>
         <div className="relative w-full flex flex-col items-center justify-center gap-4 text-center">
           <h3 className="text-2xl font-bold">kazroutes.com</h3>
-          {/* Overlay for navigation links */}
-          <div className="flex flex-wrap justify-center space-y-2 space-x-4 max-w-3xl text-sm">
-            {navigationLinks.map((link, index) => (
+
+          {/* Navigation Links */}
+          <div className="flex flex-wrap justify-center space-y-2 space-x-4 max-w-3xl text-sm mt-2">
+            {navigationLinks.map((link: any, index: number) => (
               <Link
                 key={index}
                 href={link.href}
@@ -37,43 +52,52 @@ const Footer = () => {
               </Link>
             ))}
           </div>
-          {/* Social media icons overlay with Link */}
-          <div className="flex space-x-4">
-            <Link
-              href="https://facebook.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="border border-primary h-10 w-10 flex items-center justify-center rounded-full hover:bg-primary transition-colors group"
-            >
-              <Facebook
-                size={20}
-                className="text-primary group-hover:text-white transition-colors"
-              />
-            </Link>
-            <Link
-              href="https://instagram.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="border border-primary h-10 w-10 flex items-center justify-center rounded-full hover:bg-primary transition-colors group"
-            >
-              <Instagram
-                size={20}
-                className="text-primary group-hover:text-white transition-colors"
-              />
-            </Link>
-            <Link
-              href="https://twitter.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="border border-primary h-10 w-10 flex items-center justify-center rounded-full hover:bg-primary transition-colors group"
-            >
-              <Twitter
-                size={20}
-                className="text-primary group-hover:text-white transition-colors"
-              />
-            </Link>
+
+          {/* Social media icons dynamically */}
+          <div className="flex space-x-4 mt-2">
+            {socials.facebook && (
+              <Link
+                href={socials.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="border border-primary h-10 w-10 flex items-center justify-center rounded-full hover:bg-primary transition-colors group"
+              >
+                <Facebook className="text-primary group-hover:text-white transition-colors" />
+              </Link>
+            )}
+            {socials.instagram && (
+              <Link
+                href={socials.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="border border-primary h-10 w-10 flex items-center justify-center rounded-full hover:bg-primary transition-colors group"
+              >
+                <Instagram className="text-primary group-hover:text-white transition-colors" />
+              </Link>
+            )}
+            {socials.twitter && (
+              <Link
+                href={socials.twitter}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="border border-primary h-10 w-10 flex items-center justify-center rounded-full hover:bg-primary transition-colors group"
+              >
+                <Twitter className="text-primary group-hover:text-white transition-colors" />
+              </Link>
+            )}
+            {socials.linkedin && (
+              <Link
+                href={socials.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="border border-primary h-10 w-10 flex items-center justify-center rounded-full hover:bg-primary transition-colors group"
+              >
+                <Linkedin className="text-primary group-hover:text-white transition-colors" />
+              </Link>
+            )}
           </div>
         </div>
+
         <div className="text-center text-gray-500 text-sm mt-4">
           Copyright ©2025 All rights reserved | Powered by{" "}
           <span className="font-semibold text-primary">KazRoutes</span> - Your

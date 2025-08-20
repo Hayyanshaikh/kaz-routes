@@ -13,7 +13,7 @@ const Search = () => {
         description=""
         showSearchBar={false}
       />
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense>
         <SearchComponent />
       </Suspense>
     </div>

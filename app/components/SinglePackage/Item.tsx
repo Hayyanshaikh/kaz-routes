@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { PropertyDetailProps } from "@/app/types/CommonType";
 import CommonBadge from "../common/CommonBadge";
-import { formatCurrencyPKR } from "@/lib/utils";
+import { formatCurrency } from "@/lib/utils";
 
 interface Props {
   item: any;
@@ -27,7 +27,7 @@ const Item = ({ item, packageDetail }: Props) => {
           {/* <CommonBadge color="success" label={item?.status} /> */}
         </div>
         <p className="text-lg font-semibold text-gray-900">
-          {formatCurrencyPKR(item.price)}
+          {formatCurrency(item.price)}
         </p>
       </div>
 
@@ -50,7 +50,7 @@ const Item = ({ item, packageDetail }: Props) => {
               <strong className="font-semibold">Double:</strong>{" "}
               {item.pricing.double === 0
                 ? "Free"
-                : item.pricing.double && formatCurrencyPKR(item.pricing.double)}
+                : item.pricing.double && formatCurrency(item.pricing.double)}
             </li>
 
             <li>

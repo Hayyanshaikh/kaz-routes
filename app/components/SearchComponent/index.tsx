@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import SearchCard from "../Cards/SearchCard";
 import { CATEGORIES, FILE_BASE_URL } from "@/lib/constant";
 import CommonButton from "../common/CommonButton";
@@ -18,10 +18,17 @@ import RestaurantCard from "../Cards/RestaurantCard";
 import PackageCard from "../Cards/PackageCard";
 import VehicleCard from "../Cards/VehicleCard";
 import HotelCard from "../Cards/HotelCard";
+import CommonPagination from "../common/CommonPagination";
 
 const SearchComponent = () => {
   const searchParams = useSearchParams();
   const category = searchParams.get("category");
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    // jab category change ho, current page reset ho jaye 1
+    setCurrentPage(1);
+  }, [category]);
 
   // ✅ Extract filters from URL
 
@@ -56,7 +63,7 @@ const SearchComponent = () => {
   const list = activeQuery?.data?.data || [];
   const filters = activeQuery?.data?.filters || {};
   const isLoading = activeQuery?.isLoading || false;
-
+  const totalPages = activeQuery?.data?.meta?.last_page || false;
   const formattedFilters = convertFiltersToArray(filters);
 
   if (isLoading) return <PageLoading />;
@@ -168,6 +175,20 @@ const SearchComponent = () => {
             getCardByCategory(item, index)
           )}
         </div>
+        <CommonPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={(page) => {
+            setCurrentPage(page);
+
+            // Update URL without removing existing params
+            const params = new URLSearchParams(searchParams.toString());
+            params.set("page", page.toString());
+
+            const newUrl = `${window.location.pathname}?${params.toString()}`;
+            window.history.replaceState(null, "", newUrl);
+          }}
+        />
       </main>
     </div>
   );

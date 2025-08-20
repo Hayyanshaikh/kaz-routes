@@ -10,7 +10,7 @@ import useForm from "@/app/hooks/useForm";
 import CommonInput from "../common/CommonInput";
 import CommonTextarea from "../common/CommonTextarea";
 import VehicleBookingForm from "../VehicleBookingForm";
-import { formatCurrencyPKR } from "@/lib/utils";
+import { formatCurrency } from "@/lib/utils";
 import { useControllerPostCreateCarBooking } from "@/app/hooks/api";
 import { showError, showSuccess } from "../common/CommonSonner";
 
@@ -38,14 +38,14 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
   const isVertical = layout === "vertical";
   const [isBookingModal, setIsBookingModal] = useState(false);
   const { formData, errors, handleChange, resetForm, handleSubmit } = useForm([
-    "name",
-    "email",
-    "phone",
-    "pickupDate",
-    "dropOffDate",
-    "pickupLocation",
-    "dropOffLocation",
-    "specialRequests",
+    { name: "name", required: true },
+    { name: "email", required: true },
+    { name: "phone", required: true },
+    { name: "pickupDate", required: true },
+    { name: "dropOffDate", required: true },
+    { name: "pickupLocation", required: true },
+    { name: "dropOffLocation", required: true },
+    { name: "specialRequests" },
   ]);
 
   const { mutateAsync: carBooking, isPending } =
@@ -76,7 +76,8 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
         console.error(error);
         showError({
           message: "Failed",
-          description: "Server did not respond.",
+          description:
+            error?.response?.data?.message || "Server did not respond.",
         });
       })
       .finally(() => {
@@ -153,7 +154,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
           {/* Price & Button */}
           <div className="flex items-center justify-between pt-2 mt-auto border-t border-gray-200">
             <div className="text-gray-500 font-semibold">
-              {formatCurrencyPKR(price)}
+              {formatCurrency(price)}
             </div>
             <CommonButton
               iconPosition="right"

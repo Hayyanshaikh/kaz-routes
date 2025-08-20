@@ -71,7 +71,7 @@ const CommonMultiSelect: React.FC<CommonMultiSelectProps> = ({
                   .map((opt) => (
                     <span
                       key={opt.value}
-                      className="flex items-center gap-1 max-w-[150px] line-clamp-1 rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700 border border-gray-300"
+                      className="flex items-center gap-1 line-clamp-1 rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700 border border-gray-300"
                     >
                       {opt.label}
                       <span

@@ -1,3 +1,4 @@
+import { useGetCurrency } from "@/app/hooks/useGetCurrency";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -17,14 +18,14 @@ export const convertFiltersToArray = (filterObj: Record<string, any>) => {
   });
 };
 
-export const formatCurrencyPKR = (
-  amount: number,
-  options: Intl.NumberFormatOptions = {}
-): string => {
-  return Number(amount).toLocaleString("en-PK", {
-    style: "currency",
-    currency: "PKR",
+export const formatCurrency = (amount: number | string): string => {
+  const { symbol } = useGetCurrency();
+
+  // string ho aur commas ho to remove kar do
+  const numericAmount =
+    typeof amount === "string" ? Number(amount.replace(/,/g, "")) : amount;
+
+  return `${symbol}${numericAmount.toLocaleString("en-PK", {
     minimumFractionDigits: 2,
-    ...options,
-  });
+  })}`;
 };

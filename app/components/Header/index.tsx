@@ -8,6 +8,7 @@ import NavigationDesktop from "./NavigationDesktop";
 import NavigationMobile from "./NavigationMobile";
 import {
   useControllerGetFindAllPageContents,
+  useCurrencySettings,
   usePostToken,
 } from "@/app/hooks/api";
 import usePageContentStore from "@/app/store/usePageContent";
@@ -22,6 +23,15 @@ const Header = () => {
   const { mutateAsync: login } = usePostToken();
   const { data: pageContentRes } = useControllerGetFindAllPageContents();
   const { setPageContent } = usePageContentStore();
+
+  const { data } = useCurrencySettings();
+
+  useEffect(() => {
+    if (data) {
+      // sirf value array ko save kar rahe hain
+      localStorage.setItem("currency", JSON.stringify(data));
+    }
+  }, [data]);
 
   useEffect(() => {
     setPageContent(pageContentRes);

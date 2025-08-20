@@ -24,14 +24,14 @@ const DishCard = ({ dish, restaurantDetail }: DishCardProps | any) => {
   const [open, setOpen] = useState(false);
 
   const { formData, errors, handleChange, handleSubmit, resetForm } = useForm([
-    "name",
-    "email",
-    "phone",
-    "bookingDate",
-    "bookingTime",
-    "guestCount",
-    "referenceNumber",
-    "specialRequest",
+    { name: "name", required: true },
+    { name: "email", required: true },
+    { name: "phone", required: true },
+    { name: "bookingDate", required: true },
+    { name: "bookingTime", required: true },
+    { name: "guestCount", value: 1 }, // default 1 guest
+    { name: "referenceNumber" },
+    { name: "specialRequest" },
   ]);
 
   // Use the mutation hook

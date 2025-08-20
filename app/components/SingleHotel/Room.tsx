@@ -5,7 +5,7 @@ import CommonButton from "../common/CommonButton";
 import { Bath, Bed, CookingPot } from "lucide-react";
 import { PropertyDetailProps } from "@/app/types/CommonType";
 import CommonBadge from "../common/CommonBadge";
-import { formatCurrencyPKR } from "@/lib/utils";
+import { formatCurrency } from "@/lib/utils";
 import CommonModal from "../common/CommonModal";
 import HotelBookingForm from "../HotelForm";
 import { useControllerPostCreateHotelBooking } from "@/app/hooks/api";
@@ -18,16 +18,16 @@ const Room = ({ room, hotelDetail }: PropertyDetailProps) => {
 
   // Initialize form with pre-filled values from room and hotelDetail, including adults, infants, and children
   const { formData, errors, handleChange, handleSubmit, resetForm } = useForm([
-    "name",
-    "email",
-    "phone",
-    "checkInDate",
-    "nights",
-    "roomCount",
-    "specialRequests",
-    "adults",
-    "children",
-    "infants",
+    { name: "name", required: true },
+    { name: "email", required: true },
+    { name: "phone", required: true },
+    { name: "checkInDate", required: true },
+    { name: "nights", value: 1 },
+    { name: "roomCount", value: 1 },
+    { name: "specialRequests" },
+    { name: "adults", value: 1 },
+    { name: "children", value: 0 },
+    { name: "infants", value: 0 },
   ]);
 
   // Use the hotel booking mutation hook
@@ -79,12 +79,7 @@ const Room = ({ room, hotelDetail }: PropertyDetailProps) => {
           <CommonBadge color="success" label={room?.status} />
         </div>
         <p className="text-lg font-semibold text-gray-900">
-          {room.pricing.single &&
-            Number(room.pricing.single).toLocaleString("en-PK", {
-              style: "currency",
-              currency: "PKR",
-              minimumFractionDigits: 2,
-            })}
+          {room.pricing.single && formatCurrency(room.pricing.single)}
           <span className="text-gray-500 text-sm font-normal"> / Single</span>
         </p>
       </div>
@@ -130,21 +125,21 @@ const Room = ({ room, hotelDetail }: PropertyDetailProps) => {
               <strong className="font-semibold">Double:</strong>{" "}
               {room.pricing.double === 0
                 ? "Free"
-                : room.pricing.double && formatCurrencyPKR(room.pricing.double)}
+                : room.pricing.double && formatCurrency(room.pricing.double)}
             </li>
             <li>
               <strong className="font-semibold">Extra Bed:</strong>{" "}
               {room.pricing.extra_bed === 0
                 ? "Free"
                 : room.pricing.extra_bed &&
-                  formatCurrencyPKR(room.pricing.extra_bed)}
+                  formatCurrency(room.pricing.extra_bed)}
             </li>
             <li>
               <strong className="font-semibold">Child (No Bed):</strong>{" "}
               {room.pricing.child_no_bed === 0
                 ? "Free"
                 : room.pricing.child_no_bed &&
-                  formatCurrencyPKR(room.pricing.child_no_bed)}
+                  formatCurrency(room.pricing.child_no_bed)}
             </li>
           </ul>
         </div>

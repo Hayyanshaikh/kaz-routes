@@ -16,10 +16,18 @@ type RestaurantData = {
   variants: string[];
 };
 
+type Site = {
+  id: string;
+  name: string;
+  duration_hours: number;
+};
+
 type Fields = {
   sites: string[];
   restaurants: string[];
   restaurantData: RestaurantData[];
+  startTime: string;
+  endTime: string;
 };
 
 type Props = {
@@ -36,9 +44,8 @@ const RestaurantSection: React.FC<Props> = ({
   const { data: siteData } = useControllerGetFindAllSites();
   const { data: restaurantDataRes } = useControllerGetFindAllRestaurants();
 
-  const siteOptions = dropdownManipulator(siteData?.data || []);
+  const sites: Site[] = siteData?.data || [];
   const restaurantOptions = dropdownManipulator(restaurantDataRes?.data || []);
-
   const [selectedRestaurants, setSelectedRestaurants] = useState<
     RestaurantData[]
   >([]);
@@ -49,6 +56,47 @@ const RestaurantSection: React.FC<Props> = ({
       setSelectedRestaurants(restaurantList);
     }
   }, [formData?.restaurantData, selectedRestaurants.length]);
+
+  // Helper: total hours between start and end time
+  const getAvailableHours = () => {
+    const start = formData.startTime
+      ? parseInt(formData.startTime.split(":")[0])
+      : 0;
+    const end = formData.endTime ? parseInt(formData.endTime.split(":")[0]) : 0;
+    return end - start;
+  };
+
+  // Helper: total duration of selected sites
+  const selectedSitesDuration = (selectedIds: string[]) =>
+    selectedIds.reduce((acc, id) => {
+      const site = sites.find((s) => s.id === id);
+      return acc + (site?.duration_hours || 0);
+    }, 0);
+
+  // Filter sites based on remaining hours
+  const getAvailableSites = () => {
+    const remainingHours =
+      getAvailableHours() - selectedSitesDuration(formData.sites);
+    return sites.filter((s) => s.duration_hours <= remainingHours);
+  };
+
+  const handleSiteChange = (selectedIds: string[]) => {
+    let remainingHours = getAvailableHours();
+    const validSelection: string[] = [];
+
+    selectedIds.forEach((id) => {
+      const site = sites.find((s) => s.id === id);
+      if (site && site.duration_hours <= remainingHours) {
+        validSelection.push(id);
+        remainingHours -= site.duration_hours;
+      } else if (formData.sites.includes(id)) {
+        // keep already selected site even if remainingHours < duration
+        validSelection.push(id);
+      }
+    });
+
+    handleChange("sites", validSelection);
+  };
 
   const sanitizeArray = (arr: string[] | undefined) =>
     Array.isArray(arr) ? arr.filter((item) => item !== "") : [];
@@ -96,9 +144,7 @@ const RestaurantSection: React.FC<Props> = ({
 
   const generateVariantOptions = (dishIds: string[], restaurant: any) => {
     if (!restaurant?.dishes) return [];
-
     let variants: { label: string; value: string }[] = [];
-
     dishIds?.forEach((id) => {
       const dish = restaurant.dishes.find((d: any) => String(d.id) === id);
       if (dish?.variants) {
@@ -110,7 +156,6 @@ const RestaurantSection: React.FC<Props> = ({
         );
       }
     });
-
     return variants;
   };
 
@@ -124,25 +169,28 @@ const RestaurantSection: React.FC<Props> = ({
     { label: "Snack", value: "snack" },
   ];
 
+  // Combine already selected + available new sites
+  const dropdownSites = [
+    ...sites.filter((s) => formData.sites.includes(s.id)), // always include selected
+    ...getAvailableSites().filter((s) => !formData.sites.includes(s.id)), // only remaining hours fit
+  ];
+
   return (
     <div className="flex flex-col gap-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <CommonMultiSelect
-          label="Select Sites"
-          value={formData.sites}
-          onValueChange={(value) => safeHandleChange("sites", value)}
-          options={siteOptions}
-          error={errors.sites}
-        />
-
-        <CommonMultiSelect
-          label="Select Restaurants"
-          value={formData.restaurants}
-          onValueChange={handleRestaurantChange}
-          options={restaurantOptions}
-          error={errors.restaurants}
-        />
-      </div>
+      <CommonMultiSelect
+        label="Select Sites"
+        value={formData.sites}
+        onValueChange={handleSiteChange}
+        options={dropdownSites.map((s) => ({ label: s.name, value: s.id }))}
+        error={errors.sites}
+      />
+      <CommonMultiSelect
+        label="Select Restaurants"
+        value={formData.restaurants}
+        onValueChange={handleRestaurantChange}
+        options={restaurantOptions}
+        error={errors.restaurants}
+      />
 
       {selectedRestaurants
         .filter((rest) =>
@@ -166,7 +214,6 @@ const RestaurantSection: React.FC<Props> = ({
             restaurantDetails
           );
 
-          // Filter meal types to remove already selected types in other restaurants
           const selectedMealTypes = selectedRestaurants
             .filter((r) => r.restaurantId !== rest.restaurantId)
             .map((r) => r.mealType)

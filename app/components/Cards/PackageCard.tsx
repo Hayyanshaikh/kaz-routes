@@ -4,7 +4,7 @@ import { Star, Clock, Users, Plus, ArrowRight } from "lucide-react"; // Icons ke
 import CommonBadge from "../common/CommonBadge";
 import CommonButton from "../common/CommonButton";
 import Image from "next/image";
-import { formatCurrencyPKR } from "@/lib/utils";
+import { formatCurrency } from "@/lib/utils";
 
 type PackageCardProps = {
   imageUrl: string;
@@ -93,7 +93,7 @@ const PackageCard: React.FC<PackageCardProps> = ({
         {/* Price and Add to Cart */}
         <div className="flex items-center justify-between mt-auto border-t pt-5">
           <div className="text-stone-900 font-semibold">
-            {formatCurrencyPKR(price)}
+            {formatCurrency(price)}
           </div>
           <CommonButton
             link={`packages/${id}`}

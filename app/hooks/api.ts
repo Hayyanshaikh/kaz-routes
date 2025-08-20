@@ -418,3 +418,18 @@ export const useControllerGetFindPackageItinerariesByPackageId = (
     },
     enabled: enabled && !!packageId,
   });
+
+// ✅ GET currency from /settings
+export const useCurrencySettings = (options?: QueryOptions) =>
+  useQuery({
+    queryKey: ["CurrencySettings"],
+    queryFn: async () => {
+      const res = await axios.get("/settings");
+      // Filter currency from response
+      const currencyItem = res.data.data.find(
+        (item: any) => item.key === "currency"
+      );
+      return currencyItem?.value[0] ?? {};
+    },
+    enabled: options?.enabled ?? true,
+  });

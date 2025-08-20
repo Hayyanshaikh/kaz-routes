@@ -9,33 +9,61 @@ import Container from "@/app/components/Container";
 import CommonButton from "@/app/components/common/CommonButton";
 import CommonHeading from "@/app/components/common/CommonHeading";
 import { Mail, MapPin, Phone } from "lucide-react";
+import usePageContentStore from "@/app/store/usePageContent";
 
 export default function Contact() {
   const { formData, errors, handleChange, handleSubmit, resetForm } = useForm([
-    "name",
-    "email",
-    "phone",
-    "message",
+    { name: "name", required: true },
+    { name: "email", required: true },
+    { name: "phone", required: true },
+    { name: "message", required: true },
   ]);
 
-  const onSubmit = () => {};
+  const { pageContent } = usePageContentStore();
+
+  // ✅ Safe JSON parse function
+  const safeParse = (jsonString: string | undefined) => {
+    try {
+      return jsonString ? JSON.parse(jsonString) : {};
+    } catch (e) {
+      console.error("Invalid JSON:", e);
+      return {};
+    }
+  };
+
+  // Parse stringified JSON from store
+  const parsedData = {
+    header: safeParse(pageContent?.contact?.header),
+    form: safeParse(pageContent?.contact?.form),
+    info: safeParse(pageContent?.contact?.info),
+    socials: safeParse(pageContent?.contact?.socials),
+    map: safeParse(pageContent?.contact?.map),
+  };
+
+  console.log({ parsedData });
+
+  const onSubmit = () => {
+    console.log("Form Submitted", formData);
+    resetForm();
+  };
 
   return (
     <>
       <Head>
         <title>Contact Us</title>
       </Head>
-      <div className="">
+      {parsedData.form.enabled && (
         <Section>
           <Container>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-              {/* Contact Form */}
               <h2 className="text-4xl font-bold leading-snug mb-6 text-gray-900">
-                We're Here to Help — Contact KazRoutes for Travel Bookings,
-                Partnerships, and Media Inquiries.
+                {parsedData.header.title || "We're Here to Help — Contact Us"}
               </h2>
               <form
-                onSubmit={() => handleSubmit(onSubmit)}
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleSubmit(onSubmit);
+                }}
                 className="space-y-6"
               >
                 <CommonInput
@@ -82,109 +110,72 @@ export default function Contact() {
             </div>
           </Container>
         </Section>
-        <Section className="bg-gray-100">
-          <Container>
-            <div className="container mx-auto px-4">
-              <CommonHeading
-                title="Our Contact Details"
-                subtitle="Get in touch with us for any inquiries or support."
-              />
+      )}
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                {/* 📧 Email Section */}
-                <div className="flex flex-col items-center gap-4 ">
-                  <Mail size={40} className="text-primary" />
-                  <div className="text-center">
-                    <p className="mb-2">
-                      <a
-                        href="mailto:info@example.com"
-                        className="text-gray-600 hover:text-blue-500 transition duration-200"
-                      >
-                        info@example.com
-                      </a>
-                    </p>
-                    <p>
-                      <a
-                        href="mailto:support@example.com"
-                        className="text-gray-600 hover:text-blue-500 transition duration-200"
-                      >
-                        support@example.com
-                      </a>
-                    </p>
-                  </div>
-                </div>
-
-                {/* 📞 Phone Section */}
-                <div className="flex flex-col items-center gap-4">
-                  <Phone size={40} className="text-primary" />
-                  <div className="text-center">
-                    <p className="mb-2">
-                      <a
-                        href="tel:+1234567890"
-                        className="text-gray-600 hover:text-blue-500 transition duration-200"
-                      >
-                        +1 (234) 567-890
-                      </a>
-                    </p>
-                    <p>
-                      <a
-                        href="tel:+0987654321"
-                        className="text-gray-600 hover:text-blue-500 transition duration-200"
-                      >
-                        +0 (987) 654-321
-                      </a>
-                    </p>
-                  </div>
-                </div>
-
-                {/* 📍 Location Section */}
-                <div className="flex flex-col items-center gap-4">
-                  <MapPin size={40} className="text-primary" />
-                  <div className="text-center text-gray-600">
-                    <p>123 Business Street, Suite 456</p>
-                    <p>London, UK, 78910</p>
-                  </div>
-                </div>
+      <Section className="bg-gray-100">
+        <Container>
+          <CommonHeading
+            title="Our Contact Details"
+            subtitle="Get in touch with us for any inquiries or support."
+          />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            {/* Emails */}
+            <div className="flex flex-col items-center gap-4">
+              <Mail size={40} className="text-primary" />
+              <div className="text-center">
+                {parsedData.info.emails?.map((email: string, i: number) => (
+                  <p key={i}>
+                    <a
+                      href={`mailto:${email}`}
+                      className="text-gray-600 hover:text-blue-500 transition duration-200"
+                    >
+                      {email}
+                    </a>
+                  </p>
+                ))}
               </div>
             </div>
-          </Container>
-        </Section>
+
+            {/* Phones */}
+            <div className="flex flex-col items-center gap-4">
+              <Phone size={40} className="text-primary" />
+              <div className="text-center">
+                {parsedData.info.phones?.map((phone: string, i: number) => (
+                  <p key={i}>
+                    <a
+                      href={`tel:${phone}`}
+                      className="text-gray-600 hover:text-blue-500 transition duration-200"
+                    >
+                      {phone}
+                    </a>
+                  </p>
+                ))}
+              </div>
+            </div>
+
+            {/* Address */}
+            <div className="flex flex-col items-center gap-4">
+              <MapPin size={40} className="text-primary" />
+              <div className="text-center text-gray-600">
+                <p>{parsedData.info.address}</p>
+                <p>{parsedData.info.hours}</p>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </Section>
+
+      {parsedData.map.enabled && (
         <Section>
           <Container>
             {/* Map */}
-            <div className="h-screen rounded-2xl overflow-hidden shadow-lg">
-              <div
-                style={{
-                  position: "relative",
-                  textAlign: "right",
-                  width: "100%",
-                  height: "100%",
-                }}
-              >
-                <div
-                  style={{
-                    overflow: "hidden",
-                    background: "none",
-                    width: "100%",
-                    height: "100%",
-                  }}
-                >
-                  <iframe
-                    className="gmap_iframe"
-                    width="100%"
-                    height="100%"
-                    frameBorder="0"
-                    scrolling="no"
-                    marginHeight={0}
-                    marginWidth={0}
-                    src="https://maps.google.com/maps?width=600&height=400&hl=en&q=123%20Business%20Street,%20London,%20UK&t=&z=14&ie=UTF8&iwloc=B&output=embed"
-                  ></iframe>
-                </div>
-              </div>
-            </div>
+            <div
+              className="h-screen rounded-2xl overflow-hidden shadow-lg"
+              dangerouslySetInnerHTML={{ __html: parsedData.map.iframe }}
+            />
           </Container>
         </Section>
-      </div>
+      )}
     </>
   );
 }
