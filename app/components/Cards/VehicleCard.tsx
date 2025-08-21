@@ -45,7 +45,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
     { name: "dropOffDate", required: true },
     { name: "pickupLocation", required: true },
     { name: "dropOffLocation", required: true },
-    { name: "specialRequests" },
+    { name: "specialRequests", required: false },
   ]);
 
   const { mutateAsync: carBooking, isPending } =

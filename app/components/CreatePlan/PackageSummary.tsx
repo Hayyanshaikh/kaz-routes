@@ -1,3 +1,4 @@
+import { formatCurrency } from "@/lib/utils";
 import React from "react";
 
 const PackageSummary: React.FC<{ data: any }> = ({ data }) => {
@@ -32,7 +33,7 @@ const PackageSummary: React.FC<{ data: any }> = ({ data }) => {
     items = [],
   } = data?.[0] ?? {};
 
-  console.log({ data: data?.[0] });
+  console.log({ data: items });
 
   const containerStyle = {
     border: "1px solid #E5E7EB",
@@ -154,7 +155,7 @@ const PackageSummary: React.FC<{ data: any }> = ({ data }) => {
               padding: 16,
             }}
           >
-            <h2 style={sectionHeaderStyle}>Item {index + 1}</h2>
+            <h2 style={sectionHeaderStyle}>Day {index + 1}</h2>
 
             {/* Location */}
             <div style={{ marginBottom: 16 }}>
@@ -291,10 +292,8 @@ const PackageSummary: React.FC<{ data: any }> = ({ data }) => {
             {/* Total Price */}
             <div style={totalPriceStyle}>
               <h3>
-                Total Price: $
-                {item?.total_price
-                  ? Number(item?.total_price).toFixed(2)
-                  : "0.00"}
+                Total Price:
+                {item?.total_price ? formatCurrency(item?.total_price) : "0.00"}
               </h3>
             </div>
           </section>

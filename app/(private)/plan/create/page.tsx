@@ -125,9 +125,9 @@ const CreatePlan = () => {
 
   const handleFinish = () => {
     generatePdf("myContent");
-    // setPackageData(null);
-    // setPackageItemData(null);
-    // setTimeout(() => router.push("/"), 1000);
+    setPackageData(null);
+    setPackageItemData(null);
+    setTimeout(() => router.push("/"), 1000);
   };
 
   return (
