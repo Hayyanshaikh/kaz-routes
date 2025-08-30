@@ -4,8 +4,11 @@
 import React from "react";
 import Image from "next/image";
 import CommonButton from "../common/CommonButton";
-import { Baby, User } from "lucide-react";
-import { useGetCurrency } from "@/app/hooks/useGetCurrency";
+import {
+  ArrowRightOutlined,
+  DollarOutlined,
+  TagOutlined,
+} from "@ant-design/icons"; // ✅ Antd Icons
 import { formatCurrency } from "@/lib/utils";
 
 type SearchCardProps = {
@@ -49,15 +52,21 @@ const SearchCard = ({
       <div className="mt-auto">
         <div className="flex items-center gap-2 text-sm justify-between font-medium mb-2 text-gray-500">
           <span className="flex items-center gap-2">
-            <User size={16} />
+            <DollarOutlined /> {/* ✅ Lucide → Antd */}
             {formatCurrency(Number(adultPrice))}
           </span>
           <span className="flex items-center gap-2">
-            <Baby size={16} />
+            <TagOutlined /> {/* ✅ Lucide → Antd */}
             {formatCurrency(Number(childPrice))}
           </span>
         </div>
-        <CommonButton link={link} label="View Details" className="w-full" />
+        <CommonButton
+          link={link}
+          label="View Details"
+          className="w-full"
+          iconPosition="right"
+          icon={<ArrowRightOutlined />}
+        />
       </div>
     </div>
   );

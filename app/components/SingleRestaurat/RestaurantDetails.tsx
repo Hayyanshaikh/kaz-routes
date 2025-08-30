@@ -46,11 +46,12 @@ const RestaurantDetails = ({ restaurant }: Props) => {
         }
       />
       <div className="mb-6 text-gray-700">
-        <CommonButton
-          className="p-0 bg-transparent hover:bg-transparent text-gray-900 underline"
+        <button
+          className="p-0 bg-transparent hover:bg-transparent text-gray-900 w-auto underline text-sm"
           onClick={() => setShowFull(!showFull)}
-          label={showFull ? "Show less" : "Show more"}
-        />
+        >
+          {showFull ? "Show less" : "Show more"}
+        </button>
       </div>
 
       {/* Features */}

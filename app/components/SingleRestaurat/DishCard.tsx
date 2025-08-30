@@ -1,57 +1,40 @@
 import Image from "next/image";
 import { useState } from "react";
 import CommonModal from "../common/CommonModal";
-import RestaurantForm from "../RestaurantForm";
-import useForm from "@/app/hooks/useForm";
 import { showError, showSuccess } from "../common/CommonSonner";
 import CommonButton from "../common/CommonButton";
 import { useControllerPostCreateRestaurantBooking } from "@/app/hooks/api";
 import { RestaurantBookingPayload } from "@/app/types/CommonType";
+import { Form, Input, DatePicker, TimePicker, InputNumber } from "antd";
+import RestaurantForm from "../RestaurantForm";
 
 type DishCardProps = {
-  dish: {
-    name: string;
-    description: string | null;
-    images: string[];
-    variants: {
-      size: string;
-      price: string;
-    }[];
-  };
+  dish: any;
+  restaurantDetail?: any;
 };
 
-const DishCard = ({ dish, restaurantDetail }: DishCardProps | any) => {
+const DishCard = ({ dish, restaurantDetail }: DishCardProps) => {
   const [open, setOpen] = useState(false);
+  const [form] = Form.useForm();
 
-  const { formData, errors, handleChange, handleSubmit, resetForm } = useForm([
-    { name: "name", required: true },
-    { name: "email", required: true },
-    { name: "phone", required: true },
-    { name: "bookingDate", required: true },
-    { name: "bookingTime", required: true },
-    { name: "guestCount", value: 1, required: false },
-    { name: "specialRequest", required: false },
-  ]);
-
-  // Use the mutation hook
+  // Mutation hook
   const { mutateAsync: createBooking, isPending } =
     useControllerPostCreateRestaurantBooking();
 
-  const onSubmit = async () => {
-    // Create payload with required fields matching the API structure
+  const onFinish = async (values: any) => {
+    console.log({ values });
     const payload: RestaurantBookingPayload = {
-      restaurant_id: restaurantDetail?.id, // Replace with dynamic restaurant ID if available
-      booking_date: formData.bookingDate,
-      booking_time: formData.bookingTime,
-      guests: parseInt(formData.guestCount, 10) || 1,
-      special_request: formData.specialRequest || "None",
-      customer_name: formData.name,
-      customer_email: formData.email,
-      customer_phone: formData.phone,
-      variant_ids: dish.variants.map((v: any) => parseInt(v.id, 10) || 1), // Adjust based on your variant IDs logic
+      restaurant_id: restaurantDetail?.id || undefined,
+      booking_date: values.bookingDate?.format("YYYY-MM-DD"),
+      booking_time: values.bookingTime?.format("HH:mm"),
+      guests: values.guestCount || 1,
+      special_request: values.specialRequest || "None",
+      customer_name: values.name,
+      customer_email: values.email,
+      customer_phone: values.phone,
+      variant_ids: dish.variants.map((v) => parseInt(v.id as any, 10) || 1),
     };
 
-    // Call the mutation and handle success/error
     createBooking(payload)
       .then(() => {
         showSuccess({
@@ -60,7 +43,7 @@ const DishCard = ({ dish, restaurantDetail }: DishCardProps | any) => {
             "Your booking request has been successfully submitted. We will get back to you shortly.",
         });
         setOpen(false);
-        resetForm();
+        form.resetFields();
       })
       .catch((error) => {
         console.error("Booking Error:", error);
@@ -79,19 +62,22 @@ const DishCard = ({ dish, restaurantDetail }: DishCardProps | any) => {
   return (
     <div className="flex flex-col gap-6 mt-4">
       {/* Dish Image */}
-      <div className="w-full h-60 rounded-lg overflow-hidden shadow">
+      <div className="w-full h-60 rounded-lg overflow-hidden shadow relative">
         <Image
-          layout="fill"
+          fill
           src={image}
           alt={dish.name}
-          className="w-full h-full object-cover !relative"
+          className="w-full h-full object-cover"
         />
       </div>
 
       <div className="flex sm:flex-row flex-col gap-4">
         {/* Variants */}
-        {dish.variants.map((v: any, i: number) => (
-          <div key={i} className="p-4 border rounded-lg flex-1 bg-gray-50">
+        {dish.variants.map((v, i) => (
+          <div
+            key={i}
+            className="p-4 border border-gray-300 rounded-lg flex-1 bg-gray-50"
+          >
             <p className="text-sm text-primary font-medium mb-2">
               {v.price &&
                 Number(v.price).toLocaleString("en-PK", {
@@ -104,31 +90,30 @@ const DishCard = ({ dish, restaurantDetail }: DishCardProps | any) => {
           </div>
         ))}
       </div>
+
       <CommonButton label="Book Now" onClick={() => setOpen(true)} />
+
       <CommonModal
         open={open}
         onOpenChange={setOpen}
         title={`Restaurant Booking ${dish.name}`}
         confirmText="Submit Booking"
-        className="!max-w-3xl"
+        onClose={() => form.resetFields()}
         destroyOnClose={false}
-        loading={isPending} // Reflect mutation loading state
+        loading={isPending}
+        width={766}
         onConfirm={() => {
-          handleSubmit(onSubmit);
+          form.submit();
         }}
       >
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-          }}
+        <Form
+          layout="vertical"
+          form={form}
+          onFinish={onFinish}
+          initialValues={{ guestCount: 1 }}
         >
-          <RestaurantForm
-            dishItems={dish.variants}
-            errors={errors}
-            formData={formData}
-            handleChange={handleChange}
-          />
-        </form>
+          <RestaurantForm dishItems={dish.variants} />
+        </Form>
       </CommonModal>
     </div>
   );

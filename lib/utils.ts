@@ -1,10 +1,12 @@
-import { useGetCurrency } from "@/app/hooks/useGetCurrency";
-import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { useGetCurrency } from "@/app/hooks/useGetCurrency";
 
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+// Combine class names
+export function cn(...inputs: string[]) {
+  return twMerge(...inputs);
 }
+
+// Convert filters object to array
 export const convertFiltersToArray = (filterObj: Record<string, any>) => {
   return Object.entries(filterObj).map(([key, valueArray]) => {
     const optionsList = valueArray?.[0]?.value || [];
@@ -18,10 +20,10 @@ export const convertFiltersToArray = (filterObj: Record<string, any>) => {
   });
 };
 
+// Format currency
 export const formatCurrency = (amount: number | string): string => {
   const { symbol } = useGetCurrency();
 
-  // string ho aur commas ho to remove kar do
   const numericAmount =
     typeof amount === "string" ? Number(amount.replace(/,/g, "")) : amount;
 

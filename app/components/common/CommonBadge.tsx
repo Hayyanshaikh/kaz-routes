@@ -1,23 +1,34 @@
+import React from "react";
 import { CommonBadgeProps } from "@/app/types/CommonType";
-import { Badge } from "@/shadcn/components/ui/badge";
 
 const CommonBadge: React.FC<CommonBadgeProps> = ({
   label,
   className = "",
   color,
 }) => {
-  let colorClass = "";
+  let bgColor: string;
+  let textColor: string;
 
-  if (color === "success") colorClass = "bg-green-200 text-green-800";
-  else if (color === "warning") colorClass = "bg-yellow-200 text-yellow-800";
-  else if (color === "error") colorClass = "bg-red-200 text-red-800";
+  if (color === "success") {
+    bgColor = "bg-green-100";
+    textColor = "text-green-800";
+  } else if (color === "warning") {
+    bgColor = "bg-yellow-100";
+    textColor = "text-yellow-800";
+  } else if (color === "error") {
+    bgColor = "bg-red-100";
+    textColor = "text-red-800";
+  } else {
+    bgColor = "bg-gray-200";
+    textColor = "text-black";
+  }
 
   return (
-    <Badge
-      className={`border-0 rounded-full leading-none py-1 pb-1.5 px-3 ${className} ${colorClass}`}
+    <span
+      className={`${bgColor} ${textColor} ${className} py-0.5 w-auto font-medium rounded-full px-3 text-xs leading-5`}
     >
       {label}
-    </Badge>
+    </span>
   );
 };
 

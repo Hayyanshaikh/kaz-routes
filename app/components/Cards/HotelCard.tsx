@@ -1,6 +1,8 @@
+"use client";
+
 import React from "react";
 import CommonButton from "../common/CommonButton";
-import { ArrowRight } from "lucide-react";
+import { ArrowRightOutlined } from "@ant-design/icons";
 import Image from "next/image";
 import { FILE_BASE_URL } from "@/lib/constant";
 import CommonBadge from "../common/CommonBadge";
@@ -28,7 +30,7 @@ const HotelCard = ({ hotelData }: any) => {
           alt={hotel_name || "Not found"}
           className="!relative w-full h-full object-cover group-hover:scale-105 transition"
           onError={(e) => {
-            e.currentTarget.src =
+            (e.currentTarget as HTMLImageElement).src =
               "https://placehold.co/300x200/E5E5E5/333?text=Image+Not+Found";
           }}
         />
@@ -43,16 +45,6 @@ const HotelCard = ({ hotelData }: any) => {
           {hotel_name}
         </h3>
 
-        {/* City and Tag */}
-        {/* <p className="text-gray-600 text-sm mb-4">
-          {city?.name}, {city?.country_id}
-          {tag && (
-            <span className="ml-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
-              {tag}
-            </span>
-          )}
-        </p> */}
-
         {/* Description */}
         <div className="text-gray-700 text-sm mb-4">
           <p className="line-clamp-3">{description}</p>
@@ -63,7 +55,7 @@ const HotelCard = ({ hotelData }: any) => {
           className="w-full mt-auto"
           label="View Details"
           iconPosition="right"
-          icon={<ArrowRight />}
+          icon={<ArrowRightOutlined />}
         />
       </div>
     </div>

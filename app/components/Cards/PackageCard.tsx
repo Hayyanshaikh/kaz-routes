@@ -1,6 +1,11 @@
 "use client";
 import React from "react";
-import { Star, Clock, Users, Plus, ArrowRight } from "lucide-react"; // Icons ke liye
+import {
+  StarFilled,
+  ClockCircleOutlined,
+  UserOutlined,
+  ArrowRightOutlined,
+} from "@ant-design/icons"; // Antd icons
 import CommonBadge from "../common/CommonBadge";
 import CommonButton from "../common/CommonButton";
 import Image from "next/image";
@@ -44,11 +49,7 @@ const PackageCard: React.FC<PackageCardProps> = ({
         />
         {/* Rating Badge */}
         {/* <div className="absolute top-3 right-3 bg-white text-stone-800 px-3 py-1 rounded-full flex items-center shadow-md">
-          <Star
-            size={16}
-            fill="currentColor"
-            className="text-yellow-400 mr-1"
-          />
+          <StarFilled className="text-yellow-400 mr-1 text-sm" />
           <span className="font-semibold text-sm">{rating.toFixed(1)}</span>
         </div> */}
       </div>
@@ -65,33 +66,17 @@ const PackageCard: React.FC<PackageCardProps> = ({
         {/* Duration & Participants */}
         <div className="flex items-center justify-between text-stone-500 text-sm mb-4">
           <div className="flex items-center space-x-1">
-            <Clock size={16} />
+            <ClockCircleOutlined />
             <span>{duration} Days</span>
           </div>
           <div className="flex items-center space-x-1">
-            <Users size={16} />
+            <UserOutlined />
             <span>Max {maxParticipants}</span>
           </div>
         </div>
 
-        {/* Highlights */}
-        {/* <div className="mb-4">
-          <h4 className="text-stone-900 font-semibold text-sm mb-2">
-            Highlights:
-          </h4>
-          <div className="flex flex-wrap gap-2">
-            {highlights.map((highlight, index) => (
-              <CommonBadge
-                className="bg-primary/15 text-primary"
-                key={index}
-                label={highlight}
-              />
-            ))}
-          </div>
-        </div> */}
-
         {/* Price and Add to Cart */}
-        <div className="flex items-center justify-between mt-auto border-t pt-5">
+        <div className="flex items-center justify-between mt-auto border-t border-gray-300 pt-5">
           <div className="text-stone-900 font-semibold">
             {formatCurrency(price)}
           </div>
@@ -99,7 +84,7 @@ const PackageCard: React.FC<PackageCardProps> = ({
             link={`packages/${id}`}
             label="Details"
             iconPosition="right"
-            icon={<ArrowRight size={18} />}
+            icon={<ArrowRightOutlined />}
           />
         </div>
       </div>

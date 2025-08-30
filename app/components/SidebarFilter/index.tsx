@@ -56,7 +56,7 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({ filters }) => {
   };
 
   return (
-    <div className="p-4 border rounded-xl space-y-4">
+    <div className="p-4 border border-gray-300 rounded-xl space-y-4">
       {filters.map((filter) => (
         <div key={filter.id}>
           <h3 className="font-semibold text-sm text-gray-700 mb-2">

@@ -1,30 +1,30 @@
+import React from "react";
+import { Form, Input } from "antd";
 import { CommonTextareaProps } from "@/app/types/CommonType";
-import { Textarea } from "@/shadcn/components/ui/textarea";
+
+const { TextArea } = Input;
 
 const CommonTextarea: React.FC<CommonTextareaProps> = ({
   value,
   onChange,
   placeholder = "",
   disabled = false,
+  name,
   className = "",
   label = "",
-  error,
-}) => (
-  <div className="text-left w-full">
-    {label && (
-      <label className="mb-1 block text-xs text-gray-600">{label}</label>
-    )}
-    <Textarea
-      value={value}
-      onChange={onChange}
-      placeholder={placeholder}
-      disabled={disabled}
-      className={`${className} bg-white text-sm ${
-        error ? "border-red-500" : ""
-      }`}
-    />
-    {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
-  </div>
-);
+}) => {
+  return (
+    <Form.Item layout="vertical" label={label} className="w-full" name={name}>
+      <TextArea
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        disabled={disabled}
+        className={className}
+        rows={4} // default height (customizable)
+      />
+    </Form.Item>
+  );
+};
 
 export default CommonTextarea;

@@ -1,14 +1,8 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import CommonButton from "../common/CommonButton";
-import { Menu } from "lucide-react";
-import {
-  Sheet,
-  SheetTrigger,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/shadcn/components/ui/sheet";
+import { MenuOutlined } from "@ant-design/icons"; // ✅ AntD Icon
+import { Drawer } from "antd"; // ✅ AntD Drawer
 import NavigationLinksList from "./NavigationLinksList";
 import Logo from "./Logo";
 
@@ -18,35 +12,49 @@ type Props = {
 };
 
 const NavigationMobile = ({ className, navigationLinks = [] }: Props) => {
+  const [open, setOpen] = useState(false);
+
+  const handleClose = () => setOpen(false);
+
   return (
     <div className={`md:hidden ${className}`}>
-      <Sheet>
-        <SheetTrigger>
-          <Menu className="w-6 h-6 cursor-pointer text-white" />
-        </SheetTrigger>
-        <SheetContent side="right" className="w-80 bg-white gap-0">
-          <SheetHeader>
-            <SheetTitle>
-              <Logo className="!text-black" />
-            </SheetTitle>
-          </SheetHeader>
+      {/* Trigger Button */}
+      <MenuOutlined
+        className="!text-white text-xl cursor-pointer"
+        onClick={() => setOpen(true)}
+      />
 
-          {/* Shared navigation links */}
-          <div className="flex flex-col gap-2 flex-1">
-            <NavigationLinksList
-              links={navigationLinks}
-              wrapperClass="flex-col gap-3"
-              itemClass="px-4 py-2 !text-black"
-              onItemClick={() => document.body.click()} // auto-close
-            />
-            <CommonButton
-              label="Create Plan"
-              link="/plan/create"
-              className="w-full mt-auto px-4 mb-4"
-            />
-          </div>
-        </SheetContent>
-      </Sheet>
+      {/* Drawer for Mobile Navigation */}
+      <Drawer
+        title={<Logo className="!text-black" />}
+        placement="right"
+        closable
+        classNames={{
+          body: "!p-2",
+          header: "!p-2",
+          footer: "!p-2",
+        }}
+        onClose={handleClose}
+        open={open}
+        width={320}
+      >
+        <div className="flex flex-col gap-2 h-full">
+          {/* Navigation Links */}
+          <NavigationLinksList
+            links={navigationLinks}
+            wrapperClass="flex-col gap-3"
+            itemClass="px-4 py-2 !text-black"
+            onItemClick={handleClose} // Auto-close on click
+          />
+
+          {/* CTA Button */}
+          <CommonButton
+            label="Create Plan"
+            link="/plan/create"
+            className="w-full mt-auto px-4 mb-4"
+          />
+        </div>
+      </Drawer>
     </div>
   );
 };

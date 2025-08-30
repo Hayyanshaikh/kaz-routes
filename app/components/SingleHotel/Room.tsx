@@ -1,74 +1,56 @@
 "use client";
 
 import React, { useState } from "react";
+import { Form, Input, DatePicker, InputNumber } from "antd";
 import CommonButton from "../common/CommonButton";
-import { Bath, Bed, CookingPot } from "lucide-react";
+import { CoffeeOutlined, HomeOutlined, RestOutlined } from "@ant-design/icons";
 import { PropertyDetailProps } from "@/app/types/CommonType";
 import CommonBadge from "../common/CommonBadge";
 import { formatCurrency } from "@/lib/utils";
 import CommonModal from "../common/CommonModal";
-import HotelBookingForm from "../HotelForm";
 import { useControllerPostCreateHotelBooking } from "@/app/hooks/api";
-import useForm from "@/app/hooks/useForm";
+import HotelBookingForm from "../HotelForm"; // Ab isko AntD compatible bana lena
 import { showError, showSuccess } from "../common/CommonSonner";
-import dayjs from "dayjs";
 
 const Room = ({ room, hotelDetail }: PropertyDetailProps) => {
   const [open, setOpen] = useState(false);
-
-  // Initialize form with pre-filled values from room and hotelDetail, including adults, infants, and children
-  const { formData, errors, handleChange, handleSubmit, resetForm } = useForm([
-    { name: "name", required: true },
-    { name: "email", required: true },
-    { name: "phone", required: true },
-    { name: "checkInDate", required: true },
-    { name: "nights", value: 1 },
-    { name: "roomCount", value: 1 },
-    { name: "specialRequests", required: false },
-    { name: "adults", value: 1 },
-    { name: "children", value: 0 },
-    { name: "infants", value: 0 },
-  ]);
-
-  // Use the hotel booking mutation hook
+  const [form] = Form.useForm();
   const { mutateAsync: createHotelBooking, isPending } =
     useControllerPostCreateHotelBooking();
 
-  // Handle form submission
-  const onSubmit = () => {
+  const onFinish = async (values: any) => {
     const payload = {
-      customer_name: formData.name || "",
-      customer_email: formData.email || "",
-      customer_phone: formData.phone || "",
+      customer_name: values.name || "",
+      customer_email: values.email || "",
+      customer_phone: values.phone || "",
       hotel_id: hotelDetail?.id || "",
       room_id: room?.id || "",
-      check_in: formData.checkInDate || "",
-      nights: Number(formData.nights) || 0,
-      total_rooms: Number(formData.roomCount) || 1,
-      total_adults: Number(formData.adults) || 0,
-      total_children: Number(formData.children) || 0,
-      total_infants: Number(formData.infants) || 0,
-      special_request: formData.specialRequests || "",
-      meal_preference: formData.mealPlan || room?.meal_plan || "",
+      check_in: values.checkInDate?.format("YYYY-MM-DD") || "",
+      nights: Number(values.nights) || 0,
+      total_rooms: Number(values.roomCount) || 1,
+      total_adults: Number(values.adults) || 0,
+      total_children: Number(values.children) || 0,
+      total_infants: Number(values.infants) || 0,
+      special_request: values.specialRequests || "",
+      meal_preference: values.mealPlan || room?.meal_plan || "",
     };
 
-    createHotelBooking(payload, {
-      onSuccess: (response) => {
-        showSuccess({
-          message: "Booking Successful",
-          description: "Your hotel booking has been successfully created.",
-        });
-        resetForm();
-        setOpen(false);
-      },
-      onError: (error: any) => {
-        showError({
-          message: "Booking Failed",
-          description:
-            error?.response?.data?.message || "Something went wrong!",
-        });
-      },
-    });
+    try {
+      await createHotelBooking(payload);
+      setOpen(false);
+      form.resetFields();
+      showSuccess({
+        message: "Booking Successful",
+        description: "Your hotel booking has been successfully created.",
+      });
+    } catch (error: any) {
+      showError({
+        message: "Booking Failed",
+        description:
+          error?.response?.data?.message ||
+          "Something went wrong. Please try again.",
+      });
+    }
   };
 
   return (
@@ -86,21 +68,21 @@ const Room = ({ room, hotelDetail }: PropertyDetailProps) => {
 
       <p className="text-sm text-gray-700">{room?.description}</p>
 
-      <div className="flex items-center space-x-6 text-gray-700 border-y py-5">
+      <div className="flex items-center space-x-6 text-gray-700 border-y border-gray-300 py-5">
         <div className="flex items-start flex-col gap-2">
-          <CookingPot size={20} />
+          <CoffeeOutlined className="text-lg" />
           <span className="text-sm">
             <strong className="font-medium">Meal:</strong> {room.meal_plan}
           </span>
         </div>
         <div className="flex items-start flex-col gap-2">
-          <Bed size={20} />
+          <HomeOutlined className="text-lg" />
           <span className="text-sm">
             <strong className="font-medium">Bed:</strong> {room.bed_type}
           </span>
         </div>
         <div className="flex items-start flex-col gap-2">
-          <Bath size={20} />
+          <RestOutlined className="text-lg" />
           <span className="text-sm">
             <strong className="font-medium">Attached Bath:</strong>{" "}
             {room.has_attached_bath ? "Yes" : "No"}
@@ -108,7 +90,7 @@ const Room = ({ room, hotelDetail }: PropertyDetailProps) => {
         </div>
       </div>
 
-      <div className="flex items-start gap-16 border-b pb-5">
+      <div className="flex items-start gap-16 border-b border-gray-300 pb-5">
         <div>
           <p className="font-semibold text-gray-900 mb-3">Facilities:</p>
           <ul className="list-disc list-inside text-sm text-gray-700">
@@ -152,26 +134,28 @@ const Room = ({ room, hotelDetail }: PropertyDetailProps) => {
         disabled={isPending}
       />
 
-      {/* ✅ Modal With Form */}
       <CommonModal
         open={open}
         onOpenChange={setOpen}
-        title={`Hotel Booking ${
-          room.name.charAt(0).toUpperCase() + room.name.slice(1)
-        } Room`}
+        title={`Hotel Booking ${room.name} Room`}
         confirmText={isPending ? "Submitting..." : "Submit Booking"}
-        className="!max-w-3xl"
+        width={766}
         destroyOnClose={false}
-        onConfirm={() => {
-          handleSubmit(onSubmit);
-        }}
+        onClose={() => form.resetFields()}
+        onConfirm={() => form.submit()}
         loading={isPending}
       >
-        <HotelBookingForm
-          formData={formData}
-          errors={errors}
-          handleChange={handleChange}
-        />
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={onFinish}
+          initialValues={{
+            nights: 1,
+            adults: 1,
+          }}
+        >
+          <HotelBookingForm />
+        </Form>
       </CommonModal>
     </div>
   );

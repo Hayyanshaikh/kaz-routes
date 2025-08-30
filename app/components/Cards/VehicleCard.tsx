@@ -1,18 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
-import { MapPin, ArrowRight } from "lucide-react";
+import { EnvironmentOutlined, ArrowRightOutlined } from "@ant-design/icons"; // ⬅️ AntD Icons
 import CommonButton from "../common/CommonButton";
 import CommonBadge from "../common/CommonBadge";
 import CommonModal from "../common/CommonModal";
 import Image from "next/image";
-import useForm from "@/app/hooks/useForm";
-import CommonInput from "../common/CommonInput";
-import CommonTextarea from "../common/CommonTextarea";
-import VehicleBookingForm from "../VehicleBookingForm";
 import { formatCurrency } from "@/lib/utils";
 import { useControllerPostCreateCarBooking } from "@/app/hooks/api";
 import { showError, showSuccess } from "../common/CommonSonner";
+import { Form, Input, DatePicker } from "antd";
+import VehicleBookingForm from "../VehicleBookingForm";
+
+const { TextArea } = Input;
 
 interface VehicleCardProps {
   imageUrl: string;
@@ -37,43 +37,32 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
 }) => {
   const isVertical = layout === "vertical";
   const [isBookingModal, setIsBookingModal] = useState(false);
-  const { formData, errors, handleChange, resetForm, handleSubmit } = useForm([
-    { name: "name", required: true },
-    { name: "email", required: true },
-    { name: "phone", required: true },
-    { name: "pickupDate", required: true },
-    { name: "dropOffDate", required: true },
-    { name: "pickupLocation", required: true },
-    { name: "dropOffLocation", required: true },
-    { name: "specialRequests", required: false },
-  ]);
+  const [form] = Form.useForm();
 
   const { mutateAsync: carBooking, isPending } =
     useControllerPostCreateCarBooking();
 
-  const onSubmit = () => {
+  const onSubmit = (values: any) => {
     const payload = {
       car_id: id || "",
-      customer_name: formData?.name || "",
-      customer_email: formData?.email || "",
-      customer_phone: formData?.phone || "",
-      start_date: formData?.pickupDate || "",
-      end_date: formData?.dropOffDate || "",
-      pickup_location: formData?.pickupLocation || "",
-      dropoff_location: formData?.dropOffLocation || "",
-      special_requests: formData?.specialRequests || "",
+      customer_name: values.name || "",
+      customer_email: values.email || "",
+      customer_phone: values.phone || "",
+      start_date: values.pickupDate?.format("YYYY-MM-DD") || "",
+      end_date: values.dropOffDate?.format("YYYY-MM-DD") || "",
+      pickup_location: values.pickupLocation || "",
+      dropoff_location: values.dropOffLocation || "",
+      special_requests: values.specialRequests || "",
     };
 
     carBooking(payload)
       .then(() => {
-        console.log("Submit");
         showSuccess({
           message: "Booking done!",
           description: "Your booking has been confirmed successfully.",
         });
       })
       .catch((error) => {
-        console.error(error);
         showError({
           message: "Failed",
           description:
@@ -81,11 +70,9 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
         });
       })
       .finally(() => {
-        resetForm();
+        form.resetFields();
         setIsBookingModal(false);
       });
-
-    // Success action
   };
 
   return (
@@ -93,14 +80,14 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
       {/* Card */}
       <div
         className={`group bg-white rounded-lg shadow-sm overflow-hidden w-full border border-gray-200 hover:border-primary transition
-        ${isVertical ? "flex flex-col" : "flex flex-col md:flex-row"}`}
+        ${isVertical ? "flex flex-col" : "flex flex-col sm:flex-row"}`}
       >
         {/* Image */}
         <div
-          className={`relative ${
+          className={`relative border-gray-300 ${
             isVertical
-              ? "w-full h-60 border-b"
-              : "w-full md:w-2/4 h-60 border-r"
+              ? "w-full h-full border-b"
+              : "w-full sm:w-2/4 sm:border-r"
           } flex items-center justify-center p-4 group-hover:bg-primary/10 group-hover:border-primary transition`}
         >
           <Image
@@ -113,14 +100,14 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
 
         {/* Details */}
         <div
-          className={`p-4 flex flex-col justify-between text-gray-800 flex-1 ${
+          className={`p-4 flex flex-col items-start justify-between text-gray-800 flex-1 ${
             isVertical ? "w-full" : "w-full md:w-2/3"
           }`}
         >
-          {/* Location */}
+          {/* Availability */}
           {isAvailable && (
             <CommonBadge
-              className="capitalize mb-2"
+              className="capitalize !mb-2"
               label={isAvailable}
               color={
                 isAvailable === "available"
@@ -152,13 +139,13 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
           </div>
 
           {/* Price & Button */}
-          <div className="flex items-center justify-between pt-2 mt-auto border-t border-gray-200">
+          <div className="flex items-center w-full justify-between pt-2 mt-auto border-t border-gray-200">
             <div className="text-gray-500 font-semibold">
               {formatCurrency(price)}
             </div>
             <CommonButton
               iconPosition="right"
-              icon={<ArrowRight className="w-4 h-4" />}
+              icon={<ArrowRightOutlined className="text-primary" />} // ✅ AntD icon
               label="Book Now"
               onClick={() => setIsBookingModal(true)}
             />
@@ -168,7 +155,6 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
 
       {/* Modal */}
       <CommonModal
-        className="!max-w-3xl"
         open={isBookingModal}
         onOpenChange={setIsBookingModal}
         title={`Book ${carBrand} ${carModel}`}
@@ -177,21 +163,12 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
         confirmText="Book"
         destroyOnClose={false}
         onConfirm={() => {
-          setIsBookingModal(true);
-          handleSubmit(onSubmit);
+          form.submit();
         }}
       >
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-          }}
-        >
-          <VehicleBookingForm
-            formData={formData}
-            errors={errors}
-            handleChange={handleChange}
-          />
-        </form>
+        <Form form={form} layout="vertical">
+          <VehicleBookingForm />
+        </Form>
       </CommonModal>
     </>
   );

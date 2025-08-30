@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import Link from "next/link";
 import NavigationLinksList from "./NavigationLinksList";
 import Logo from "./Logo";
 import CommonButton from "../common/CommonButton";

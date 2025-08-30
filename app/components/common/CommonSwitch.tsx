@@ -1,5 +1,5 @@
 import { CommonSwitchProps } from "@/app/types/CommonType";
-import { Switch } from "@/shadcn/components/ui/switch";
+import { Switch, Form } from "antd";
 
 const CommonSwitch: React.FC<CommonSwitchProps> = ({
   checked,
@@ -7,16 +7,16 @@ const CommonSwitch: React.FC<CommonSwitchProps> = ({
   className = "",
   label = "",
 }) => (
-  <label
-    className={`flex items-center gap-2 cursor-pointer user-select-none ${className}`}
+  <Form.Item
+    label={label}
+    className={className}
+    valuePropName="checked" // Switch ke liye zaroori
   >
     <Switch
       checked={checked}
-      onCheckedChange={onCheckedChange}
-      className={`cursor-pointer`}
+      onChange={onCheckedChange} // Antd me "onChange" hota hai
     />
-    {label && <span className="user-select-none">{label}</span>}
-  </label>
+  </Form.Item>
 );
 
 export default CommonSwitch;

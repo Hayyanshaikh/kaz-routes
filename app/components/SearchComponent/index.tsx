@@ -163,7 +163,7 @@ const SearchComponent = () => {
               className={`${
                 cat.value === category
                   ? ""
-                  : "*:border *:bg-transparent *:text-black *:hover:text-white *:hover:border-primary"
+                  : "*:!border *:!border-gray-300 *:!bg-transparent *:!text-black *:!hover:text-white *:!hover:border-primary"
               }`}
             />
           ))}

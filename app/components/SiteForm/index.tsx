@@ -1,95 +1,66 @@
 "use client";
+import CommonDatePicker from "../common/CommonDatePicker";
 import CommonInput from "../common/CommonInput";
 import CommonTextarea from "../common/CommonTextarea";
 
-interface SiteFormProps {
-  formData: Record<string, string>;
-  errors: Record<string, string>;
-  handleChange: (key: string, value: string) => void;
-}
-
-const SiteForm: React.FC<SiteFormProps> = ({
-  formData,
-  errors,
-  handleChange,
-}) => {
+const SiteForm = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <CommonInput
+        name="customerName"
         label="Customer Name"
-        placeholder=""
-        value={formData.customerName}
-        error={errors.customerName}
-        onChange={(e) => handleChange("customerName", e.target.value)}
+        placeholder="Enter customer name"
       />
 
       <CommonInput
+        name="customerPhone"
         label="Customer Phone"
-        placeholder=""
-        value={formData.customerPhone}
-        error={errors.customerPhone}
-        onChange={(e) => handleChange("customerPhone", e.target.value)}
+        placeholder="Enter phone number"
       />
 
       <CommonInput
         type="email"
+        name="customerEmail"
         label="Customer Email"
-        placeholder=""
-        value={formData.customerEmail}
-        error={errors.customerEmail}
-        onChange={(e) => handleChange("customerEmail", e.target.value)}
+        placeholder="Enter email address"
       />
-      <CommonInput
-        type="date"
+
+      <CommonDatePicker
+        name="bookingDate"
         label="Booking Date"
-        placeholder="mm/dd/yyyy"
-        value={formData.bookingDate}
-        error={errors.bookingDate}
-        onChange={(e) => handleChange("bookingDate", e.target.value)}
+        placeholder="Select booking date"
       />
 
-      <CommonInput
-        type="time"
-        label="Booking Time"
-        placeholder="--:--"
-        value={formData.bookingTime}
-        error={errors.bookingTime}
-        onChange={(e) => handleChange("bookingTime", e.target.value)}
-      />
+      <CommonDatePicker name="bookingTime" label="Booking Time" mode="time" />
+
       <CommonInput
         type="number"
+        name="numberOfAdults"
         label="Number of Adults (Age 13+)"
-        placeholder="0"
-        value={formData.numberOfAdults}
-        error={errors.numberOfAdults}
-        onChange={(e) => handleChange("numberOfAdults", e.target.value)}
+        placeholder="Enter number of adults"
       />
 
       <CommonInput
         type="number"
+        isRequired={false}
+        name="numberOfBoys"
         label="Number of Boys (Age 0 - 7)"
-        placeholder="0"
-        value={formData.numberOfBoys}
-        error={errors.numberOfBoys}
-        onChange={(e) => handleChange("numberOfBoys", e.target.value)}
+        placeholder="Enter number of boys"
       />
 
       <CommonInput
         type="number"
+        name="numberOfChildren"
+        isRequired={false}
         label="Number of Children (Age 8 - 12)"
-        placeholder="0"
-        value={formData.numberOfChildren}
-        error={errors.numberOfChildren}
-        onChange={(e) => handleChange("numberOfChildren", e.target.value)}
+        placeholder="Enter number of children"
       />
 
       <div className="col-span-1 md:col-span-2">
         <CommonTextarea
+          name="specialRequest"
           label="Special Request"
-          placeholder=""
-          value={formData.specialRequest}
-          error={errors.specialRequest}
-          onChange={(e) => handleChange("specialRequest", e.target.value)}
+          placeholder="Write any special requests here"
         />
       </div>
     </div>

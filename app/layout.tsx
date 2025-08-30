@@ -1,3 +1,4 @@
+import "@ant-design/v5-patch-for-react-19";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
@@ -5,7 +6,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Providers from "./providers";
 import { Toaster } from "sonner";
-
+import { ConfigProvider } from "antd";
 // Poppins font config
 const poppins = Poppins({
   subsets: ["latin"],
@@ -29,12 +30,43 @@ export default function RootLayout({
         className={`${poppins.variable} font-sans antialiased min-h-screen flex flex-col`}
       >
         <Providers>
-          <Header />
-          <main>
-            {children}
-            <Toaster position="bottom-right" richColors />
-          </main>
-          <Footer />
+          <ConfigProvider
+            theme={{
+              components: {
+                Button: {
+                  controlHeight: 38,
+                },
+                Radio: {
+                  colorPrimary: "#ff6900",
+                  colorPrimaryHover: "#3c4fde",
+                  colorPrimaryActive: "#ff0000",
+                },
+                Table: {
+                  headerColor: "#222",
+                  cellPaddingBlock: 10,
+                },
+                Form: {
+                  colorTextPlaceholder: "#0005",
+                  fontFamily: "Poppins, sans-serif",
+                  labelFontSize: 12,
+                  labelColor: "#888",
+                },
+              },
+              token: {
+                colorTextPlaceholder: "#0005",
+                borderRadius: 5,
+                colorPrimary: "#ff6900",
+                fontFamily: "Poppins, sans-serif",
+              },
+            }}
+          >
+            <Header />
+            <main>
+              {children}
+              <Toaster position="bottom-right" richColors />
+            </main>
+            <Footer />
+          </ConfigProvider>
         </Providers>
       </body>
     </html>

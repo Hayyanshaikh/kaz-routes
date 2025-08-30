@@ -1,5 +1,7 @@
 import { ReactNode } from "react";
 import { Hotel } from "../components/SingleHotel/PropertyDetails";
+import { Rule } from "antd/es/form";
+import { Dayjs } from "dayjs";
 
 export interface VariantProps {
   variant: "success" | "warning" | "error";
@@ -28,39 +30,63 @@ export interface CommonButtonProps {
 
 // Common Input Props
 export interface CommonInputProps {
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  placeholder?: string;
-  type?: string;
-  disabled?: boolean;
-  max?: number;
-  min?: number;
-  className?: string;
+  name: string;
   label?: string;
-  error?: string;
+  rules?: Rule[];
+  formItemClassName?: string;
+  isRequired?: boolean;
+  value?: string;
+  className?: string;
+  placeholder?: string;
+  disabled?: boolean;
+  maxLength?: number;
+  allowClear?: boolean;
+  type?: "text" | "password" | "email" | "number" | "tel";
+  prefix?: ReactNode;
+  suffix?: ReactNode;
+  onChange?: (value: string) => void;
+}
+
+export interface CommonDatePickerProps {
+  name: string;
+  label?: string;
+  rules?: Rule[];
+  formItemClassName?: string;
+  mode?: "date" | "time" | "datetime";
+  isRequired?: boolean;
+  className?: string;
+  placeholder?: string;
+  disabled?: boolean;
+  maxLength?: number;
+  allowClear?: boolean;
+  type?: "text" | "password" | "email" | "number" | "tel";
+  prefix?: ReactNode;
+  suffix?: ReactNode;
+  value?: Dayjs;
+  onChange?: (date: Dayjs | null) => void;
+  disabledDate?: (currentDate: Dayjs) => boolean;
 }
 
 // Common Textarea Props
 export interface CommonTextareaProps {
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  name: string;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   placeholder?: string;
   disabled?: boolean;
   className?: string;
-  error?: string;
   label?: string;
 }
 
 // Common Select Props
 export interface CommonSelectProps {
-  value: string;
-  onValueChange: (value: string) => void;
+  name: string;
+  onValueChange?: (value: string) => void;
   options: { label: string; value: string }[];
   className?: string;
   placeholder?: string;
   label?: string;
   disabled?: boolean;
-  error?: string;
 }
 
 export interface CommonMultiSelectProps {
@@ -68,7 +94,6 @@ export interface CommonMultiSelectProps {
   placeholder?: string;
   className?: string;
   disabled?: boolean;
-  error?: string;
   options: DropdownOption[];
   value: string[];
   onValueChange: (values: string[]) => void;
@@ -76,9 +101,12 @@ export interface CommonMultiSelectProps {
 
 // Common Checkbox Props
 export interface CommonCheckboxProps {
-  checked: boolean;
-  onChange: (checked: boolean) => void;
-  label?: string;
+  name?: string;
+  value?: string | number;
+  checked?: boolean;
+  onChange?: (checked: boolean) => void;
+  rules?: any[];
+  label?: string | ReactNode;
   className?: string;
 }
 
@@ -106,7 +134,9 @@ export interface CommonModalProps {
   className?: string;
   destroyOnClose?: boolean;
   confirmText?: string;
+  width?: number;
   cancelText?: string;
+  onClose?: () => void;
   open: boolean;
   loading?: boolean;
   onOpenChange: (open: boolean) => void;
@@ -200,7 +230,7 @@ export interface PropertyDetailProps {
 
 // Type definition for the booking payload
 export interface RestaurantBookingPayload {
-  restaurant_id: number;
+  restaurant_id: number | string | undefined;
   booking_date: string;
   booking_time: string;
   guests: number;
@@ -258,7 +288,7 @@ export interface Step {
 }
 
 export interface Package {
-  id?: stirng;
+  id?: string;
   country: string;
   city: string;
   arrivalDate: string; // ISO format date

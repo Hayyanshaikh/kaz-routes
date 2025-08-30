@@ -6,7 +6,7 @@ import CommonSelect from "../common/CommonSelect";
 import CommonButton from "../common/CommonButton";
 import { CATEGORIES } from "@/lib/constant";
 
-const AdvancedSearchBar = () => {
+const SearchBar = () => {
   const router = useRouter();
   const [category, setCategory] = useState("");
 
@@ -23,14 +23,12 @@ const AdvancedSearchBar = () => {
   };
 
   return (
-    <div className="flex flex-col sm:flex-row sm:items-end gap-4 bg-white p-4 sm:p-6 rounded-xl shadow-xl w-full">
+    <div className="flex flex-col sm:flex-row sm:items-center gap-4 bg-white p-4 sm:p-5 rounded-xl shadow-xl w-full">
       <div className="grid grid-cols-1 sm:grid-cols-1 gap-4 flex-1">
         <CommonSelect
           label="Category"
           options={CATEGORIES}
-          value={category}
           onValueChange={handleCategoryChange}
-          error={undefined}
           placeholder="Select Category"
         />
       </div>
@@ -44,4 +42,4 @@ const AdvancedSearchBar = () => {
   );
 };
 
-export default AdvancedSearchBar;
+export default SearchBar;

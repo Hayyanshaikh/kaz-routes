@@ -1,10 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Card, CardContent } from "@/shadcn/components/ui/card";
-import { Separator } from "@/shadcn/components/ui/separator";
-import { cn } from "@/lib/utils";
-import CommonButton from "./CommonButton";
+import React, { useState, useEffect } from "react";
+import { Card } from "antd";
+import { Steps, Button } from "antd";
 import { Step } from "@/app/types/CommonType";
 
 interface MultiStepFormProps {
@@ -12,23 +10,24 @@ interface MultiStepFormProps {
   onFinish: () => void;
   showNext?: boolean;
   customAction?: React.ReactNode;
-  currentStepExternal?: number; // external control
+  currentStepExternal?: number;
   setCurrentStepExternal?: (step: number) => void;
 }
 
-const CommonMultiStep = ({
+const CommonMultiStep: React.FC<MultiStepFormProps> = ({
   steps,
   onFinish,
   showNext = true,
   customAction,
   currentStepExternal,
   setCurrentStepExternal,
-}: MultiStepFormProps) => {
+}) => {
   const [currentStep, setCurrentStep] = useState(0);
 
-  // Agar external step control hai to sync karo
   useEffect(() => {
-    if (currentStepExternal !== undefined) setCurrentStep(currentStepExternal);
+    if (currentStepExternal !== undefined) {
+      setCurrentStep(currentStepExternal);
+    }
   }, [currentStepExternal]);
 
   const isLastStep = currentStep === steps.length - 1;
@@ -36,11 +35,9 @@ const CommonMultiStep = ({
 
   const handleNext = () => {
     if (!isLastStep) {
-      setCurrentStep((prev) => {
-        const next = prev + 1;
-        if (setCurrentStepExternal) setCurrentStepExternal(next);
-        return next;
-      });
+      const next = currentStep + 1;
+      setCurrentStep(next);
+      if (setCurrentStepExternal) setCurrentStepExternal(next);
     } else {
       onFinish();
     }
@@ -48,58 +45,44 @@ const CommonMultiStep = ({
 
   const handleBack = () => {
     if (!isFirstStep) {
-      setCurrentStep((prev) => {
-        const next = prev - 1;
-        if (setCurrentStepExternal) setCurrentStepExternal(next);
-        return next;
-      });
+      const prev = currentStep - 1;
+      setCurrentStep(prev);
+      if (setCurrentStepExternal) setCurrentStepExternal(prev);
     }
   };
 
   return (
     <Card className="w-full">
-      <div className="hidden md:flex justify-between px-6">
-        {steps.map((step, index) => (
-          <div
-            key={index}
-            className={cn(
-              "text-sm font-medium flex items-center justify-center gap-1",
-              index === currentStep ? "text-primary" : "text-muted-foreground"
-            )}
-          >
-            <span className="h-8 w-8 bg-primary text-white flex items-center justify-center rounded-full mr-2">
-              {index + 1}
-            </span>
-            {step.title}
-          </div>
-        ))}
-      </div>
+      {/* Steps Header */}
+      <Steps
+        current={currentStep}
+        items={steps.map((step, index) => ({
+          title: step.title,
+        }))}
+        className="mb-6"
+      />
 
-      <Separator />
+      {/* Step Content */}
+      <div className="min-h-[200px] mb-6">{steps[currentStep]?.content}</div>
 
-      <CardContent className="min-h-[200px]">
-        {steps[currentStep]?.content}
-      </CardContent>
+      {/* Action Buttons */}
+      <div className="flex justify-between">
+        <Button onClick={handleBack} disabled={isFirstStep}>
+          Back
+        </Button>
 
-      <Separator />
-
-      <div className="flex justify-between px-6">
-        <CommonButton
-          onClick={handleBack}
-          label="Back"
-          disabled={isFirstStep}
-        />
-
-        {showNext && (
-          <CommonButton
-            disabled={steps[currentStep]?.disabled}
-            type="submit"
-            onClick={handleNext}
-            label={isLastStep ? "Finish" : "Next"}
-          />
-        )}
-
-        {customAction && customAction}
+        <div className="flex gap-2">
+          {customAction && customAction}
+          {showNext && (
+            <Button
+              type="primary"
+              onClick={handleNext}
+              disabled={steps[currentStep]?.disabled}
+            >
+              {isLastStep ? "Finish" : "Next"}
+            </Button>
+          )}
+        </div>
       </div>
     </Card>
   );

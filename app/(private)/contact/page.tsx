@@ -8,7 +8,12 @@ import Section from "@/app/components/Container/Section";
 import Container from "@/app/components/Container";
 import CommonButton from "@/app/components/common/CommonButton";
 import CommonHeading from "@/app/components/common/CommonHeading";
-import { Mail, MapPin, Phone } from "lucide-react";
+import {
+  MailOutlined,
+  EnvironmentOutlined,
+  PhoneOutlined,
+} from "@ant-design/icons";
+
 import usePageContentStore from "@/app/store/usePageContent";
 import { useControllerContactSubmit } from "@/app/hooks/api";
 import { showError, showSuccess } from "@/app/components/common/CommonSonner";
@@ -141,7 +146,7 @@ const Contact = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             {/* Emails */}
             <div className="flex flex-col items-center gap-4">
-              <Mail size={40} className="text-primary" />
+              <MailOutlined className="text-primary text-4xl" />
               <div className="text-center">
                 {parsedData.info.emails?.map((email: string, i: number) => (
                   <p key={i}>
@@ -158,7 +163,7 @@ const Contact = () => {
 
             {/* Phones */}
             <div className="flex flex-col items-center gap-4">
-              <Phone size={40} className="text-primary" />
+              <PhoneOutlined className="text-primary text-4xl" />
               <div className="text-center">
                 {parsedData.info.phones?.map((phone: string, i: number) => (
                   <p key={i}>
@@ -175,7 +180,7 @@ const Contact = () => {
 
             {/* Address */}
             <div className="flex flex-col items-center gap-4">
-              <MapPin size={40} className="text-primary" />
+              <EnvironmentOutlined className="text-primary text-4xl" />
               <div className="text-center text-gray-600">
                 <p>{parsedData.info.address}</p>
                 <p>{parsedData.info.hours}</p>

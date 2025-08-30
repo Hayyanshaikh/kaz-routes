@@ -5,7 +5,14 @@ import CommonButton from "../common/CommonButton";
 import CommonTabs from "../common/CommonTabs";
 import { RoomType } from "@/app/types/CommonType";
 import Item from "./Item";
-import { Baby, Clock, Users } from "lucide-react";
+
+// ✅ Ant Design Icons import
+import {
+  ClockCircleOutlined,
+  TeamOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+import { formatCurrency } from "@/lib/utils";
 
 type Hotel = {
   name: string;
@@ -39,42 +46,43 @@ const PackageDetails = ({ packageDetail }: Props) => {
         }
       />
       <div className="mb-6 text-gray-700">
-        <CommonButton
-          className="p-0 bg-transparent hover:bg-transparent text-gray-900 underline"
+        <button
+          className="p-0 bg-transparent hover:bg-transparent text-gray-900 w-auto underline text-sm"
           onClick={() => setShowFull(!showFull)}
-          label={showFull ? "Show less" : "Show more"}
-        />
+        >
+          {showFull ? "Show less" : "Show more"}
+        </button>
       </div>
       <h1 className={`text-xl sm:text-2xl font-bold mb-2`}>
-        Rs.{packageDetail?.price}
+        {formatCurrency(packageDetail?.price)}
       </h1>
 
       {/* Services */}
       {/* <Services services={packageDetail.services} /> */}
-      <div className="flex items-center space-x-6 text-gray-700 border-y py-5 w-full">
+      <div className="flex items-center space-x-6 text-gray-700 border-y border-gray-200 py-5 w-full">
         <div className="flex items-start flex-col gap-2">
-          <Clock size={20} />
+          <ClockCircleOutlined style={{ fontSize: 20 }} />
           <span className="text-sm">
             <strong className="font-medium">Days:</strong>{" "}
             {packageDetail?.duration?.days}
           </span>
         </div>
         <div className="flex items-start flex-col gap-2">
-          <Users size={20} />
+          <TeamOutlined style={{ fontSize: 20 }} />
           <span className="text-sm">
             <strong className="font-medium">Adults:</strong>{" "}
             {packageDetail?.duration?.adults}
           </span>
         </div>
         <div className="flex items-start flex-col gap-2">
-          <Baby />
+          <UserOutlined style={{ fontSize: 20 }} />
           <span className="text-sm">
             <strong className="font-medium">Children:</strong>{" "}
             {packageDetail?.duration?.children}
           </span>
         </div>
         <div className="flex items-start flex-col gap-2">
-          <Baby size={20} />
+          <UserOutlined style={{ fontSize: 20 }} />
           <span className="text-sm">
             <strong className="font-medium">Infants:</strong>{" "}
             {packageDetail?.duration?.infants}

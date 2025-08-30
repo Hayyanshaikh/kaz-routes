@@ -1,16 +1,6 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
+import { Modal } from "antd";
 import { CommonModalProps } from "@/app/types/CommonType";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/shadcn/components/ui/dialog";
-import { DialogClose } from "@radix-ui/react-dialog";
-import React from "react";
-import CommonButton from "./CommonButton";
 
 const CommonModal: React.FC<CommonModalProps> = ({
   open,
@@ -20,15 +10,16 @@ const CommonModal: React.FC<CommonModalProps> = ({
   description,
   onOpenChange,
   footer = true,
+  width = 520,
   className = "",
   cancelText = "Cancel",
   destroyOnClose = true,
+  onClose = () => {},
   confirmText = "Confirm",
   onConfirm = () => {},
 }) => {
   const handleConfirm = () => {
     onConfirm();
-
     if (destroyOnClose) onOpenChange(false);
   };
 
@@ -47,33 +38,30 @@ const CommonModal: React.FC<CommonModalProps> = ({
   }, [open]);
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={`w-[calc(100%_-_20px)] ${className}`}>
-        <DialogHeader>
-          {title && <DialogTitle>{title}</DialogTitle>}
-          {description && <DialogDescription>{description}</DialogDescription>}
-        </DialogHeader>
-        <div className="max-h-[calc(100vh_-_200px)] overflow-auto">
-          {children}
-        </div>
-        {footer && (
-          <DialogFooter>
-            <DialogClose asChild>
-              <CommonButton
-                className="bg-transparent text-red-500 border border-red-500 hover:bg-red-500 hover:text-white"
-                label={cancelText}
-                onClick={() => onOpenChange(false)}
-              />
-            </DialogClose>
-            <CommonButton
-              loading={loading}
-              onClick={handleConfirm}
-              label={confirmText}
-            />
-          </DialogFooter>
-        )}
-      </DialogContent>
-    </Dialog>
+    <Modal
+      centered
+      open={open}
+      title={title}
+      onCancel={() => {
+        onOpenChange(false);
+        onClose();
+      }}
+      onOk={handleConfirm}
+      okText={confirmText}
+      cancelText={cancelText}
+      width={width}
+      confirmLoading={loading}
+      destroyOnHidden={destroyOnClose}
+      footer={footer ? undefined : null}
+      className={className}
+    >
+      {description && (
+        <p className="text-sm mb-4 text-gray-500">{description}</p>
+      )}
+      <div style={{ maxHeight: "calc(100vh - 200px)", overflowY: "auto" }}>
+        {children}
+      </div>
+    </Modal>
   );
 };
 

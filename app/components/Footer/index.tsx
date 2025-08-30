@@ -2,13 +2,17 @@
 
 import Container from "../Container";
 import Link from "next/link";
-import { Facebook, Instagram, Twitter, Linkedin } from "lucide-react";
+import {
+  FacebookOutlined,
+  InstagramOutlined,
+  TwitterOutlined,
+  LinkedinOutlined,
+} from "@ant-design/icons";
 import usePageContentStore from "@/app/store/usePageContent";
 
 const Footer = () => {
   const { pageContent } = usePageContentStore();
 
-  // ✅ Safe JSON parse function
   const safeParse = (jsonString: string | undefined) => {
     try {
       return jsonString ? JSON.parse(jsonString) : {};
@@ -18,10 +22,8 @@ const Footer = () => {
     }
   };
 
-  // Parse social links from store
   const socials = safeParse(pageContent?.contact?.socials);
 
-  // Parse navigation links from store (optional, else fallback)
   const navigationLinks = [
     { label: "Home", href: "/" },
     { label: "Packages", href: "search?category=packages" },
@@ -36,18 +38,18 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-gray-950 text-white py-6 pb-6 mt-auto relative flex justify-center items-center min-h-[300px]">
+    <footer className="bg-gray-950 text-white py-10 mt-auto min-h-[300px]">
       <Container>
-        <div className="relative w-full flex flex-col items-center justify-center gap-4 text-center">
+        <div className="flex flex-col items-center gap-4 text-center">
           <h3 className="text-2xl font-bold">kazroutes.com</h3>
 
           {/* Navigation Links */}
-          <div className="flex flex-wrap justify-center space-y-2 space-x-4 max-w-3xl text-sm mt-2">
-            {navigationLinks.map((link: any, index: number) => (
+          <div className="flex flex-wrap justify-center gap-3 mt-2 max-w-[700px] text-sm">
+            {navigationLinks.map((link, index) => (
               <Link
                 key={index}
                 href={link.href}
-                className="text-gray-300 hover:text-primary transition text-sm"
+                className="text-gray-400 hover:text-white transition-colors"
               >
                 {link.label}
               </Link>
@@ -55,15 +57,15 @@ const Footer = () => {
           </div>
 
           {/* Social media icons dynamically */}
-          <div className="flex space-x-4 mt-2">
+          <div className="flex gap-4 mt-3">
             {socials.facebook && (
               <Link
                 href={socials.facebook}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="border border-primary h-10 w-10 flex items-center justify-center rounded-full hover:bg-primary transition-colors group"
+                className="text-primary hover:text-[#ff8929]"
               >
-                <Facebook className="text-primary group-hover:text-white transition-colors" />
+                <FacebookOutlined className="text-xl" />
               </Link>
             )}
             {socials.instagram && (
@@ -71,9 +73,9 @@ const Footer = () => {
                 href={socials.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="border border-primary h-10 w-10 flex items-center justify-center rounded-full hover:bg-primary transition-colors group"
+                className="text-primary hover:text-[#ff8929]"
               >
-                <Instagram className="text-primary group-hover:text-white transition-colors" />
+                <InstagramOutlined className="text-xl" />
               </Link>
             )}
             {socials.twitter && (
@@ -81,9 +83,9 @@ const Footer = () => {
                 href={socials.twitter}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="border border-primary h-10 w-10 flex items-center justify-center rounded-full hover:bg-primary transition-colors group"
+                className="text-primary hover:text-[#ff8929]"
               >
-                <Twitter className="text-primary group-hover:text-white transition-colors" />
+                <TwitterOutlined className="text-xl" />
               </Link>
             )}
             {socials.linkedin && (
@@ -91,15 +93,15 @@ const Footer = () => {
                 href={socials.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="border border-primary h-10 w-10 flex items-center justify-center rounded-full hover:bg-primary transition-colors group"
+                className="text-primary hover:text-[#ff8929]"
               >
-                <Linkedin className="text-primary group-hover:text-white transition-colors" />
+                <LinkedinOutlined className="text-xl" />
               </Link>
             )}
           </div>
         </div>
 
-        <div className="text-center text-gray-500 text-sm mt-4">
+        <div className="text-center text-gray-500 text-xs mt-5">
           Copyright ©2025 All rights reserved | Powered by{" "}
           <span className="font-semibold text-primary">KazRoutes</span> - Your
           Travel Companion

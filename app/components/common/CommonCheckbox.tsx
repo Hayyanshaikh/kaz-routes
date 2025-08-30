@@ -1,22 +1,27 @@
 import { CommonCheckboxProps } from "@/app/types/CommonType";
-import { Checkbox } from "@/shadcn/components/ui/checkbox";
+import { Checkbox, Form } from "antd";
 
 const CommonCheckbox: React.FC<CommonCheckboxProps> = ({
+  name,
+  label,
+  value,
   checked,
   onChange,
-  label,
+  rules,
   className = "",
-}) => (
-  <label className={`flex items-center gap-2 cursor-pointer ${className}`}>
-    <Checkbox
-      className="cursor-pointer"
-      checked={checked}
-      onCheckedChange={onChange}
-    />
-    {label && (
-      <span className="user-select-none text-sm text-gray-600">{label}</span>
-    )}
-  </label>
-);
+}) => {
+  return (
+    <Form.Item name={name} rules={rules} valuePropName="checked" noStyle>
+      <Checkbox
+        value={value}
+        checked={checked}
+        onChange={(e) => onChange && onChange(e.target.checked)}
+        className={className + " text-sm text-gray-600"}
+      >
+        {label}
+      </Checkbox>
+    </Form.Item>
+  );
+};
 
 export default CommonCheckbox;

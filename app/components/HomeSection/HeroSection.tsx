@@ -1,14 +1,8 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import {
-  DESTINATION_OPTIONS,
-  HERO_SLIDES_DATA,
-  HOTEL_PREFERENCE_OPTIONS,
-} from "@/lib/constant";
-import { SearchIcon } from "lucide-react";
-import CommonSelect from "../common/CommonSelect";
-import CommonButton from "../common/CommonButton";
+import { HERO_SLIDES_DATA } from "@/lib/constant";
+import { SearchOutlined } from "@ant-design/icons"; // ✅ AntD icon
 import SearchBar from "../SearchBar";
 
 type Props = {
@@ -34,18 +28,20 @@ const HeroSection = ({
     <div
       className={`relative w-full h-screen overflow-hidden flex items-center justify-center ${className}`}
     >
-      {/* Background Image using next/image */}
+      {/* Background Image */}
       <Image
         src={imageUrl}
         alt={heading}
-        layout="fill"
-        objectFit="cover"
+        fill
+        className="object-cover"
         onError={(e) => {
-          e.currentTarget.src = `https://placehold.co/1920x1080/4a5568/ffffff?text=Image+Error`;
+          (
+            e.target as HTMLImageElement
+          ).src = `https://placehold.co/1920x1080/4a5568/ffffff?text=Image+Error`;
         }}
       />
 
-      {/* Overlay for better text readability */}
+      {/* Overlay */}
       <div className="absolute inset-0 bg-black/50 flex items-center justify-center p-4">
         <div className="text-white max-w-4xl w-full text-center z-10">
           {/* Heading */}
@@ -62,7 +58,11 @@ const HeroSection = ({
           </p>
 
           {/* Search Bar */}
-          {showSearchBar && <SearchBar />}
+          {showSearchBar && (
+            <div className="flex justify-center">
+              <SearchBar />
+            </div>
+          )}
         </div>
       </div>
     </div>

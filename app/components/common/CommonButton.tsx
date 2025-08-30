@@ -1,10 +1,10 @@
 "use client";
+
 import { CommonButtonProps } from "@/app/types/CommonType";
-import { Button } from "@/shadcn/components/ui/button";
 import Link from "next/link";
 import * as React from "react";
-
-import { Loader2 } from "lucide-react";
+import { Button, Spin } from "antd"; // ✅ AntD Button & Loader
+import { LoadingOutlined } from "@ant-design/icons"; // ✅ AntD Loader Icon
 
 const CommonButton: React.FC<CommonButtonProps> = ({
   label,
@@ -18,24 +18,27 @@ const CommonButton: React.FC<CommonButtonProps> = ({
   ref,
   loading = false,
 }) => {
+  const loaderIcon = <LoadingOutlined spin />;
+
   const content = (
-    <div className="flex items-center justify-center gap-2">
+    <span className="flex items-center justify-center gap-2">
       {!loading && iconPosition === "left" && icon && <span>{icon}</span>}
       {label && <span>{label}</span>}
       {!loading && iconPosition === "right" && icon && <span>{icon}</span>}
-      {loading && <Loader2 className="animate-spin h-4 w-4" />}
-    </div>
+      {loading && <Spin indicator={loaderIcon} size="small" />}
+    </span>
   );
 
   if (link) {
     return (
       <Link href={link} className={className}>
         <Button
-          ref={ref}
-          className="rounded-sm bg-primary cursor-pointer w-full"
-          asChild
+          ref={ref as any}
+          type="primary"
+          className="w-full"
+          disabled={disabled || loading}
         >
-          <span>{content}</span>
+          {content}
         </Button>
       </Link>
     );
@@ -43,14 +46,16 @@ const CommonButton: React.FC<CommonButtonProps> = ({
 
   return (
     <Button
-      ref={ref}
-      type={type}
+      ref={ref as any}
+      type="primary"
+      htmlType={type as "button" | "submit" | "reset"}
       onClick={onClick}
       disabled={disabled || loading}
-      className={`rounded-sm cursor-pointer bg-orange-500 hover:bg-orange-600 shadow-none ${className}`}
+      className={className}
     >
       {content}
     </Button>
   );
 };
+
 export default CommonButton;
