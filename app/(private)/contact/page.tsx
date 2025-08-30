@@ -3,7 +3,6 @@
 import Head from "next/head";
 import CommonInput from "@/app/components/common/CommonInput";
 import CommonTextarea from "@/app/components/common/CommonTextarea";
-import useForm from "@/app/hooks/useForm";
 import Section from "@/app/components/Container/Section";
 import Container from "@/app/components/Container";
 import CommonButton from "@/app/components/common/CommonButton";
@@ -17,16 +16,11 @@ import {
 import usePageContentStore from "@/app/store/usePageContent";
 import { useControllerContactSubmit } from "@/app/hooks/api";
 import { showError, showSuccess } from "@/app/components/common/CommonSonner";
+import { Form } from "antd";
 
 const Contact = () => {
-  const { formData, errors, handleChange, handleSubmit, resetForm } = useForm([
-    { name: "name", required: true },
-    { name: "email", required: true },
-    { name: "phone", required: true },
-    { name: "message", required: true },
-  ]);
-
   const { pageContent } = usePageContentStore();
+  const [form] = Form.useForm();
 
   const { mutate: createContact, isPending } = useControllerContactSubmit();
 
@@ -49,15 +43,14 @@ const Contact = () => {
     map: safeParse(pageContent?.contact?.map),
   };
 
-  const onSubmit = () => {
-    createContact(formData, {
+  const onSubmit = (values: any) => {
+    createContact(values, {
       onSuccess: () => {
-        console.log("✅ Contact created successfully!");
         showSuccess({
           message: "Contact created successfully!",
           description: "We will get back to you shortly.",
         });
-        resetForm();
+        form.resetFields();
       },
       onError: (err) => {
         console.error("❌ Contact creation failed:", err);
@@ -83,55 +76,33 @@ const Contact = () => {
               <h2 className="text-4xl font-bold leading-snug mb-6 text-gray-900">
                 {parsedData.header.title || "We're Here to Help — Contact Us"}
               </h2>
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  handleSubmit(onSubmit);
-                }}
-                className="space-y-6"
-              >
+
+              <Form form={form} layout="vertical" onFinish={onSubmit}>
+                <CommonInput name="name" label="Name" placeholder="Your Name" />
+
                 <CommonInput
-                  className="bg-white"
-                  label="Name"
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => handleChange("name", e.target.value)}
-                  placeholder="Your Name"
-                  error={errors.name}
-                />
-                <CommonInput
-                  className="bg-white"
+                  name="email"
                   label="Email"
                   type="email"
-                  value={formData.email}
-                  onChange={(e) => handleChange("email", e.target.value)}
                   placeholder="Your Email"
-                  error={errors.email}
                 />
+
                 <CommonInput
-                  className="bg-white"
+                  name="phone"
                   label="Phone"
                   type="tel"
-                  value={formData.phone}
-                  onChange={(e) => handleChange("phone", e.target.value)}
                   placeholder="Your Phone"
-                  error={errors.phone}
                 />
+
                 <CommonTextarea
-                  className="h-32 bg-white"
+                  name="message"
                   label="Message"
-                  value={formData.message}
-                  onChange={(e) => handleChange("message", e.target.value)}
                   placeholder="Your Message"
-                  error={errors.message}
+                  className="h-32"
                 />
-                <CommonButton
-                  label={isPending ? "Sending..." : "Send Message"}
-                  type="submit"
-                  className="w-full"
-                  disabled={isPending}
-                />
-              </form>
+
+                <CommonButton label="Submit" type="submit" />
+              </Form>
             </div>
           </Container>
         </Section>
@@ -146,7 +117,7 @@ const Contact = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             {/* Emails */}
             <div className="flex flex-col items-center gap-4">
-              <MailOutlined className="text-primary text-4xl" />
+              <MailOutlined className="!text-primary text-4xl" />
               <div className="text-center">
                 {parsedData.info.emails?.map((email: string, i: number) => (
                   <p key={i}>
@@ -163,7 +134,7 @@ const Contact = () => {
 
             {/* Phones */}
             <div className="flex flex-col items-center gap-4">
-              <PhoneOutlined className="text-primary text-4xl" />
+              <PhoneOutlined className="!text-primary text-4xl" />
               <div className="text-center">
                 {parsedData.info.phones?.map((phone: string, i: number) => (
                   <p key={i}>
@@ -180,7 +151,7 @@ const Contact = () => {
 
             {/* Address */}
             <div className="flex flex-col items-center gap-4">
-              <EnvironmentOutlined className="text-primary text-4xl" />
+              <EnvironmentOutlined className="!text-primary text-4xl" />
               <div className="text-center text-gray-600">
                 <p>{parsedData.info.address}</p>
                 <p>{parsedData.info.hours}</p>

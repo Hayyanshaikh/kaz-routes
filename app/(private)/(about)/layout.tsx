@@ -3,7 +3,6 @@ import AboutNav from "@/app/components/About/AboutNav";
 import AboutSidebar from "@/app/components/About/Sidebar";
 import Container from "@/app/components/Container";
 import Section from "@/app/components/Container/Section";
-import { SidebarProvider } from "@/shadcn/components/ui/sidebar";
 import React from "react";
 
 type Props = {
@@ -12,17 +11,12 @@ type Props = {
 
 const layout = ({ children }: Props) => {
   return (
-    <Section>
+    <Section className="min-h-screen">
       <Container>
-        <SidebarProvider>
+        <div className="flex flex-col  md:flex-row ">
           <AboutSidebar />
-          <main className="flex-1">
-            <div className="md:hidden block">
-              <AboutNav />
-            </div>
-            {children}
-          </main>
-        </SidebarProvider>
+          <main className="flex-1">{children}</main>
+        </div>
       </Container>
     </Section>
   );

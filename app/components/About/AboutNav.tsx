@@ -14,7 +14,7 @@ const AboutNav = () => {
   const pathname = usePathname();
 
   return (
-    <nav className="flex md:flex-col gap-2 md:gap-0 space-y-2 mb-8">
+    <nav className="flex md:flex-col min-w-[250px] gap-2 md:gap-0 space-y-2 mb-8">
       {links.map((link) => {
         const isActive = pathname === link.href;
 

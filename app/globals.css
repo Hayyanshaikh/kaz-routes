@@ -48,7 +48,7 @@
 
 
 :root {
-  --primary: #ff6900;
+  --primary: #ff6900 !important;
 }
 
 @layer base {
