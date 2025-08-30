@@ -28,8 +28,8 @@ const SingleHotel = () => {
     <Section>
       <Container className="flex-start">
         <main className="flex flex-col lg:flex-row gap-16">
-          <PackageDetails packageDetail={packageDetail} />
           <ImagesGallery images={packageDetail?.media?.images} />
+          <PackageDetails packageDetail={packageDetail} />
         </main>
       </Container>
     </Section>

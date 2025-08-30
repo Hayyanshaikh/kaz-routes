@@ -26,8 +26,8 @@ const SingleRestaurant = () => {
     <Section>
       <Container className="flex-start">
         <main className="flex flex-col lg:flex-row gap-16">
-          <RestaurantDetails restaurant={restaurant} />
           <ImagesGallery images={restaurant.images} />
+          <RestaurantDetails restaurant={restaurant} />
         </main>
       </Container>
     </Section>

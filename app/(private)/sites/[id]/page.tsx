@@ -24,8 +24,8 @@ const SingleSite = () => {
     <Section>
       <Container className="flex-start">
         <main className="flex flex-col lg:flex-row gap-16">
-          <SitesDetail site={site} />
           <ImagesGallery images={site.media?.images || []} />
+          <SitesDetail site={site} />
         </main>
       </Container>
     </Section>

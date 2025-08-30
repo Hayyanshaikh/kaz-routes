@@ -25,8 +25,8 @@ const SingleHotel = () => {
     <Section>
       <Container className="flex-start">
         <main className="flex flex-col lg:flex-row gap-16">
-          <PropertyDetails hotel={hotel} />
           <ImagesGallery images={hotel?.images} />
+          <PropertyDetails hotel={hotel} />
         </main>
       </Container>
     </Section>
