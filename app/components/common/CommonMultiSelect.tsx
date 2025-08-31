@@ -11,49 +11,25 @@ const CommonMultiSelect: React.FC<CommonMultiSelectProps> = ({
   label = "",
   placeholder = "Select...",
   disabled = false,
-  error = "",
   options,
-  value = [],
+  name,
   onValueChange,
   className = "",
+  onSelect,
 }) => {
   return (
-    <Form.Item
-      label={label}
-      validateStatus={error ? "error" : ""}
-      help={error || ""}
-      className={className}
-    >
+    <Form.Item name={name} label={label} className={`${className} !mb-0`}>
       <Select
         mode="multiple"
         allowClear
         disabled={disabled}
         placeholder={placeholder}
-        value={value}
+        options={options}
+        onSelect={onSelect}
         onChange={onValueChange}
         className="w-full"
         suffixIcon={<DownOutlined />}
-        tagRender={(props) => {
-          const { label, closable, onClose } = props;
-          return (
-            <Tag
-              color="blue"
-              closable={closable}
-              onClose={onClose}
-              closeIcon={<CloseOutlined />}
-              style={{ marginRight: 3 }}
-            >
-              {label}
-            </Tag>
-          );
-        }}
-      >
-        {options.map((opt) => (
-          <Option key={opt.value} value={opt.value}>
-            {opt.label}
-          </Option>
-        ))}
-      </Select>
+      />
     </Form.Item>
   );
 };

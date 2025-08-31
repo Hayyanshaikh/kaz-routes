@@ -33,6 +33,7 @@ const CommonDatePicker: React.FC<CommonDatePickerProps> = ({
           disabled={disabled}
           className={className || "w-full"}
           onChange={onChange}
+          allowClear={false}
           format="HH:mm"
         />
       );
@@ -45,6 +46,7 @@ const CommonDatePicker: React.FC<CommonDatePickerProps> = ({
           value={value}
           placeholder={placeholder || "Select Date & Time"}
           disabled={disabled}
+          allowClear={false}
           className={className || "w-full"}
           onChange={onChange}
           disabledDate={disabledDate}
@@ -57,6 +59,7 @@ const CommonDatePicker: React.FC<CommonDatePickerProps> = ({
         value={value}
         placeholder={placeholder}
         disabled={disabled}
+        allowClear={false}
         className={className || "w-full"}
         onChange={onChange}
         disabledDate={disabledDate}

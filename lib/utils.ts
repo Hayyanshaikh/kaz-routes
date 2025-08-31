@@ -27,7 +27,7 @@ export const formatCurrency = (amount: number | string): string => {
   const numericAmount =
     typeof amount === "string" ? Number(amount.replace(/,/g, "")) : amount;
 
-  return `${symbol}${numericAmount.toLocaleString("en-PK", {
+  return `${symbol} ${numericAmount.toLocaleString("en-PK", {
     minimumFractionDigits: 2,
   })}`;
 };

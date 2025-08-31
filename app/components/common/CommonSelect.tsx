@@ -7,6 +7,8 @@ const CommonSelect: React.FC<CommonSelectProps> = ({
   options,
   label = "",
   className = "",
+  name,
+  onSelect,
   placeholder = "Select",
   disabled = false,
 }) => {
@@ -14,6 +16,7 @@ const CommonSelect: React.FC<CommonSelectProps> = ({
     <Form.Item
       layout="vertical"
       label={label}
+      name={name}
       className="w-full !mb-0 text-left"
     >
       <Select
@@ -21,6 +24,7 @@ const CommonSelect: React.FC<CommonSelectProps> = ({
         disabled={disabled}
         className={className}
         options={options}
+        onSelect={onSelect}
         onChange={onValueChange}
       />
     </Form.Item>

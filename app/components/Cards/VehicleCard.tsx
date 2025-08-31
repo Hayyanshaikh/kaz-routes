@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { EnvironmentOutlined, ArrowRightOutlined } from "@ant-design/icons"; // ⬅️ AntD Icons
+import { ArrowRightOutlined } from "@ant-design/icons"; // ⬅️ AntD Icons
 import CommonButton from "../common/CommonButton";
 import CommonBadge from "../common/CommonBadge";
 import CommonModal from "../common/CommonModal";
@@ -9,7 +9,7 @@ import Image from "next/image";
 import { formatCurrency } from "@/lib/utils";
 import { useControllerPostCreateCarBooking } from "@/app/hooks/api";
 import { showError, showSuccess } from "../common/CommonSonner";
-import { Form, Input, DatePicker } from "antd";
+import { Form, Input } from "antd";
 import VehicleBookingForm from "../VehicleBookingForm";
 
 const { TextArea } = Input;
@@ -43,6 +43,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
     useControllerPostCreateCarBooking();
 
   const onSubmit = (values: any) => {
+    console.log({ values });
     const payload = {
       car_id: id || "",
       customer_name: values.name || "",
@@ -55,24 +56,24 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
       special_requests: values.specialRequests || "",
     };
 
-    carBooking(payload)
-      .then(() => {
-        showSuccess({
-          message: "Booking done!",
-          description: "Your booking has been confirmed successfully.",
-        });
-      })
-      .catch((error) => {
-        showError({
-          message: "Failed",
-          description:
-            error?.response?.data?.message || "Server did not respond.",
-        });
-      })
-      .finally(() => {
-        form.resetFields();
-        setIsBookingModal(false);
-      });
+    // carBooking(payload)
+    //   .then(() => {
+    //     showSuccess({
+    //       message: "Booking done!",
+    //       description: "Your booking has been confirmed successfully.",
+    //     });
+    //   })
+    //   .catch((error) => {
+    //     showError({
+    //       message: "Failed",
+    //       description:
+    //         error?.response?.data?.message || "Server did not respond.",
+    //     });
+    //   })
+    //   .finally(() => {
+    //     form.resetFields();
+    //     setIsBookingModal(false);
+    //   });
   };
 
   return (
@@ -162,12 +163,16 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
         cancelText="Discard"
         confirmText="Book"
         destroyOnClose={false}
+        onClose={() => form.resetFields()}
+        width={`100%`}
         onConfirm={() => {
           form.submit();
         }}
       >
-        <Form form={form} layout="vertical">
-          <VehicleBookingForm />
+        <Form form={form} onFinish={onSubmit} layout="vertical">
+          <div className="flex items-start gap-4">
+            <VehicleBookingForm price={price} form={form} />
+          </div>
         </Form>
       </CommonModal>
     </>

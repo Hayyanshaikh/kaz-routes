@@ -30,7 +30,7 @@ export interface CommonButtonProps {
 
 // Common Input Props
 export interface CommonInputProps {
-  name: string;
+  name: string | string[];
   label?: string;
   rules?: Rule[];
   formItemClassName?: string;
@@ -48,7 +48,7 @@ export interface CommonInputProps {
 }
 
 export interface CommonDatePickerProps {
-  name: string;
+  name: string | string[];
   label?: string;
   rules?: Rule[];
   formItemClassName?: string;
@@ -69,7 +69,7 @@ export interface CommonDatePickerProps {
 
 // Common Textarea Props
 export interface CommonTextareaProps {
-  name: string;
+  name: string | string[];
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   placeholder?: string;
@@ -80,13 +80,14 @@ export interface CommonTextareaProps {
 
 // Common Select Props
 export interface CommonSelectProps {
-  name: string;
+  name: string | string[];
   onValueChange?: (value: string) => void;
   options: { label: string; value: string }[];
   className?: string;
   placeholder?: string;
   label?: string;
   disabled?: boolean;
+  onSelect?: (_value: string) => void;
 }
 
 export interface CommonMultiSelectProps {
@@ -95,13 +96,14 @@ export interface CommonMultiSelectProps {
   className?: string;
   disabled?: boolean;
   options: DropdownOption[];
-  value: string[];
-  onValueChange: (values: string[]) => void;
+  name: string | string[];
+  onValueChange?: (_values: string[]) => void;
+  onSelect?: (_value: string) => void;
 }
 
 // Common Checkbox Props
 export interface CommonCheckboxProps {
-  name?: string;
+  name?: string | string[];
   value?: string | number;
   checked?: boolean;
   onChange?: (checked: boolean) => void;
@@ -134,7 +136,7 @@ export interface CommonModalProps {
   className?: string;
   destroyOnClose?: boolean;
   confirmText?: string;
-  width?: number;
+  width?: number | string;
   cancelText?: string;
   onClose?: () => void;
   open: boolean;
