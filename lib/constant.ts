@@ -557,3 +557,13 @@ export const TERMS_AND_CONDITIONS_CONTENT = [
 
   "These terms shall be governed by and construed in accordance with the laws of the jurisdiction in which Your Company is registered. Any disputes shall be subject to the exclusive jurisdiction of the local courts.",
 ];
+
+export const MEALTYPE_DROPDOWN = [
+  { label: "Breakfast", value: "breakfast" },
+  { label: "Brunch", value: "brunch" },
+  { label: "Lunch", value: "lunch" },
+  { label: "Tea", value: "tea" },
+  { label: "Dinner", value: "dinner" },
+  { label: "Supper", value: "supper" },
+  { label: "Snack", value: "snack" },
+];

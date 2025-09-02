@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Script from "next/script";
+import { FormInstance } from "antd";
 
 type LatLng = { lat: number; lng: number };
 
@@ -10,11 +11,13 @@ export default function GoogleMapModern({
   zoom = 11,
   height = "480px",
   width = "100%",
+  form,
 }: {
   center?: LatLng;
   zoom?: number;
   height?: string;
   width?: string;
+  form: FormInstance;
 }) {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const pickupACRef = useRef<HTMLDivElement | null>(null);
@@ -218,11 +221,17 @@ export default function GoogleMapModern({
 
     if (which === "pickup") {
       setPickup({ lat, lng, address });
+
+      // 👇 hidden form field update
+      form.setFieldsValue({
+        pickup_location: address,
+      });
+
       if (!pickupMarker.current) {
         pickupMarker.current = new AM({
           map: gmap.current,
           position: { lat, lng },
-          content: buildPin("#ef4444", "A").element, // red
+          content: buildPin("#ef4444", "A").element,
           gmpDraggable: true,
           title: "Pickup",
         });
@@ -235,11 +244,17 @@ export default function GoogleMapModern({
       }
     } else {
       setDropoff({ lat, lng, address });
+
+      // 👇 hidden form field update
+      form.setFieldsValue({
+        dropoff_location: address,
+      });
+
       if (!dropoffMarker.current) {
         dropoffMarker.current = new AM({
           map: gmap.current,
           position: { lat, lng },
-          content: buildPin("#3b82f6", "B").element, // blue
+          content: buildPin("#3b82f6", "B").element,
           gmpDraggable: true,
           title: "Drop-off",
         });
@@ -252,7 +267,6 @@ export default function GoogleMapModern({
       }
     }
 
-    // If both set, optionally compute a route via Routes API (modern)
     if (hasBoth()) computeRoute();
   }
 

@@ -11,6 +11,7 @@ import { useControllerPostCreateCarBooking } from "@/app/hooks/api";
 import { showError, showSuccess } from "../common/CommonSonner";
 import { Form, Input } from "antd";
 import VehicleBookingForm from "../VehicleBookingForm";
+import dayjs from "dayjs";
 
 const { TextArea } = Input;
 
@@ -38,42 +39,71 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
   const isVertical = layout === "vertical";
   const [isBookingModal, setIsBookingModal] = useState(false);
   const [form] = Form.useForm();
-
+  // todo: this task pending
   const { mutateAsync: carBooking, isPending } =
     useControllerPostCreateCarBooking();
 
   const onSubmit = (values: any) => {
     console.log({ values });
+
     const payload = {
-      car_id: id || "",
-      customer_name: values.name || "",
+      day_plan_json: values.days?.map((d: any) => ({
+        date: d.date,
+        outOfCity: d.outOfCity || false,
+        notes: d.notes || "",
+        hotelId: d.hotel ? Number(d.hotel) : null,
+        hotelRoomId: d.hotelRoom ? Number(d.hotelRoom) : null,
+        hotelRoomQty: d.hotelRoomQty ? Number(d.hotelRoomQty) : null,
+        siteId: d.site ? Number(d.site) : null,
+        restaurantId: d.restaurant ? Number(d.restaurant) : null,
+        mealType: d.mealType || null,
+        dishIds: d.dishes || [],
+        variantIds: d.variants || [],
+      })),
+      car_id: Number(id),
+
+      pickup_date: dayjs(values.pickupDate).format("YYYY-MM-DD") || "",
+      dropoff_date: dayjs(values.dropOffDate).format("YYYY-MM-DD") || "",
+
+      customer_name: values.customerName || "",
       customer_email: values.email || "",
       customer_phone: values.phone || "",
-      start_date: values.pickupDate?.format("YYYY-MM-DD") || "",
-      end_date: values.dropOffDate?.format("YYYY-MM-DD") || "",
-      pickup_location: values.pickupLocation || "",
-      dropoff_location: values.dropOffLocation || "",
+
+      pickup_address: values.pickup_location || "",
+      pickup_lat: "",
+      pickup_lng: "",
+
+      dropoff_address: values.dropoff_location || "",
+      dropoff_lat: "",
+      dropoff_lng: "",
+
       special_requests: values.specialRequests || "",
+
+      estimated_days: values.days?.length || 0,
+      estimated_total: values.estimated_total,
     };
 
-    // carBooking(payload)
-    //   .then(() => {
-    //     showSuccess({
-    //       message: "Booking done!",
-    //       description: "Your booking has been confirmed successfully.",
-    //     });
-    //   })
-    //   .catch((error) => {
-    //     showError({
-    //       message: "Failed",
-    //       description:
-    //         error?.response?.data?.message || "Server did not respond.",
-    //     });
-    //   })
-    //   .finally(() => {
-    //     form.resetFields();
-    //     setIsBookingModal(false);
-    //   });
+    console.log("Final Payload:", payload);
+
+    // ab backend call karo
+    carBooking(payload)
+      .then(() => {
+        showSuccess({
+          message: "Booking done!",
+          description: "Your booking has been confirmed successfully.",
+        });
+      })
+      .catch((error) => {
+        showError({
+          message: "Failed",
+          description:
+            error?.response?.data?.message || "Server did not respond.",
+        });
+      })
+      .finally(() => {
+        form.resetFields();
+        setIsBookingModal(false);
+      });
   };
 
   return (
