@@ -54,6 +54,20 @@ const CommonDatePicker: React.FC<CommonDatePickerProps> = ({
       );
     }
 
+    if (mode === "range") {
+      return (
+        <DatePicker.RangePicker
+          value={value}
+          onChange={onChange}
+          placeholder={["Start Date", "End Date"]}
+          disabled={disabled}
+          allowClear={false}
+          className={className || "w-full"}
+          disabledDate={disabledDate}
+        />
+      );
+    }
+
     return (
       <DatePicker
         value={value}

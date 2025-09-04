@@ -60,7 +60,6 @@ const Header = () => {
       {
         onSuccess: (data) => {
           localStorage.setItem("token", data?.token);
-          console.log("Login success:", data);
         },
         onError: (error) => {
           console.error("Login failed", error);
@@ -81,8 +80,7 @@ const Header = () => {
             ? "bg-transparent"
             : "bg-gray-900"
         }
-      `}
-    >
+      `}>
       <Container className="flex items-center justify-between">
         {/* Desktop Navigation */}
         <NavigationDesktop navigationLinks={NAVIGATION_LINKS} />

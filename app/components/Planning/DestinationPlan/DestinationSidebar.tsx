@@ -2,11 +2,16 @@
 
 import React, { useState } from "react";
 import { Tabs } from "antd";
+import DestinationHotels from "../DestinationHotels";
 
-const DestinationSidebar = () => {
+const DestinationSidebar = ({ destinationData }: { destinationData: any }) => {
   const links = [
+    {
+      name: "Hotels",
+      slug: "hotels",
+      content: <DestinationHotels destination={destinationData} />,
+    },
     { name: "Sites", slug: "sites", content: <div>Sites Content</div> },
-    { name: "Hotels", slug: "hotels", content: <div>Hotels Content</div> },
     {
       name: "Restaurants",
       slug: "restaurants",
@@ -18,8 +23,7 @@ const DestinationSidebar = () => {
   const [activeKey, setActiveKey] = useState(links[0].slug);
 
   return (
-    <div className="p-4 border border-gray-300 min-w-[250px] rounded-lg">
-      <h2 className="text-lg font-semibold mb-4">Menu</h2>
+    <div className="px-4 pb-4 border border-gray-300 rounded-lg">
       <Tabs
         activeKey={activeKey}
         onChange={(key) => setActiveKey(key)}
@@ -28,7 +32,6 @@ const DestinationSidebar = () => {
           label: link.name,
           children: link.content,
         }))}
-        tabPosition="left" // sidebar style tabs
       />
     </div>
   );

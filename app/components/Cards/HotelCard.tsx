@@ -7,18 +7,12 @@ import Image from "next/image";
 import { FILE_BASE_URL } from "@/lib/constant";
 import CommonBadge from "../common/CommonBadge";
 
-const HotelCard = ({ hotelData }: any) => {
+const HotelCard = ({ hotelData }: { hotelData: any }) => {
   if (!hotelData) {
-    return (
-      <div className="p-4 text-center text-red-500">
-        Hotel data available nahi hai.
-      </div>
-    );
+    return;
   }
 
   const { hotel_name, description, city, images, rooms, id } = hotelData;
-
-  console.log({ city });
 
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col h-full">

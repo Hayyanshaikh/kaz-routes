@@ -1,11 +1,8 @@
 "use client";
-
 import React from "react";
 import { Form, Select, Tag } from "antd";
 import { CheckOutlined, CloseOutlined, DownOutlined } from "@ant-design/icons";
 import { CommonMultiSelectProps } from "@/app/types/CommonType";
-
-const { Option } = Select;
 
 const CommonMultiSelect: React.FC<CommonMultiSelectProps> = ({
   label = "",
@@ -16,9 +13,25 @@ const CommonMultiSelect: React.FC<CommonMultiSelectProps> = ({
   onValueChange,
   className = "",
   onSelect,
+  isRequired = true,
+  rules,
 }) => {
+  const appliedRules =
+    rules && rules.length > 0
+      ? rules
+      : isRequired
+        ? [{ required: true, message: `${name} is required` }]
+        : [];
+
   return (
-    <Form.Item name={name} label={label} className={`${className} !mb-0`}>
+    <Form.Item
+      layout="vertical"
+      name={name}
+      label={label}
+      rules={appliedRules}
+      required={isRequired}
+      className={`${className} !mb-0`}
+    >
       <Select
         mode="multiple"
         allowClear

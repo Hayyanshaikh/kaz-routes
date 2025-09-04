@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Form, Input } from "antd";
+import { Form, Input, InputNumber } from "antd";
 import { CommonInputProps } from "@/app/types/CommonType";
 
 const CommonInput: React.FC<CommonInputProps> = ({
@@ -19,9 +19,11 @@ const CommonInput: React.FC<CommonInputProps> = ({
   prefix,
   suffix,
   onChange,
+  min,
+  max,
+  step = 1,
 }) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    onChange?.(e.target.value);
+  const handleChange = (val: any) => onChange?.(val);
 
   const appliedRules =
     rules && rules.length > 0
@@ -32,22 +34,20 @@ const CommonInput: React.FC<CommonInputProps> = ({
 
   const renderInputText = () => (
     <Input
-      value={value}
       placeholder={placeholder}
       disabled={disabled}
       maxLength={maxLength}
       className={className}
       allowClear={allowClear}
-      type={type}
+      type="text"
       prefix={prefix}
       suffix={suffix}
-      onChange={handleChange}
+      onChange={(e) => handleChange(e.target.value)}
     />
   );
 
   const renderInputPassword = () => (
     <Input.Password
-      value={value}
       placeholder={placeholder}
       disabled={disabled}
       maxLength={maxLength}
@@ -55,6 +55,19 @@ const CommonInput: React.FC<CommonInputProps> = ({
       className={className}
       prefix={prefix}
       suffix={suffix}
+      onChange={(e) => handleChange(e.target.value)}
+    />
+  );
+
+  const renderInputNumber = () => (
+    <InputNumber
+      placeholder={placeholder}
+      disabled={disabled}
+      className={`!w-full ${className || ""}`}
+      min={min}
+      max={max}
+      step={step}
+      value={value}
       onChange={handleChange}
     />
   );
@@ -63,6 +76,8 @@ const CommonInput: React.FC<CommonInputProps> = ({
     switch (type) {
       case "password":
         return renderInputPassword();
+      case "number":
+        return renderInputNumber();
       default:
         return renderInputText();
     }
@@ -75,8 +90,7 @@ const CommonInput: React.FC<CommonInputProps> = ({
       rules={appliedRules}
       required={isRequired}
       layout="vertical"
-      className={formItemClassName || "w-full !mb-0 block"}
-    >
+      className={formItemClassName || "w-full !mb-0 block"}>
       {renderField()}
     </Form.Item>
   );

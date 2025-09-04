@@ -8,6 +8,7 @@ const dropdownManipulator = (list: any[]): DropdownOption[] => {
       item?.restaurant_name ||
       `${item?.brand?.name} - ${item?.model}`,
     value: String(item.id),
+    image: item?.image,
   }));
 };
 

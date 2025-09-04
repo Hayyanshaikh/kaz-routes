@@ -45,6 +45,9 @@ export interface CommonInputProps {
   prefix?: ReactNode;
   suffix?: ReactNode;
   onChange?: (value: string) => void;
+  min?: number;
+  max?: number;
+  step?: number;
 }
 
 export interface CommonDatePickerProps {
@@ -52,7 +55,7 @@ export interface CommonDatePickerProps {
   label?: string;
   rules?: Rule[];
   formItemClassName?: string;
-  mode?: "date" | "time" | "datetime";
+  mode?: "date" | "time" | "datetime" | "range";
   isRequired?: boolean;
   className?: string;
   placeholder?: string;
@@ -95,7 +98,10 @@ export interface CommonMultiSelectProps {
   placeholder?: string;
   className?: string;
   disabled?: boolean;
+  rules?: Rule[];
+  isRequired?: boolean;
   options: DropdownOption[];
+
   name: string | string[];
   onValueChange?: (_values: string[]) => void;
   onSelect?: (_value: string) => void;
