@@ -45,16 +45,16 @@ export function generateUUID() {
   });
 }
 
-export const getDaysCount = (
+export function getDaysCount(
   start: Dayjs,
   end: Dayjs,
   inclusive = false
-): number => {
+): number {
   if (!start || !end) return 0;
 
   const days = end.diff(start, "day");
   return inclusive ? days + 1 : days;
-};
+}
 
 export function getDateRange(start?: Dayjs, end?: Dayjs) {
   const startDate = dayjs(start);

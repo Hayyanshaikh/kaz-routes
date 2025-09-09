@@ -1,6 +1,6 @@
 import dayjs, { Dayjs } from "dayjs";
-import { create } from "zustand";
 import { getDaysCount } from "@/lib/utils";
+import { create } from "zustand";
 
 interface Plan {
   id: string;
