@@ -6,9 +6,10 @@ const CommonModal: React.FC<CommonModalProps> = ({
   open,
   title,
   loading,
+  centered,
   children,
   description,
-  onOpenChange,
+  setOpen,
   footer = true,
   width = 520,
   className = "",
@@ -20,7 +21,7 @@ const CommonModal: React.FC<CommonModalProps> = ({
 }) => {
   const handleConfirm = () => {
     onConfirm();
-    if (destroyOnClose) onOpenChange(false);
+    if (destroyOnClose) setOpen(false);
   };
 
   useEffect(() => {
@@ -39,11 +40,11 @@ const CommonModal: React.FC<CommonModalProps> = ({
 
   return (
     <Modal
-      centered
+      centered={centered}
       open={open}
       title={title}
       onCancel={() => {
-        onOpenChange(false);
+        setOpen(false);
         onClose();
       }}
       onOk={handleConfirm}

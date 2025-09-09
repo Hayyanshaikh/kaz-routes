@@ -2,8 +2,14 @@
 import React from "react";
 import { Form, DatePicker, TimePicker } from "antd";
 import { CommonDatePickerProps } from "@/app/types/CommonType";
+import dayjs, { Dayjs } from "dayjs";
 
-const CommonDatePicker: React.FC<CommonDatePickerProps> = ({
+interface ExtendedProps extends CommonDatePickerProps {
+  isNotFormItem?: boolean;
+  allowedDates?: string[]; // ✅ new prop
+}
+
+const CommonDatePicker: React.FC<ExtendedProps> = ({
   name,
   label,
   rules,
@@ -16,6 +22,8 @@ const CommonDatePicker: React.FC<CommonDatePickerProps> = ({
   onChange,
   disabledDate,
   mode = "date",
+  isNotFormItem = false, // ✅ new prop
+  allowedDates, // ✅ new prop
 }) => {
   const appliedRules =
     rules && rules.length > 0
@@ -23,6 +31,14 @@ const CommonDatePicker: React.FC<CommonDatePickerProps> = ({
       : isRequired
       ? [{ required: true, message: `${label || name} is required` }]
       : [];
+
+  // ✅ Custom disabledDate logic with allowedDates
+  const handleDisabledDate = (current: Dayjs) => {
+    if (allowedDates && allowedDates.length > 0) {
+      return !allowedDates.some((d) => current.isSame(dayjs(d), "day"));
+    }
+    return disabledDate ? disabledDate(current) : false;
+  };
 
   const renderPicker = () => {
     if (mode === "time") {
@@ -42,6 +58,7 @@ const CommonDatePicker: React.FC<CommonDatePickerProps> = ({
     if (mode === "datetime") {
       return (
         <DatePicker
+          placement="topLeft"
           showTime
           value={value}
           placeholder={placeholder || "Select Date & Time"}
@@ -49,7 +66,7 @@ const CommonDatePicker: React.FC<CommonDatePickerProps> = ({
           allowClear={false}
           className={className || "w-full"}
           onChange={onChange}
-          disabledDate={disabledDate}
+          disabledDate={handleDisabledDate}
         />
       );
     }
@@ -59,11 +76,12 @@ const CommonDatePicker: React.FC<CommonDatePickerProps> = ({
         <DatePicker.RangePicker
           value={value}
           onChange={onChange}
+          placement="topLeft"
           placeholder={["Start Date", "End Date"]}
           disabled={disabled}
           allowClear={false}
           className={className || "w-full"}
-          disabledDate={disabledDate}
+          disabledDate={handleDisabledDate}
         />
       );
     }
@@ -71,15 +89,20 @@ const CommonDatePicker: React.FC<CommonDatePickerProps> = ({
     return (
       <DatePicker
         value={value}
+        placement="topLeft"
         placeholder={placeholder}
         disabled={disabled}
         allowClear={false}
         className={className || "w-full"}
         onChange={onChange}
-        disabledDate={disabledDate}
+        disabledDate={handleDisabledDate}
       />
     );
   };
+
+  if (isNotFormItem) {
+    return renderPicker();
+  }
 
   return (
     <Form.Item

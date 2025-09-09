@@ -1,120 +1,107 @@
-"use client";
-
-import React, { useState } from "react";
 import { useControllerGetFindAllHotels } from "@/app/hooks/api";
-import CommonPagination from "../../common/CommonPagination";
-import { Spin } from "antd";
-import { FILE_BASE_URL } from "@/lib/constant";
-import { PlusOutlined } from "@ant-design/icons";
+import { useFormatCurrency } from "@/app/hooks/useFormatCurrency";
 import useDestinationStore from "@/app/store/destinationStore";
+import usePlanStore from "@/app/store/planStore";
+import { FILE_BASE_URL } from "@/lib/constant";
+import { useState } from "react";
 
-type Props = {
+interface Props {
   destination: any;
-};
+}
 
 const DestinationHotels = ({ destination }: Props) => {
+  const { format } = useFormatCurrency();
   const { addHotel, removeHotel } = useDestinationStore();
+  const { plan, dayCount, usedDays } = usePlanStore();
   const [currentPage, setCurrentPage] = useState(1);
 
   const { data, isLoading } = useControllerGetFindAllHotels({
     params: { page: currentPage },
   });
 
-  const totalPages = data?.meta?.last_page || 1;
+  // Direct booking
+  const handleBook = (hotel: any, room: any) => {
+    if (plan && usedDays < dayCount) {
+      const startDate = plan.planDateRange[0]
+        .add(usedDays, "day")
+        .startOf("day");
+      const booking = {
+        ...room,
+        fromDate: startDate.format("YYYY-MM-DD"),
+        toDate: startDate.format("YYYY-MM-DD"),
+      };
+      addHotel(destination?.id, booking);
+    }
+  };
 
   return (
-    <>
-      {isLoading ? (
-        <div className="h-screen flex items-center justify-center">
-          <Spin />
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {data?.data?.map((hotel: any) => {
-            const mainImage = hotel.images?.[0] || "/placeholder.jpg";
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      {data?.data?.map((hotel: any) => {
+        const mainImage = hotel.images?.[0] || "/placeholder.jpg";
 
-            return (
-              <div
-                key={hotel.id}
-                className="rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition bg-white flex flex-col"
-              >
-                {/* Hotel Image */}
-                <div
-                  className="h-56 bg-cover bg-center relative"
-                  style={{
-                    backgroundImage: `url(${FILE_BASE_URL}/${mainImage})`,
-                  }}
-                >
-                  <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/70 to-transparent p-4 text-white">
-                    <h3 className="font-semibold text-lg truncate">
-                      {hotel.hotel_name}
-                    </h3>
-                    <p className="text-sm">⭐ {hotel.hotel_rating}</p>
-                  </div>
-                </div>
-
-                {/* Hotel Details */}
-                <div className="p-5 flex flex-col gap-3 flex-1">
-                  <p className="text-gray-600 text-sm line-clamp-2">
-                    {hotel.description}
-                  </p>
-
-                  <div className="flex flex-col gap-3 mt-2">
-                    {hotel.rooms?.map((room: any) => (
-                      <div
-                        key={room.id}
-                        className="flex justify-between items-center border border-gray-200 rounded-lg p-3 hover:border-orange-400 transition"
-                      >
-                        <div>
-                          <p className="font-medium text-gray-900">
-                            {room.room_name}
-                          </p>
-                          <p className="text-primary font-bold text-sm">
-                            Rs {room.price_double}
-                          </p>
-                        </div>
-                        {destination?.hotels?.some(
-                          (h: any) => h.id === room.id
-                        ) ? (
-                          <button
-                            onClick={() => {
-                              removeHotel(destination?.id, room?.id);
-                              console.log("removeHotel call karo:", room.id);
-                            }}
-                            className="flex items-center gap-1 bg-red-500 text-white px-3 py-1.5 rounded-full text-xs font-medium hover:bg-red-700 transition"
-                          >
-                            Delete
-                          </button>
-                        ) : (
-                          <button
-                            onClick={() => {
-                              addHotel(destination?.id, room);
-                            }}
-                            className="flex items-center gap-1 bg-primary text-white px-3 py-1.5 rounded-full text-xs font-medium hover:bg-orange-700 transition"
-                          >
-                            <PlusOutlined />
-                            Book
-                          </button>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
+        return (
+          <div
+            key={hotel.id}
+            className="rounded-xl overflow-hidden border border-gray-200 bg-white hover:shadow-md transition flex flex-col"
+          >
+            {/* Hotel Image */}
+            <div
+              className="h-36 bg-cover bg-center relative"
+              style={{ backgroundImage: `url(${FILE_BASE_URL}/${mainImage})` }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+              <div className="absolute bottom-2 left-2 right-2 text-white">
+                <h3 className="font-medium text-sm truncate">
+                  {hotel.hotel_name}
+                </h3>
+                <p className="text-xs opacity-90">⭐ {hotel.hotel_rating}</p>
               </div>
-            );
-          })}
-        </div>
-      )}
+            </div>
 
-      {/* Pagination */}
-      <div className="mt-8">
-        <CommonPagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={(page) => setCurrentPage(page)}
-        />
-      </div>
-    </>
+            {/* Rooms */}
+            {hotel.rooms?.length > 0 && (
+              <div className="p-3 flex flex-col gap-2 flex-1">
+                {hotel.rooms.map((room: any) => {
+                  const isBooked = destination?.hotels?.some(
+                    (h: any) => h.id === room.id
+                  );
+                  return (
+                    <div
+                      key={room.id}
+                      className="flex justify-between items-center border border-gray-300 rounded-md px-2 py-2 text-xs"
+                    >
+                      <span className="text-gray-700 truncate">
+                        {room.room_name}
+                      </span>
+                      {isBooked ? (
+                        <button
+                          onClick={() => removeHotel(destination?.id, room?.id)}
+                          className="bg-red-500 text-white px-2 py-0.5 rounded-full hover:bg-red-600"
+                        >
+                          Delete
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => handleBook(hotel, room)}
+                          disabled={usedDays >= dayCount}
+                          className={`px-2 py-0.5 rounded-full text-white ${
+                            usedDays >= dayCount
+                              ? "bg-gray-400 cursor-not-allowed"
+                              : "bg-primary hover:bg-orange-600"
+                          }`}
+                        >
+                          Book
+                        </button>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
   );
 };
 

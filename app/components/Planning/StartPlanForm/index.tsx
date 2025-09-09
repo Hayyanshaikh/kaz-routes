@@ -15,8 +15,7 @@ const StartPlanForm: React.FC = () => {
   const { data: countriesData } = useControllerGetFindAllCountries();
   const countriesOptions = dropdownManipulator(countriesData?.data || []);
   const [form] = Form.useForm();
-
-  const setPlan = usePlanStore((state) => state.setPlan);
+  const { plan, setPlan } = usePlanStore();
 
   const onFinish = (values: any) => {
     console.log("Form values:", values);
@@ -38,6 +37,14 @@ const StartPlanForm: React.FC = () => {
           form={form}
           onFinish={onFinish}
           layout="vertical"
+          initialValues={{
+            planName: plan?.planName,
+            countries: plan?.countries,
+            planDateRange: plan?.planDateRange,
+            adults: plan?.adults || 1,
+            childrens: plan?.childrens || 0,
+            infants: plan?.infants || 0,
+          }}
           className="flex flex-col gap-4"
         >
           <CommonInput
@@ -79,8 +86,8 @@ const StartPlanForm: React.FC = () => {
             />
             <CommonInput
               type="number"
-              name="children"
-              label="Children"
+              name="childrens"
+              label="Childrens"
               placeholder="0"
             />
             <CommonInput

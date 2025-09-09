@@ -3,35 +3,39 @@
 import React, { useState } from "react";
 import { Tabs } from "antd";
 
-const DestinationSidebar = () => {
-  const links = [
-    { name: "Sites", slug: "sites", content: <div>Sites Content</div> },
-    { name: "Hotels", slug: "hotels", content: <div>Hotels Content</div> },
-    {
-      name: "Restaurants",
-      slug: "restaurants",
-      content: <div>Restaurants Content</div>,
-    },
-    { name: "Cars", slug: "cars", content: <div>Cars Content</div> },
-  ];
+interface TabItem {
+  value: string; // unique key
+  label: string; // tab name
+  content: React.ReactNode; // tab content
+}
 
-  const [activeKey, setActiveKey] = useState(links[0].slug);
+interface CommonTabsProps {
+  tabs: TabItem[];
+  className?: string;
+  tabPosition?: "top" | "left" | "right" | "bottom";
+}
+
+const CommonTabs: React.FC<CommonTabsProps> = ({
+  tabs,
+  className = "",
+  tabPosition = "top",
+}) => {
+  const [activeKey, setActiveKey] = useState(tabs[0]?.value);
 
   return (
-    <div className="p-4 border border-gray-300 min-w-[250px] rounded-lg">
-      <h2 className="text-lg font-semibold mb-4">Menu</h2>
+    <div className={`${className}`}>
       <Tabs
         activeKey={activeKey}
         onChange={(key) => setActiveKey(key)}
-        items={links.map((link) => ({
-          key: link.slug,
-          label: link.name,
-          children: link.content,
+        items={tabs.map((tab) => ({
+          key: tab.value,
+          label: tab.label,
+          children: tab.content,
         }))}
-        tabPosition="left" // sidebar style tabs
+        tabPosition={tabPosition}
       />
     </div>
   );
 };
 
-export default DestinationSidebar;
+export default CommonTabs;

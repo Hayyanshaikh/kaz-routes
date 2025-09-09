@@ -136,7 +136,7 @@ const Room = ({ room, hotelDetail }: PropertyDetailProps) => {
 
       <CommonModal
         open={open}
-        onOpenChange={setOpen}
+        setOpen={setOpen}
         title={`Hotel Booking ${room.name} Room`}
         confirmText={isPending ? "Submitting..." : "Submit Booking"}
         width={766}

@@ -3,14 +3,14 @@ import React, { useState } from "react";
 import { AutoComplete, Empty } from "antd";
 import usePlanStore from "@/app/store/planStore";
 import { generateUUID } from "@/lib/utils";
-import CommonSlider from "../../common/CommonSlider";
-import DestinationCard from "./DestinationCard";
 import { useControllerGetFindAllCities } from "@/app/hooks/api";
 import dropdownManipulator from "@/app/manipulators/dropdownManipulator";
-import Link from "next/link";
 import useDestinationStore from "@/app/store/destinationStore";
+import { useRouter } from "next/navigation";
+import DestinationList from "./DestinationList";
 
 const DestinationPlan = () => {
+  const router = useRouter();
   const { plan } = usePlanStore();
   const { addDestination, destinations, removeDestination } =
     useDestinationStore();
@@ -29,25 +29,9 @@ const DestinationPlan = () => {
     setSearchValue("");
   };
 
-  // Prepare slider items with DestinationCard
-  const sliderItems =
-    destinations?.map((d) => (
-      <Link href={`/plan/${plan?.id}/${d.id}`}>
-        <DestinationCard
-          key={d.id}
-          name={d.name}
-          image={d.image}
-          sitesCount={d?.sites?.length || 0}
-          carsCount={d?.cars?.length || 0}
-          onDelete={() => removeDestination(d.id)}
-          restaurantsCount={d?.restaurants?.length || 0}
-          hotelsCount={d?.hotels?.length || 0}
-        />
-      </Link>
-    )) || [];
-
   return (
     <div className="">
+      {/* Search / Add Destination */}
       <label className="block text-xs text-gray-600 mb-2 font-medium">
         Add Destination:
       </label>
@@ -59,33 +43,21 @@ const DestinationPlan = () => {
         onChange={(val) => setSearchValue(val)}
         onSelect={handleSelect}
         filterOption={(inputValue: any, option: any) =>
-          option?.value.toLowerCase().includes(inputValue.toLowerCase())
+          option?.label.toLowerCase().includes(inputValue.toLowerCase())
         }
       />
 
-      {/* Slider of destinations */}
-      {sliderItems.length > 0 ? (
-        <div className="mt-6">
-          <CommonSlider
-            items={sliderItems}
-            slidesPerView={4}
-            spaceBetween={20}
-            autoplay={false}
-            loop={false}
-            showNavigation={true}
-            breakpoints={{
-              1024: { slidesPerView: 4 },
-              768: { slidesPerView: 3 },
-              640: { slidesPerView: 2 },
-              0: { slidesPerView: 1 },
-            }}
-          />
-        </div>
-      ) : (
-        <div className="py-5">
-          <Empty description="No Destination Selected" />
-        </div>
-      )}
+      {/* List of Destination Cards */}
+      <div className="mt-3">
+        {destinations?.length > 0 && (
+          <div className="flex justify-between gap-2 text-xs text-gray-800 font-light px-2">
+            <span>Destnation</span>
+            <span>Nights</span>
+          </div>
+        )}
+
+        <DestinationList destinations={destinations} />
+      </div>
     </div>
   );
 };

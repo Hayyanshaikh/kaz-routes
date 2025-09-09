@@ -51,7 +51,7 @@ export interface CommonInputProps {
 }
 
 export interface CommonDatePickerProps {
-  name: string | string[];
+  name?: string | string[];
   label?: string;
   rules?: Rule[];
   formItemClassName?: string;
@@ -65,8 +65,9 @@ export interface CommonDatePickerProps {
   type?: "text" | "password" | "email" | "number" | "tel";
   prefix?: ReactNode;
   suffix?: ReactNode;
-  value?: Dayjs;
-  onChange?: (date: Dayjs | null) => void;
+  value?: Dayjs | string | any;
+  isNotFormItem?: boolean;
+  onChange?: (date: Dayjs | null | any) => void | any;
   disabledDate?: (currentDate: Dayjs) => boolean;
 }
 
@@ -143,11 +144,12 @@ export interface CommonModalProps {
   destroyOnClose?: boolean;
   confirmText?: string;
   width?: number | string;
+  centered?: boolean;
   cancelText?: string;
   onClose?: () => void;
   open: boolean;
   loading?: boolean;
-  onOpenChange: (open: boolean) => void;
+  setOpen: (open: boolean) => void;
   onConfirm?: () => void;
 }
 

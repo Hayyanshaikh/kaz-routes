@@ -95,7 +95,7 @@ const DishCard = ({ dish, restaurantDetail }: DishCardProps) => {
 
       <CommonModal
         open={open}
-        onOpenChange={setOpen}
+        setOpen={setOpen}
         title={`Restaurant Booking ${dish.name}`}
         confirmText="Submit Booking"
         onClose={() => form.resetFields()}

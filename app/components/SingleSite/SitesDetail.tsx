@@ -165,7 +165,7 @@ const SitesDetail = ({ site }: Props) => {
 
       <CommonModal
         open={isModalOpen}
-        onOpenChange={setIsModalOpen}
+        setOpen={setIsModalOpen}
         onClose={() => {
           form.resetFields();
         }}

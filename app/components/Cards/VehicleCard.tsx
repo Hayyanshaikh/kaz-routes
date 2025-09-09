@@ -187,7 +187,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
       {/* Modal */}
       <CommonModal
         open={isBookingModal}
-        onOpenChange={setIsBookingModal}
+        setOpen={setIsBookingModal}
         title={`Book ${carBrand} ${carModel}`}
         loading={isPending}
         cancelText="Discard"
