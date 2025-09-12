@@ -5,6 +5,7 @@ import DestinationHotels from "../DestinationHotels";
 import CommonTabs from "../../common/CommonTabs";
 import PlanSites from "../PlanSites";
 import PlanRestaurants from "../PlanRestaurants";
+import PlanCars from "../PlanCars";
 
 const DestinationDetail = ({ destinationData }: { destinationData: any }) => {
   const links = [
@@ -23,7 +24,11 @@ const DestinationDetail = ({ destinationData }: { destinationData: any }) => {
       value: "restaurants",
       content: <PlanRestaurants destination={destinationData} />,
     },
-    { label: "Cars", value: "cars", content: <div>Cars Content</div> },
+    {
+      label: "Cars",
+      value: "cars",
+      content: <PlanCars destination={destinationData} />,
+    },
   ];
 
   return (

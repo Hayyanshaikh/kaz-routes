@@ -44,8 +44,6 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
     useControllerPostCreateCarBooking();
 
   const onSubmit = (values: any) => {
-    console.log({ values });
-
     const payload = {
       day_plan_json: values.days?.map((d: any) => ({
         date: d.date,
@@ -82,8 +80,6 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
       estimated_days: values.days?.length || 0,
       estimated_total: values.estimated_total,
     };
-
-    console.log("Final Payload:", payload);
 
     // ab backend call karo
     carBooking(payload)

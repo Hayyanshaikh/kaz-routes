@@ -56,7 +56,7 @@ const PlanSiteCard: React.FC<PlanSiteCardProps> = ({
           className="h-40 w-full object-cover rounded-t-lg"
         />
       }
-      className="rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition"
+      className="rounded-lg border !border-gray-300"
     >
       {/* Title */}
       <h2 className="text-base font-semibold text-gray-900 truncate">
@@ -76,24 +76,21 @@ const PlanSiteCard: React.FC<PlanSiteCardProps> = ({
       </div>
 
       {/* Price & Action */}
-      <div className="flex flex-wrap gap-2 items-center justify-between mt-3">
+      <div className="flex flex-wrap gap-2 items-center justify-between my-3">
         <span className="text-sm text-gray-600 font-semibold">
           {format(price)}
         </span>
-        {isBooked ? (
-          <CommonButton
-            label="Remove"
-            onClick={onRemove}
-            className="!bg-red-500 !px-3 !h-6 !py-1"
-          />
-        ) : (
-          <CommonButton
-            label={buttonText}
-            onClick={onBook}
-            className="!px-3 !h-6 !py-1"
-          />
-        )}
       </div>
+
+      {isBooked ? (
+        <CommonButton
+          label="Remove"
+          onClick={onRemove}
+          className="!bg-red-500 !w-full"
+        />
+      ) : (
+        <CommonButton label={buttonText} className="!w-full" onClick={onBook} />
+      )}
     </Card>
   );
 };

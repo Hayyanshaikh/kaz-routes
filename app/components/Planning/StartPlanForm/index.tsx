@@ -18,7 +18,6 @@ const StartPlanForm: React.FC = () => {
   const { plan, setPlan } = usePlanStore();
 
   const onFinish = (values: any) => {
-    console.log("Form values:", values);
     const payload = {
       id: generateUUID(),
       ...values,

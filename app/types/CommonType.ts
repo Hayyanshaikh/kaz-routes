@@ -131,6 +131,8 @@ export interface CommonSwitchProps {
 export interface CommonBadgeProps {
   label: string;
   color?: VariantProps["variant"];
+  icon?: React.ReactNode;
+
   className?: string;
 }
 

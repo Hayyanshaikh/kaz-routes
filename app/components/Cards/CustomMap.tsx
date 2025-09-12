@@ -12,12 +12,14 @@ export default function GoogleMapModern({
   height = "480px",
   width = "100%",
   form,
+  showMap = true,
 }: {
   center?: LatLng;
   zoom?: number;
   height?: string;
   width?: string;
   form: FormInstance;
+  showMap?: boolean;
 }) {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const pickupACRef = useRef<HTMLDivElement | null>(null);
@@ -78,35 +80,24 @@ export default function GoogleMapModern({
   }, []);
 
   async function boot() {
-    // Load libraries (new async import)
-    const { Map } = (await (google.maps as any).importLibrary(
-      "maps"
-    )) as google.maps.MapsLibrary;
+    // ✅ Agar map nahi dikhana to sirf inputs load kar do
     const { PlaceAutocompleteElement }: any = await (
       google.maps as any
     ).importLibrary("places");
+
     const { AdvancedMarkerElement, PinElement }: any = await (
       google.maps as any
     ).importLibrary("marker");
-    const { encoding } = await (google.maps as any).importLibrary("geometry"); // for route polyline decode
 
     AdvancedMarkerElementRef.current = AdvancedMarkerElement;
     PinElementRef.current = PinElement;
 
     geocoder.current = new google.maps.Geocoder();
-    gmap.current = new Map(mapRef.current as HTMLDivElement, {
-      mapId: process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID, // must be a Vector Map ID
-      center,
-      zoom,
-      mapTypeControl: false,
-      streetViewControl: false,
-      fullscreenControl: false,
-    });
-    // ----- Places Autocomplete Web Component (NEW)
+
+    // --- Pickup autocomplete
     const pickupEl = new PlaceAutocompleteElement();
     pickupEl.placeholder = "Search pickup…";
     pickupEl.style.width = "100%";
-
     pickupACRef.current?.replaceChildren(pickupEl);
 
     pickupEl.addEventListener(
@@ -123,11 +114,16 @@ export default function GoogleMapModern({
           loc.lng(),
           place.formattedAddress || place.displayName
         );
-        if (place.viewport) gmap.current?.fitBounds(place.viewport);
-        else gmap.current?.panTo(loc);
+
+        // 👇 agar map enable hai to map pe pan/fitBounds karo
+        if (showMap) {
+          if (place.viewport) gmap.current?.fitBounds(place.viewport);
+          else gmap.current?.panTo(loc);
+        }
       }
     );
 
+    // --- Dropoff autocomplete
     const dropEl = new PlaceAutocompleteElement();
     dropEl.placeholder = "Search drop-off…";
     dropEl.style.width = "100%";
@@ -137,10 +133,7 @@ export default function GoogleMapModern({
       dropEl.disabled = pickup.lat == null;
     };
     toggleDropDisabled();
-
-    // React state updates won't auto-toggle the web component; observe manually:
     const pickupToggleInterval = window.setInterval(toggleDropDisabled, 250);
-    // Clean it later
 
     dropEl.addEventListener("gmp-select", async ({ placePrediction }: any) => {
       const place = placePrediction.toPlace();
@@ -154,11 +147,34 @@ export default function GoogleMapModern({
         loc.lng(),
         place.formattedAddress || place.displayName
       );
-      if (place.viewport) gmap.current?.fitBounds(place.viewport);
-      else gmap.current?.panTo(loc);
+
+      if (showMap) {
+        if (place.viewport) gmap.current?.fitBounds(place.viewport);
+        else gmap.current?.panTo(loc);
+      }
     });
 
-    // Map click: first sets pickup, second sets dropoff, then alternates to dropoff
+    // ✅ Agar showMap false hai to yahan hi stop kar do
+    if (!showMap) {
+      return () => window.clearInterval(pickupToggleInterval);
+    }
+
+    // --- Agar map visible hai to initialize karo
+    const { Map } = (await (google.maps as any).importLibrary(
+      "maps"
+    )) as google.maps.MapsLibrary;
+    const { encoding } = await (google.maps as any).importLibrary("geometry");
+
+    gmap.current = new Map(mapRef.current as HTMLDivElement, {
+      mapId: process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID,
+      center,
+      zoom,
+      mapTypeControl: false,
+      streetViewControl: false,
+      fullscreenControl: false,
+    });
+
+    // --- Map click se pickup/dropoff set karna
     gmap.current?.addListener("click", (e: google.maps.MapMouseEvent) => {
       const latLng = e.latLng!;
       const which =
@@ -170,10 +186,10 @@ export default function GoogleMapModern({
       setPointFromLatLng(which as "pickup" | "dropoff", latLng);
     });
 
-    // Ensure proper paint if the container is in a hidden/sticky parent
+    // --- Resize fix
     setTimeout(() => google.maps.event.trigger(gmap.current!, "resize"), 150);
 
-    // Cleanup for the interval
+    // Cleanup
     return () => {
       window.clearInterval(pickupToggleInterval);
     };
@@ -378,15 +394,17 @@ export default function GoogleMapModern({
           <div className="customMapinput flex-1" ref={dropoffACRef} />
         </div>
 
-        <div
-          ref={mapRef}
-          style={{
-            height,
-            width,
-            marginTop: 12,
-            borderRadius: 6,
-          }}
-        />
+        {showMap && (
+          <div
+            ref={mapRef}
+            style={{
+              height,
+              width,
+              marginTop: 12,
+              borderRadius: 6,
+            }}
+          />
+        )}
       </div>
 
       {(distance || hasBoth()) && (

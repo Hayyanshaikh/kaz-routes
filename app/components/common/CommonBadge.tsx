@@ -5,6 +5,7 @@ const CommonBadge: React.FC<CommonBadgeProps> = ({
   label,
   className = "",
   color,
+  icon,
 }) => {
   let bgColor: string;
   let textColor: string;
@@ -25,8 +26,9 @@ const CommonBadge: React.FC<CommonBadgeProps> = ({
 
   return (
     <span
-      className={`${bgColor} ${textColor} ${className} py-0.5 w-auto font-medium rounded-full px-3 text-xs leading-5`}
+      className={`${bgColor} ${textColor} ${className} py-0.5 w-auto font-medium rounded-full px-3 text-xs leading-5 flex items-center gap-1`}
     >
+      {icon && <span className="flex items-center">{icon}</span>}
       {label}
     </span>
   );

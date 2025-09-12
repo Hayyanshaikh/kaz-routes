@@ -22,7 +22,6 @@ const DishCard = ({ dish, restaurantDetail }: DishCardProps) => {
     useControllerPostCreateRestaurantBooking();
 
   const onFinish = async (values: any) => {
-    console.log({ values });
     const payload: RestaurantBookingPayload = {
       restaurant_id: restaurantDetail?.id || undefined,
       booking_date: values.bookingDate?.format("YYYY-MM-DD"),

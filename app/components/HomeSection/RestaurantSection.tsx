@@ -15,8 +15,6 @@ const RestaurantSection = () => {
 
   const restaurants = data?.data || []; // yahan extract kiya
 
-  console.log({ restaurants });
-
   return (
     <Section>
       <Container>

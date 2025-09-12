@@ -39,8 +39,7 @@ const PlanSites = ({ destination }: Props) => {
   const handleConfirm = () => {
     if (selectedSite && selectedDate) {
       addSite(destination.id, {
-        id: selectedSite.id,
-        name: selectedSite.name,
+        ...selectedSite,
         date: dayjs(selectedDate).format("YYYY-MM-DD"),
       });
     }
@@ -48,12 +47,10 @@ const PlanSites = ({ destination }: Props) => {
     setSelectedDate(null);
   };
 
-  console.log({ checking: destination, plan });
-
   return (
     <>
       {isLoading ? (
-        <div className="h-[500px] flex items-center justify-center">
+        <div className="h-[300px] flex items-center justify-center">
           <Spin />
         </div>
       ) : (

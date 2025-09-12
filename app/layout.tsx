@@ -2,11 +2,11 @@ import "@ant-design/v5-patch-for-react-19";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
+import { ConfigProvider } from "antd";
+import { Toaster } from "sonner";
+import Providers from "./providers";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import Providers from "./providers";
-import { Toaster } from "sonner";
-import { ConfigProvider } from "antd";
 // Poppins font config
 const poppins = Poppins({
   subsets: ["latin"],

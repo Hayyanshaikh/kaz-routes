@@ -1,7 +1,8 @@
 import { create } from "zustand";
-import usePlanStore from "./planStore";
 import { Dayjs } from "dayjs";
+import usePlanStore from "./planStore";
 
+// Basic types
 export interface Hotel {
   id: string | number;
   room_name: string;
@@ -21,9 +22,21 @@ export interface Site {
   date: Dayjs | string;
 }
 
+export interface RestaurantVariant {
+  id: string | number;
+  size: string;
+  price: number;
+}
+
+export interface Dish {
+  id: string | number;
+  variants: RestaurantVariant[];
+}
+
 export interface Restaurant {
   id: string | number;
   name: string;
+  dishes: Dish[];
 }
 
 export interface Destination {
@@ -49,22 +62,18 @@ interface DestinationState {
   removeDestination: (destinationId: string | number) => void;
   resetDestinations: () => void;
 
-  // Hotels
   addHotel: (destinationId: string | number, hotel: Hotel) => void;
   removeHotel: (
     destinationId: string | number,
     hotelId: string | number
   ) => void;
 
-  // Cars
   addCar: (destinationId: string | number, car: Car) => void;
   removeCar: (destinationId: string | number, carId: string | number) => void;
 
-  // Sites
   addSite: (destinationId: string | number, site: Site) => void;
   removeSite: (destinationId: string | number, siteId: string | number) => void;
 
-  // Restaurants
   addRestaurant: (
     destinationId: string | number,
     restaurant: Restaurant
@@ -76,51 +85,35 @@ interface DestinationState {
 }
 
 const useDestinationStore = create<DestinationState>((set, get) => ({
-  destinations: [
-    {
-      id: "dest1",
-      name: "Paris",
-      image: "paris.jpg",
-      nights: 2,
-    },
-  ],
+  destinations: [],
 
-  // Destination ke nights update ke liye
-  addNight: (destinationId: string | number, nightsToAdd: number) => {
+  addNight: (destinationId, nightsToAdd) => {
     const { dayCount, usedDays } = usePlanStore.getState();
     const maxAddable = dayCount - usedDays;
     const actualAdd = Math.min(nightsToAdd, maxAddable);
+    if (actualAdd <= 0) return;
 
-    if (actualAdd <= 0) return; // koi add na ho
+    set((state) => ({
+      destinations: state.destinations.map((d) =>
+        d.id === destinationId
+          ? { ...d, nights: (d.nights || 0) + actualAdd }
+          : d
+      ),
+    }));
+    usePlanStore.getState().addUsedDays(actualAdd);
+  },
 
+  removeNight: (destinationId, nightsToRemove) => {
     set((state) => ({
       destinations: state.destinations.map((d) => {
         if (d.id === destinationId) {
-          usePlanStore.getState().addUsedDays(actualAdd);
-          return { ...d, nights: (d.nights || 0) + actualAdd };
+          const newNights = Math.max((d.nights || 0) - nightsToRemove, 0);
+          usePlanStore.getState().removeUsedDays(nightsToRemove);
+          return { ...d, nights: newNights };
         }
         return d;
       }),
     }));
-  },
-
-  removeNight: (destinationId: string | number, nightsToRemove: number) => {
-    set((state) => {
-      return {
-        destinations: state.destinations.map((d) => {
-          if (d.id === destinationId) {
-            usePlanStore.getState().removeUsedDays(nightsToRemove);
-            const newNights = Math.max((d.nights || 0) - nightsToRemove, 0);
-            console.log("After remove:", newNights); // debug
-            return {
-              ...d,
-              nights: newNights,
-            };
-          }
-          return d;
-        }),
-      };
-    });
   },
 
   addDestination: (destination) =>
@@ -131,19 +124,13 @@ const useDestinationStore = create<DestinationState>((set, get) => ({
       ],
     })),
 
-  removeDestination: (id) => {
-    const { destinations } = get();
-    const destToRemove = destinations.find((d) => d.id === id);
-
-    if (destToRemove) {
-      // Is destination ki nights wapis karo
-      const nightsToRemove = destToRemove.nights || 0;
-      usePlanStore.getState().removeUsedDays(nightsToRemove);
+  removeDestination: (destinationId) => {
+    const destToRemove = get().destinations.find((d) => d.id === destinationId);
+    if (destToRemove && destToRemove.nights) {
+      usePlanStore.getState().removeUsedDays(destToRemove.nights);
     }
-
-    // Destination store se delete karo
     set({
-      destinations: destinations.filter((d) => d.id !== id),
+      destinations: get().destinations.filter((d) => d.id !== destinationId),
     });
   },
 
@@ -158,17 +145,15 @@ const useDestinationStore = create<DestinationState>((set, get) => ({
       ),
     })),
 
-  removeHotel: (destinationId, hotelId) => {
+  removeHotel: (destinationId, hotelId) =>
     set((state) => ({
       destinations: state.destinations.map((d) =>
         d.id === destinationId
           ? { ...d, hotels: d.hotels?.filter((h) => h.id !== hotelId) || [] }
           : d
       ),
-    }));
-  },
+    })),
 
-  // ✅ Cars
   addCar: (destinationId, car) =>
     set((state) => ({
       destinations: state.destinations.map((d) =>
@@ -185,7 +170,6 @@ const useDestinationStore = create<DestinationState>((set, get) => ({
       ),
     })),
 
-  // ✅ Sites
   addSite: (destinationId, site) =>
     set((state) => ({
       destinations: state.destinations.map((d) =>
@@ -202,24 +186,38 @@ const useDestinationStore = create<DestinationState>((set, get) => ({
       ),
     })),
 
-  // ✅ Restaurants
   addRestaurant: (destinationId, restaurant) =>
     set((state) => ({
-      destinations: state.destinations.map((d) =>
-        d.id === destinationId
-          ? { ...d, restaurants: [...(d.restaurants || []), restaurant] }
-          : d
-      ),
+      destinations: state.destinations.map((d) => {
+        if (d.id !== destinationId) return d;
+
+        const exists = d.restaurants?.find(
+          (r) => r.variant.id === restaurant.variant.id
+        );
+
+        let updatedRestaurants;
+        if (exists) {
+          updatedRestaurants = d.restaurants.map((r) =>
+            r.variant.id === restaurant.variant.id
+              ? { ...r, quantity: restaurant.quantity }
+              : r
+          );
+        } else {
+          updatedRestaurants = [...(d.restaurants || []), restaurant];
+        }
+
+        return { ...d, restaurants: updatedRestaurants };
+      }),
     })),
 
-  removeRestaurant: (destinationId, restaurantId) =>
+  removeRestaurant: (destinationId, variantId) =>
     set((state) => ({
       destinations: state.destinations.map((d) =>
         d.id === destinationId
           ? {
               ...d,
               restaurants:
-                d.restaurants?.filter((r) => r.id !== restaurantId) || [],
+                d.restaurants?.filter((r) => r.variant.id !== variantId) || [],
             }
           : d
       ),
