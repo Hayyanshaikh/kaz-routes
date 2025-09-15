@@ -451,3 +451,20 @@ export const useControllerContactSubmit = () => {
     },
   });
 };
+
+// ✅ POST /travel-plans
+export const useControllerPostCreateTravelPlan = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (payload: any) => {
+      const res = await axios.post("/travel-plans", payload);
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["ControllerGetFindAllTravelPlans"],
+      });
+    },
+  });
+};
