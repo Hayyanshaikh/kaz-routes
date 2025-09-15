@@ -23,19 +23,8 @@ interface PlanState {
 }
 
 const usePlanStore = create<PlanState>((set, get) => ({
-  plan: {
-    id: "1",
-    countries: ["1"],
-    planDateRange: [
-      dayjs("2025-09-05", "YYYY-MM-DD"),
-      dayjs("2025-09-20", "YYYY-MM-DD"),
-    ],
-    planName: "New trip plan",
-    adults: 1,
-    childrens: 2,
-    infants: 0,
-  },
-  dayCount: getDaysCount(dayjs("2025-09-5"), dayjs("2025-09-20")),
+  plan: null,
+  dayCount: 0,
   usedDays: 0,
 
   setPlan: (data) =>

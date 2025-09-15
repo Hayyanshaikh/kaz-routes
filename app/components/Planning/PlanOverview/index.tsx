@@ -50,8 +50,8 @@ const apiPayload = (data: any) => {
 };
 
 const Index = () => {
-  const { plan } = usePlanStore();
-  const { destinations } = useDestinationStore();
+  const { plan, resetPlan } = usePlanStore();
+  const { destinations, resetDestinations } = useDestinationStore();
   const router = useRouter();
   const { mutateAsync: createPlan, isPending } =
     useControllerPostCreateTravelPlan();
@@ -87,6 +87,12 @@ const Index = () => {
           link.click();
           link.remove();
         }
+
+        router.push("/");
+        setTimeout(() => {
+          resetDestinations();
+          resetPlan();
+        }, 300);
       },
       onError: (error) => {
         console.error("Error creating travel plan:", error);
