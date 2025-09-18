@@ -365,7 +365,7 @@ const VehicleBookingForm = ({ form, price }: Props) => {
           />
         </div>
 
-        <GoogleMapModern form={form} height="300px" />
+        <GoogleMapModern form={form} />
 
         <Form.Item name="pickup_location" hidden>
           <Input type="hidden" />

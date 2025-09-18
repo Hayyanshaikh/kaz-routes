@@ -42,12 +42,8 @@ const VehicleSection = (props: Props) => {
                     carModel={`${car?.model} - ${car?.year}`}
                     features={features}
                     imageUrl={
-                      car.images?.find((img: any) => img.is_featured)
-                        ?.image_path
-                        ? `${FILE_BASE_URL}/${
-                            car.images.find((img: any) => img.is_featured)
-                              ?.image_path
-                          }`
+                      car.images[0]?.image_path
+                        ? `${FILE_BASE_URL}/${car.images[0]?.image_path}`
                         : "https://placehold.co/600x400?text=No+Image"
                     }
                     isAvailable={car?.availability?.status}

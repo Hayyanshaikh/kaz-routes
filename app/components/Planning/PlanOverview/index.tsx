@@ -62,12 +62,6 @@ const Index = () => {
 
   const contentRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!plan) {
-      router.push("/plan/create");
-    }
-  }, [plan, router]);
-
   const handleCreateTravelPlan = () => {
     const data = { plan, destinations };
     const payload = apiPayload(data);

@@ -6,7 +6,7 @@ const CommonModal: React.FC<CommonModalProps> = ({
   open,
   title,
   loading,
-  centered,
+  centered = true,
   children,
   description,
   setOpen,

@@ -116,10 +116,8 @@ const SearchComponent = () => {
             carModel={`${item?.model} - ${item?.year}`}
             features={features}
             imageUrl={
-              item.images?.find((img: any) => img.is_featured)?.image_path
-                ? `${FILE_BASE_URL}/${
-                    item.images.find((img: any) => img.is_featured)?.image_path
-                  }`
+              item.images[0]?.image_path
+                ? `${FILE_BASE_URL}/${item.images[0]?.image_path}`
                 : "https://placehold.co/600x400?text=No+Image"
             }
             isAvailable={item?.availability?.status}

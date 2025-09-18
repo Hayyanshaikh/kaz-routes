@@ -115,13 +115,13 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
             isVertical
               ? "w-full h-full border-b"
               : "w-full sm:w-2/4 sm:border-r"
-          } flex items-center justify-center p-4 group-hover:bg-primary/10 group-hover:border-primary transition`}
+          } flex items-center justify-center overflow-hidden group-hover:bg-primary/10 group-hover:border-primary transition`}
         >
           <Image
             fill
             src={imageUrl}
             alt={`${carBrand} ${carModel}`}
-            className="!relative w-full h-full object-contain group-hover:scale-105 transition"
+            className="!relative w-full h-full object-cover group-hover:scale-105 transition"
           />
         </div>
 
@@ -188,6 +188,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
         loading={isPending}
         cancelText="Discard"
         confirmText="Book"
+        centered
         destroyOnClose={false}
         onClose={() => form.resetFields()}
         width={`100%`}

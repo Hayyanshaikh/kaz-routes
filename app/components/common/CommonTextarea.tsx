@@ -14,7 +14,12 @@ const CommonTextarea: React.FC<CommonTextareaProps> = ({
   label = "",
 }) => {
   return (
-    <Form.Item layout="vertical" label={label} className="w-full" name={name}>
+    <Form.Item
+      layout="vertical"
+      label={label}
+      className="w-full !mb-0"
+      name={name}
+    >
       <TextArea
         value={value}
         onChange={onChange}
