@@ -79,7 +79,7 @@ const Index = () => {
         const pdfUrl = response?.pdf_url;
 
         if (pdfUrl) {
-          window.open(pdfUrl, "_blank");
+          window.location.assign(pdfUrl, "_blank");
         }
 
         router.push("/");
