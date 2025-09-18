@@ -79,13 +79,7 @@ const Index = () => {
         const pdfUrl = response?.pdf_url;
 
         if (pdfUrl) {
-          const link = document.createElement("a");
-          link.href = pdfUrl;
-          link.setAttribute("download", "travel-plan.pdf");
-          link.setAttribute("target", "_blank");
-          document.body.appendChild(link);
-          link.click();
-          link.remove();
+          window.open(pdfUrl, "_blank");
         }
 
         router.push("/");
