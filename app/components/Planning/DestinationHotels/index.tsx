@@ -24,7 +24,7 @@ const DestinationHotels = ({ destination }: Props) => {
 
   // Direct booking
   const handleBook = (hotel: any, room: any) => {
-    if (plan && usedDays < dayCount) {
+    if (plan) {
       const startDate = plan.planDateRange[0]
         .add(usedDays, "day")
         .startOf("day");
@@ -104,7 +104,7 @@ const DestinationHotels = ({ destination }: Props) => {
                         ) : (
                           <button
                             onClick={() => handleBook(hotel, room)}
-                            disabled={usedDays >= dayCount}
+                            // disabled={usedDays >= dayCount}
                             className={`px-2 py-0.5 rounded-full text-white bg-primary hover:bg-orange-600`}
                           >
                             Book
