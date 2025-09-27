@@ -59,6 +59,10 @@ interface DestinationState {
   removeNight: (destinationId: string | number, nightsToRemove: number) => void;
 
   addDestination: (destination: Destination) => void;
+  updateDestination: (
+    destinationId: string | number,
+    updatedData: Partial<Destination>
+  ) => void;
   removeDestination: (destinationId: string | number) => void;
   resetDestinations: () => void;
 
@@ -122,6 +126,13 @@ const useDestinationStore = create<DestinationState>((set, get) => ({
         ...state.destinations,
         { ...destination, hotels: [], cars: [], sites: [], restaurants: [] },
       ],
+    })),
+
+  updateDestination: (destinationId, updatedData) =>
+    set((state) => ({
+      destinations: state.destinations.map((d) =>
+        d.id === destinationId ? { ...d, ...updatedData } : d
+      ),
     })),
 
   removeDestination: (destinationId) => {

@@ -7,6 +7,9 @@ import { TabItem } from "@/app/types/CommonType";
 import { useFormatCurrency } from "@/app/hooks/useFormatCurrency";
 import { PlusOutlined } from "@ant-design/icons";
 import useDestinationStore from "@/app/store/destinationStore";
+import { getDateRange, getDestinationDates } from "@/lib/utils";
+import CommonDatePicker from "../../common/CommonDatePicker";
+import { message } from "antd";
 
 type Props = {
   open: boolean;
@@ -23,6 +26,10 @@ const PlanRestaurantModal = ({
 }: Props) => {
   const { format } = useFormatCurrency();
   const { addRestaurant, removeRestaurant } = useDestinationStore();
+  const [selectedDate, setSelectedDate] = useState<any>([]);
+
+  const { startDate, endDate } = getDestinationDates(destination);
+  const allowedDates = getDateRange(startDate, endDate);
 
   // ✅ Local state (variantId -> quantity)
   const [quantities, setQuantities] = useState<Record<string | number, number>>(
@@ -133,6 +140,12 @@ const PlanRestaurantModal = ({
       setOpen={setOpen}
       centered
       onConfirm={() => {
+        // ✅ Check date first
+        if (!selectedDate || selectedDate.length === 0) {
+          message.error("Please select at least one date before booking.");
+          return;
+        }
+
         // 1) Purane items ko check karo
         destination?.restaurants?.forEach((r: any) => {
           const currentQty = quantities[r.variant.id];
@@ -157,6 +170,9 @@ const PlanRestaurantModal = ({
               dishId: dish?.id,
               restaurantId: restaurant.id,
               variant,
+              selectedDate: selectedDate.map((date: any) =>
+                date.format("YYYY-MM-DD")
+              ),
               quantity: qty,
             };
             addRestaurant(destination?.id, payload); // ✅ update/add
@@ -169,6 +185,15 @@ const PlanRestaurantModal = ({
       confirmText="Book"
       width={768}
     >
+      <CommonDatePicker
+        isNotFormItem={false}
+        className="w-full"
+        multiple
+        value={selectedDate}
+        onChange={(date) => setSelectedDate(date)}
+        allowedDates={allowedDates}
+        label="Please select a date for your booking:"
+      />
       <CommonTabs tabs={tabItems} />
     </CommonModal>
   );

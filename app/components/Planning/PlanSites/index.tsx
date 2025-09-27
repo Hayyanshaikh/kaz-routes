@@ -40,7 +40,9 @@ const PlanSites = ({ destination }: Props) => {
     if (selectedSite && selectedDate) {
       addSite(destination.id, {
         ...selectedSite,
-        date: dayjs(selectedDate).format("YYYY-MM-DD"),
+        bookingDates: selectedDate?.map((date: any) =>
+          date.format("YYYY-MM-DD")
+        ),
       });
     }
     setSelectedSite(null);
@@ -99,6 +101,7 @@ const PlanSites = ({ destination }: Props) => {
               <CommonDatePicker
                 isNotFormItem={false}
                 className="w-full"
+                multiple
                 value={selectedDate}
                 onChange={(date) => setSelectedDate(date)}
                 allowedDates={allowedDates}

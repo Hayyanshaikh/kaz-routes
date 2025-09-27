@@ -6,9 +6,10 @@ import PlanDestinationDetail from "./PlanDestinationDetail";
 import useDestinationStore from "@/app/store/destinationStore";
 import usePlanStore from "@/app/store/planStore";
 import { useRouter } from "next/navigation";
-import { overviewData } from "@/lib/constant";
+import { overviewData, overviewData2 } from "@/lib/constant";
 import { useControllerPostCreateTravelPlan } from "@/app/hooks/api";
 import CommonButton from "../../common/CommonButton";
+import { transformToDayWise } from "@/app/manipulators/planManipulator";
 
 const apiPayload = (data: any) => {
   console.log({ data });
@@ -37,7 +38,7 @@ const apiPayload = (data: any) => {
       })),
       siteBookings: dest.sites.map((site) => ({
         id: site.id,
-        date: site.date,
+        date: site.bookingDates,
       })),
       restaurantBookings: dest.restaurants.map((res) => ({
         restaurantId: res.restaurant.id,
@@ -56,36 +57,37 @@ const Index = () => {
   const { mutateAsync: createPlan, isPending } =
     useControllerPostCreateTravelPlan();
 
-  // const plan = overviewData?.plan;
-  // const destinations = overviewData?.destinations;
-  console.log({ payload: { plan, destinations } });
+  // const plan = overviewData2?.plan;
+  // const destinations = overviewData2?.destinations;
 
   const contentRef = useRef<HTMLDivElement>(null);
 
   const handleCreateTravelPlan = () => {
     const data = { plan, destinations };
-    const payload = apiPayload(data);
+    const convertToDaywise = transformToDayWise(data);
+    const payload = { plan, days: convertToDaywise };
+    console.log({ payload, data });
 
-    createPlan(payload, {
-      onSuccess: (response) => {
-        console.log("Travel plan created:", response);
+    // createPlan(payload, {
+    //   onSuccess: (response) => {
+    //     console.log("Travel plan created:", response);
 
-        const pdfUrl = response?.pdf_url;
+    //     const pdfUrl = response?.pdf_url;
 
-        if (pdfUrl) {
-          window.location.assign(pdfUrl, "_blank");
-        }
+    //     if (pdfUrl) {
+    //       window.location.assign(pdfUrl, "_blank");
+    //     }
 
-        router.push("/");
-        setTimeout(() => {
-          resetDestinations();
-          resetPlan();
-        }, 300);
-      },
-      onError: (error) => {
-        console.error("Error creating travel plan:", error);
-      },
-    });
+    //     router.push("/");
+    //     setTimeout(() => {
+    //       // resetDestinations();
+    //       // resetPlan();
+    //     }, 300);
+    //   },
+    //   onError: (error) => {
+    //     console.error("Error creating travel plan:", error);
+    //   },
+    // });
   };
 
   if (!plan) return null;

@@ -49,9 +49,12 @@ export function generateUUID() {
 export function getDaysCount(
   start: Dayjs,
   end: Dayjs,
-  inclusive = false
+  inclusive = true
 ): number {
   if (!start || !end) return 0;
+
+  console.log("Start Date:", start.format("YYYY-MM-DD"));
+  console.log("End Date:", end.format("YYYY-MM-DD"));
 
   const days = end.diff(start, "day");
   return inclusive ? days + 1 : days;

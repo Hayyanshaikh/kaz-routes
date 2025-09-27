@@ -6,6 +6,7 @@ import dayjs, { Dayjs } from "dayjs";
 
 interface ExtendedProps extends CommonDatePickerProps {
   isNotFormItem?: boolean;
+  multiple?: boolean;
   allowedDates?: string[]; // ✅ new prop
 }
 
@@ -14,6 +15,7 @@ const CommonDatePicker: React.FC<ExtendedProps> = ({
   label,
   rules,
   formItemClassName,
+  multiple,
   isRequired = true,
   value,
   className,
@@ -92,6 +94,7 @@ const CommonDatePicker: React.FC<ExtendedProps> = ({
         placement="topLeft"
         placeholder={placeholder}
         disabled={disabled}
+        multiple={multiple}
         allowClear={false}
         className={className || "w-full"}
         onChange={onChange}

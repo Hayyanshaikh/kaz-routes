@@ -7,6 +7,8 @@ import { Form, Input, DatePicker } from "antd";
 import CommonModal from "../../common/CommonModal";
 import GoogleMapModern from "../../Cards/CustomMap";
 import useDestinationStore from "@/app/store/destinationStore";
+import CommonDatePicker from "../../common/CommonDatePicker";
+import { getDateRange, getDestinationDates } from "@/lib/utils";
 
 type PlanCarModalProps = {
   car: any;
@@ -22,7 +24,8 @@ const PlanCarModal = ({
   destination,
 }: PlanCarModalProps) => {
   const [form] = Form.useForm();
-
+  const { startDate, endDate } = getDestinationDates(destination);
+  const allowedDates = getDateRange(startDate, endDate);
   // ✅ store se addCar nikal lo
   const addCar = useDestinationStore((state) => state.addCar);
 
@@ -30,6 +33,9 @@ const PlanCarModal = ({
     const payload = {
       ...car,
       ...values,
+      bookingDates: values.bookingDates?.map((date: any) =>
+        date.format("YYYY-MM-DD")
+      ),
     };
 
     // ✅ Destination ID ke sath store me save karo
@@ -61,8 +67,18 @@ const PlanCarModal = ({
         <Form.Item noStyle name="dropoff_location" initialValue="">
           <Input type="hidden" />
         </Form.Item>
-
         <GoogleMapModern showMap={false} form={form} />
+
+        <CommonDatePicker
+          name={"bookingDates"}
+          isNotFormItem={false}
+          className="w-full"
+          multiple
+          // value={selectedDate}
+          // onChange={(date) => setSelectedDate(date)}
+          allowedDates={allowedDates}
+          label="Please select a date for your booking:"
+        />
       </Form>
     </CommonModal>
   );

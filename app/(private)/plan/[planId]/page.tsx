@@ -15,7 +15,6 @@ import React, { ReactNode, useEffect } from "react";
 
 const page = () => {
   const { destinations, removeDestination } = useDestinationStore();
-  const { plan } = usePlanStore();
   const searchParams = useSearchParams();
   const destination = searchParams.get("destination");
   const destinationData = destinations?.find(
