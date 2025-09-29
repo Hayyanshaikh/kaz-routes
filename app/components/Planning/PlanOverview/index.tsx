@@ -59,35 +59,36 @@ const Index = () => {
 
   // const plan = overviewData2?.plan;
   // const destinations = overviewData2?.destinations;
+  const data = { plan, destinations };
+
+  const convertToDaywise = transformToDayWise(data);
 
   const contentRef = useRef<HTMLDivElement>(null);
 
   const handleCreateTravelPlan = () => {
-    const data = { plan, destinations };
-    const convertToDaywise = transformToDayWise(data);
     const payload = { plan, days: convertToDaywise };
     console.log({ payload, data });
 
-    // createPlan(payload, {
-    //   onSuccess: (response) => {
-    //     console.log("Travel plan created:", response);
+    createPlan(payload, {
+      onSuccess: (response) => {
+        console.log("Travel plan created:", response);
 
-    //     const pdfUrl = response?.pdf_url;
+        const pdfUrl = response?.pdf_url;
 
-    //     if (pdfUrl) {
-    //       window.location.assign(pdfUrl, "_blank");
-    //     }
+        if (pdfUrl) {
+          window.location.assign(pdfUrl);
+        }
 
-    //     router.push("/");
-    //     setTimeout(() => {
-    //       // resetDestinations();
-    //       // resetPlan();
-    //     }, 300);
-    //   },
-    //   onError: (error) => {
-    //     console.error("Error creating travel plan:", error);
-    //   },
-    // });
+        router.push("/");
+        setTimeout(() => {
+          resetDestinations();
+          resetPlan();
+        }, 300);
+      },
+      onError: (error) => {
+        console.error("Error creating travel plan:", error);
+      },
+    });
   };
 
   if (!plan) return null;
@@ -96,8 +97,8 @@ const Index = () => {
     <div className="max-w-4xl mx-auto border border-gray-300">
       <div ref={contentRef} id="plan-summary">
         <PlanDetail plan={plan} destinationsCount={destinations?.length} />
-        <PlanDestinationDetail destinations={destinations} />
-        <div className="flex items-center justify-center mb-10">
+        <PlanDestinationDetail days={convertToDaywise} />
+        <div className="flex items-center justify-center pb-10 bg-gray-50">
           <CommonButton
             label="Confirm Plan"
             onClick={handleCreateTravelPlan}

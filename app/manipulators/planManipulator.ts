@@ -1,15 +1,19 @@
 import dayjs from "dayjs";
 
 // ---------------- Types ----------------
-
 type Hotel = {
   id: string;
   hotel_id: string;
   room_name: string;
-  hotel: { name: string };
+  hotel: {
+    name: string;
+    images?: string[];
+    image?: string; // fallback single image
+  };
   fromDate?: string;
   toDate?: string;
   bookingDates?: string[];
+  images?: string[];
 };
 
 type Car = {
@@ -18,18 +22,29 @@ type Car = {
   pickup_location: string;
   dropoff_location: string;
   bookingDates?: string[];
+  model: string;
+  brand?: { name: string };
+  images?: { image_path: string }[];
 };
 
 type Site = {
   id: string;
   name: string;
   bookingDates?: string[];
+  images?: string[];
 };
 
 type Restaurant = {
-  restaurant: { id: string; name: string };
+  restaurant: {
+    id: string;
+    name: string;
+    images?: string[];
+  };
   dishId: string;
-  dishName: string;
+  dish: {
+    name: string;
+    images?: string[];
+  };
   variant: { id: string; name: string };
   quantity: number;
   bookingDates?: string[];
@@ -56,7 +71,6 @@ export type Payload = {
 };
 
 // ---------------- Output structure ----------------
-
 export type DayWise = {
   date: string;
   destination: string;
@@ -66,19 +80,27 @@ export type DayWise = {
     room_id: string;
     room_name: string;
     hotel_name: string;
+    thumbnail: string;
+    images: string[];
   }[];
 
   carBookings: {
     id: string;
     name: string;
+    model: string;
+    brand: string;
     pickup_location: string;
     dropoff_location: string;
+    thumbnail: string;
+    images: string[];
   }[];
 
   siteBookings: {
     id: string;
     name: string;
     date?: string[];
+    thumbnail: string;
+    images: string[];
   }[];
 
   restaurantBookings: {
@@ -89,20 +111,18 @@ export type DayWise = {
     variantId: string;
     variantName: string;
     quantity: number;
+    thumbnail: string;
+    images: string[];
   }[];
 };
 
 // ---------------- Helpers ----------------
-
 function getDateRange(start?: string, end?: string): string[] {
   if (!start || !end) return [];
   let s = dayjs(start).startOf("day");
   let e = dayjs(end).startOf("day");
 
-  // agar start > end, swap kar do
-  if (s.isAfter(e)) {
-    [s, e] = [e, s];
-  }
+  if (s.isAfter(e)) [s, e] = [e, s]; // swap if start > end
 
   const res: string[] = [];
   while (s.isBefore(e) || s.isSame(e)) {
@@ -121,12 +141,10 @@ function hasDate(
 }
 
 // ---------------- Main Function ----------------
-
 export function transformToDayWise(payload: Payload): DayWise[] {
   const result: DayWise[] = [];
 
   for (const dest of payload.destinations || []) {
-    // sirf destination ka date range use karenge
     const destDates = getDateRange(dest.startDate, dest.endDate);
 
     destDates.forEach((date) => {
@@ -141,6 +159,8 @@ export function transformToDayWise(payload: Payload): DayWise[] {
             room_id: h.id,
             room_name: h.room_name,
             hotel_name: h.hotel.name,
+            thumbnail: h.images?.[0] || h.hotel.image || "",
+            images: [...(h.images || []), ...(h.hotel.images || [])],
           })),
 
         carBookings: (dest.cars || [])
@@ -148,8 +168,12 @@ export function transformToDayWise(payload: Payload): DayWise[] {
           .map((c) => ({
             id: c.id,
             name: c.name,
+            model: c.model,
+            brand: c?.brand?.name || "",
             pickup_location: c.pickup_location,
             dropoff_location: c.dropoff_location,
+            thumbnail: c.images?.[0]?.image_path || "",
+            images: (c.images || []).map((img) => img.image_path),
           })),
 
         siteBookings: (dest.sites || [])
@@ -158,6 +182,8 @@ export function transformToDayWise(payload: Payload): DayWise[] {
             id: s.id,
             name: s.name,
             date: s.bookingDates,
+            thumbnail: s.images?.[0] || "",
+            images: s.images || [],
           })),
 
         restaurantBookings: (dest.restaurants || [])
@@ -166,10 +192,15 @@ export function transformToDayWise(payload: Payload): DayWise[] {
             restaurantId: r.restaurant?.id,
             restaurantName: r.restaurant?.name,
             dishId: r.dishId,
-            dishName: r.dishName,
+            dishName: r.dish?.name,
             variantId: r.variant?.id,
             variantName: r.variant?.name,
             quantity: r.quantity,
+            thumbnail: r.dish?.images?.[0] || r.restaurant?.images?.[0] || "",
+            images: [
+              ...(r.dish?.images || []),
+              ...(r.restaurant?.images || []),
+            ],
           })),
       });
     });

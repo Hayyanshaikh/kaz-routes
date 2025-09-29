@@ -9,7 +9,7 @@ interface CommonCardProps {
   name: string;
   image: string;
   label: string;
-  description?: string;
+  description?: string | React.ReactNode;
 }
 
 const CommonCard: React.FC<CommonCardProps> = ({
@@ -25,7 +25,7 @@ const CommonCard: React.FC<CommonCardProps> = ({
       className="bg-white rounded-lg border border-gray-300 overflow-hidden flex flex-col"
     >
       {/* Image Section */}
-      <div className="relative h-36 w-full">
+      <div className="relative h-30 w-full">
         <Image
           src={`${FILE_BASE_URL}/${image}`}
           alt={name}
@@ -43,9 +43,9 @@ const CommonCard: React.FC<CommonCardProps> = ({
       <div className="p-3">
         <h3 className="text-sm font-semibold text-gray-800">{name}</h3>
         {description && (
-          <p className="text-xs text-gray-500 mt-1 line-clamp-2">
+          <div className="text-xs text-gray-500 mt-1 line-clamp-2">
             {description}
-          </p>
+          </div>
         )}
       </div>
     </div>
