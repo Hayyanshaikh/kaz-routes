@@ -1,5 +1,5 @@
 "use client";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Empty, Menu } from "antd";
 import useDestinationStore from "@/app/store/destinationStore";
@@ -11,8 +11,15 @@ type DestinationListProps = {
 };
 
 const DestinationList: FC<DestinationListProps> = ({ destinations }) => {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const selectedId = searchParams.get("destination") || "";
+
+  useEffect(() => {
+    if (destinations.length) {
+      router.push(`?destination=${destinations[destinations.length - 1].id}`);
+    }
+  }, [destinations.length]);
 
   if (!destinations || destinations.length === 0) {
     return (
