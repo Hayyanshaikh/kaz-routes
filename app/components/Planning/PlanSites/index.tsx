@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import PlanSiteCard from "./PlanSiteCard";
 import { useControllerGetFindAllSites } from "@/app/hooks/api";
 import { FILE_BASE_URL } from "@/lib/constant";
-import { Empty, DatePicker, Spin } from "antd";
+import { Empty, DatePicker, Spin, Form } from "antd";
 import useDestinationStore from "@/app/store/destinationStore";
 import CommonModal from "../../common/CommonModal";
 import dayjs from "dayjs";
@@ -17,6 +17,7 @@ type Props = {
 };
 
 const PlanSites = ({ destination }: Props) => {
+  const [form] = Form.useForm();
   const [currentPage, setCurrentPage] = useState(1);
   const { data, isLoading } = useControllerGetFindAllSites({
     params: { page: currentPage },
@@ -36,17 +37,70 @@ const PlanSites = ({ destination }: Props) => {
     setOpen(true);
   };
 
-  const handleConfirm = () => {
-    if (selectedSite && selectedDate) {
+  const handleConfirm = async () => {
+    try {
+      const { selectedDate } = await form.validateFields();
+      const allSites = destination?.sites ?? [];
+      const existingBookings = allSites.flatMap(
+        (s: any) => s.bookingDates ?? []
+      );
+      const siteDuration = Number(selectedSite?.duration_hours) || 0;
+
+      // Overbooked date check
+      const invalidDates = selectedDate.filter((d: any) => {
+        const date = dayjs(d).format("YYYY-MM-DD");
+        const total = existingBookings
+          .filter((b: any) => b.date === date)
+          .reduce((sum: number, b: any) => sum + Number(b.hours || 0), 0);
+        return total + siteDuration > 11.5;
+      });
+
+      if (invalidDates.length) {
+        form.setFields([
+          {
+            name: "selectedDate",
+            errors: [
+              `Already full on: ${invalidDates
+                .map((d: any) => dayjs(d).format("YYYY-MM-DD"))
+                .join(", ")}`,
+            ],
+          },
+        ]);
+        return;
+      }
+
+      // Duplicate check
+      const bookedDates = allSites
+        .filter((s: any) => s.id === selectedSite.id)
+        .flatMap((s: any) => s.bookingDates ?? []);
+
+      const isDuplicate = selectedDate.some((d: any) =>
+        bookedDates.some((b: any) => b.date === dayjs(d).format("YYYY-MM-DD"))
+      );
+
+      if (isDuplicate) {
+        form.setFields([
+          { name: "selectedDate", errors: ["Already booked for these dates."] },
+        ]);
+        return;
+      }
+
+      // ✅ Valid
       addSite(destination.id, {
         ...selectedSite,
-        bookingDates: selectedDate?.map((date: any) =>
-          date.format("YYYY-MM-DD")
-        ),
+        bookingDates: selectedDate.map((d: any) => ({
+          date: dayjs(d).format("YYYY-MM-DD"),
+          hours: siteDuration,
+        })),
       });
+
+      form.resetFields();
+      setSelectedSite(null);
+      setSelectedDate(null);
+      setOpen(false);
+    } catch {
+      // ignore validation errors
     }
-    setSelectedSite(null);
-    setSelectedDate(null);
   };
 
   return (
@@ -91,23 +145,33 @@ const PlanSites = ({ destination }: Props) => {
           {/* Booking Modal */}
           <CommonModal
             centered={false}
+            destroyOnClose={false}
             open={open}
             title={`Book ${selectedSite?.name}`}
             setOpen={setOpen}
             onConfirm={handleConfirm}
             confirmText="Book"
           >
-            <div className="space-y-3">
+            <Form form={form} layout="vertical">
               <CommonDatePicker
-                isNotFormItem={false}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select at least one date.",
+                  },
+                ]}
+                name="selectedDate"
                 className="w-full"
+                label="Please select a date for your booking:"
                 multiple
                 value={selectedDate}
-                onChange={(date) => setSelectedDate(date)}
+                onChange={(date) => {
+                  setSelectedDate(date);
+                  form.setFieldsValue({ selectedDate: date });
+                }}
                 allowedDates={allowedDates}
-                label="Please select a date for your booking:"
               />
-            </div>
+            </Form>
           </CommonModal>
 
           {/* Pagination */}

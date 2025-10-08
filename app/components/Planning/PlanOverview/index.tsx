@@ -11,45 +11,6 @@ import { useControllerPostCreateTravelPlan } from "@/app/hooks/api";
 import CommonButton from "../../common/CommonButton";
 import { transformToDayWise } from "@/app/manipulators/planManipulator";
 
-const apiPayload = (data: any) => {
-  console.log({ data });
-  return {
-    plan: {
-      planName: data.plan.planName,
-      countries: data.plan.countries,
-      adults: data.plan.adults,
-      startDate: data.plan.planDateRange[0],
-      endDate: data.plan.planDateRange[1],
-      childrens: data.plan.childrens,
-      infants: data.plan.infants,
-    },
-    destinations: data.destinations.map((dest) => ({
-      name: dest.name,
-      nights: dest.nights,
-      image: dest.image,
-      hotelBookings: dest.hotels.map((hotel) => ({
-        hotel_id: hotel.hotel_id,
-        room_id: hotel.id,
-      })),
-      carBookings: dest.cars.map((car) => ({
-        id: car.id,
-        pickup_location: car.pickup_location,
-        dropoff_location: car.dropoff_location,
-      })),
-      siteBookings: dest.sites.map((site) => ({
-        id: site.id,
-        date: site.bookingDates,
-      })),
-      restaurantBookings: dest.restaurants.map((res) => ({
-        restaurantId: res.restaurant.id,
-        dishId: res.dishId,
-        variantId: res.variant.id,
-        quantity: res.quantity,
-      })),
-    })),
-  };
-};
-
 const Index = () => {
   const { plan, resetPlan } = usePlanStore();
   const { destinations, resetDestinations } = useDestinationStore();
@@ -60,6 +21,7 @@ const Index = () => {
   // const plan = overviewData2?.plan;
   // const destinations = overviewData2?.destinations;
   const data = { plan, destinations };
+  console.log({ destinations });
 
   const convertToDaywise = transformToDayWise(data);
 
@@ -67,7 +29,6 @@ const Index = () => {
 
   const handleCreateTravelPlan = () => {
     const payload = { plan, days: convertToDaywise };
-    console.log({ payload, data });
 
     createPlan(payload, {
       onSuccess: (response) => {

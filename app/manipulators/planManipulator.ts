@@ -8,11 +8,9 @@ type Hotel = {
   hotel: {
     name: string;
     images?: string[];
-    image?: string; // fallback single image
+    image?: string;
   };
-  fromDate?: string;
-  toDate?: string;
-  bookingDates?: string[];
+  bookingDates?: (string | { date: string })[];
   images?: string[];
 };
 
@@ -21,16 +19,16 @@ type Car = {
   name: string;
   pickup_location: string;
   dropoff_location: string;
-  bookingDates?: string[];
   model: string;
   brand?: { name: string };
+  bookingDates?: (string | { date: string })[];
   images?: { image_path: string }[];
 };
 
 type Site = {
   id: string;
   name: string;
-  bookingDates?: string[];
+  bookingDates?: (string | { date: string })[];
   images?: string[];
 };
 
@@ -47,11 +45,12 @@ type Restaurant = {
   };
   variant: { id: string; name: string };
   quantity: number;
-  bookingDates?: string[];
-  selectedDate?: string[];
+  bookingDates?: (string | { date: string })[];
+  selectedDate?: (string | { date: string })[];
 };
 
 type Destination = {
+  id?: string;
   name: string;
   startDate?: string;
   endDate?: string;
@@ -61,12 +60,8 @@ type Destination = {
   restaurants?: Restaurant[];
 };
 
-type Plan = {
-  planDateRange?: [string, string];
-};
-
 export type Payload = {
-  plan?: Plan;
+  plan?: any;
   destinations?: Destination[];
 };
 
@@ -117,6 +112,26 @@ export type DayWise = {
 };
 
 // ---------------- Helpers ----------------
+
+// ✅ Normalize bookingDates into string array (ignore hours)
+function normalizeDates(dates: any): string[] {
+  if (!Array.isArray(dates)) return [];
+  return dates
+    .map((d) => (typeof d === "string" ? d : d?.date))
+    .filter(Boolean);
+}
+
+// ✅ Check if a given item is booked on a date
+function hasDate(
+  item: any,
+  date: string,
+  key: string = "bookingDates"
+): boolean {
+  const dates = normalizeDates(item[key]);
+  return dates.includes(date);
+}
+
+// ✅ Get date range between start & end date
 function getDateRange(start?: string, end?: string): string[] {
   if (!start || !end) return [];
   let s = dayjs(start).startOf("day");
@@ -132,14 +147,6 @@ function getDateRange(start?: string, end?: string): string[] {
   return res;
 }
 
-function hasDate(
-  item: any,
-  date: string,
-  key: string = "bookingDates"
-): boolean {
-  return Array.isArray(item[key]) && item[key].includes(date);
-}
-
 // ---------------- Main Function ----------------
 export function transformToDayWise(payload: Payload): DayWise[] {
   const result: DayWise[] = [];
@@ -147,7 +154,18 @@ export function transformToDayWise(payload: Payload): DayWise[] {
   for (const dest of payload.destinations || []) {
     const destDates = getDateRange(dest.startDate, dest.endDate);
 
-    destDates.forEach((date) => {
+    // ✅ Include any extra dates from booking arrays (in case date range missing)
+    const extraDates = new Set(destDates);
+    [
+      ...(dest.hotels || []),
+      ...(dest.sites || []),
+      ...(dest.cars || []),
+      ...(dest.restaurants || []),
+    ].forEach((item) => {
+      normalizeDates(item.bookingDates).forEach((d) => extraDates.add(d));
+    });
+
+    Array.from(extraDates).forEach((date) => {
       result.push({
         date,
         destination: dest.name,
@@ -181,7 +199,7 @@ export function transformToDayWise(payload: Payload): DayWise[] {
           .map((s) => ({
             id: s.id,
             name: s.name,
-            date: s.bookingDates,
+            date: normalizeDates(s.bookingDates),
             thumbnail: s.images?.[0] || "",
             images: s.images || [],
           })),
@@ -206,5 +224,6 @@ export function transformToDayWise(payload: Payload): DayWise[] {
     });
   }
 
-  return result;
+  // ✅ Sort result by date ascending
+  return result.sort((a, b) => dayjs(a.date).unix() - dayjs(b.date).unix());
 }
