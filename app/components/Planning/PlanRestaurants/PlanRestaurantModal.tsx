@@ -8,8 +8,9 @@ import { useFormatCurrency } from "@/app/hooks/useFormatCurrency";
 import { PlusOutlined } from "@ant-design/icons";
 import useDestinationStore from "@/app/store/destinationStore";
 import { getDateRange, getDestinationDates } from "@/lib/utils";
+import { message, Form } from "antd";
 import CommonDatePicker from "../../common/CommonDatePicker";
-import { message } from "antd";
+import CommonSelect from "../../common/CommonSelect";
 
 type Props = {
   open: boolean;
@@ -26,15 +27,14 @@ const PlanRestaurantModal = ({
 }: Props) => {
   const { format } = useFormatCurrency();
   const { addRestaurant, removeRestaurant } = useDestinationStore();
-  const [selectedDate, setSelectedDate] = useState<any>([]);
 
-  const { startDate, endDate } = getDestinationDates(destination);
-  const allowedDates = getDateRange(startDate, endDate);
-
-  // ✅ Local state (variantId -> quantity)
+  const [form] = Form.useForm();
   const [quantities, setQuantities] = useState<Record<string | number, number>>(
     {}
   );
+
+  const { startDate, endDate } = getDestinationDates(destination);
+  const allowedDates = getDateRange(startDate, endDate);
 
   // ✅ Reset local state jab modal open ho
   useEffect(() => {
@@ -49,23 +49,18 @@ const PlanRestaurantModal = ({
     }
   }, [open, destination, restaurant]);
 
-  // ✅ Update local state only
   const handleUpdateQuantity = (
     variantId: string | number,
     quantity: number
   ) => {
     setQuantities((prev) => {
       const updated = { ...prev };
-      if (quantity <= 0) {
-        delete updated[variantId];
-      } else {
-        updated[variantId] = quantity;
-      }
+      if (quantity <= 0) delete updated[variantId];
+      else updated[variantId] = quantity;
       return updated;
     });
   };
 
-  // ✅ Render Variants
   const renderVariant = (dish: any, variants: any[]) => (
     <div className="grid grid-cols-1 min-[500px]:grid-cols-2 md:grid-cols-3 gap-4">
       {variants?.map((v: any) => {
@@ -81,14 +76,12 @@ const PlanRestaurantModal = ({
                 : "border-gray-300 hover:bg-gray-50"
             }`}
           >
-            {/* Items List */}
             <ul className="list-disc flex flex-col list-inside text-xs text-gray-600 space-y-1 mb-3">
               {items.map((i: string, idx: number) => (
                 <li key={idx}>{i}</li>
               ))}
             </ul>
 
-            {/* Price + Action */}
             <div className="flex items-center justify-between mt-auto gap-2 border-t border-dashed border-gray-300 pt-3">
               <span className="text-sm font-medium text-gray-800">
                 {format(v?.price)}
@@ -97,6 +90,7 @@ const PlanRestaurantModal = ({
               {qty > 0 ? (
                 <div className="flex items-center gap-2">
                   <button
+                    type="button"
                     className="bg-gray-200 text-gray-800 h-6 w-6 rounded-full flex items-center justify-center"
                     onClick={() => handleUpdateQuantity(v.id, qty - 1)}
                   >
@@ -106,6 +100,7 @@ const PlanRestaurantModal = ({
                     {qty}
                   </span>
                   <button
+                    type="button"
                     className="bg-primary text-white h-6 w-6 rounded-full flex items-center justify-center"
                     onClick={() => handleUpdateQuantity(v.id, qty + 1)}
                   >
@@ -114,6 +109,7 @@ const PlanRestaurantModal = ({
                 </div>
               ) : (
                 <button
+                  type="button"
                   className="bg-primary h-6 w-6 rounded-full flex items-center justify-center text-white"
                   onClick={() => handleUpdateQuantity(v.id, 1)}
                 >
@@ -134,67 +130,102 @@ const PlanRestaurantModal = ({
       content: renderVariant(dish, dish.variants || []),
     })) || [];
 
+  const mealTypeOptions = [
+    { value: "breakfast", label: "Breakfast" },
+    { value: "brunch", label: "Brunch" },
+    { value: "lunch", label: "Lunch" },
+    { value: "snack", label: "Snack" },
+    { value: "dinner", label: "Dinner" },
+  ];
+
+  // ✅ Form Submit Handler
+  const handleFinish = (values: any) => {
+    const { selectedDate, mealType } = values;
+
+    if (!selectedDate || selectedDate.length === 0) {
+      message.error("Please select at least one date before booking.");
+      return;
+    }
+
+    if (!mealType) {
+      message.error("Please select a meal type.");
+      return;
+    }
+
+    // Purane items remove
+    destination?.restaurants?.forEach((r: any) => {
+      const currentQty = quantities[r.variant.id];
+      if (!currentQty || currentQty <= 0) {
+        removeRestaurant(destination?.id, r.variant.id);
+      }
+    });
+
+    // Naye items add
+    Object.entries(quantities).forEach(([variantId, qty]) => {
+      const dish = restaurant.dishes.find((d: any) =>
+        d.variants.some((v: any) => v.id == variantId)
+      );
+      const variant = dish?.variants.find((v: any) => v.id == variantId);
+
+      if (dish && variant && qty > 0) {
+        const payload = {
+          id: variant.id,
+          restaurant,
+          dish,
+          name: restaurant.restaurant_name,
+          dishId: dish?.id,
+          restaurantId: restaurant.id,
+          variant,
+          mealType,
+          selectedDate: selectedDate.map((date: any) =>
+            date.format("YYYY-MM-DD")
+          ),
+          quantity: qty,
+        };
+        addRestaurant(destination?.id, payload);
+      }
+    });
+
+    message.success("Booking saved successfully!");
+    setOpen(false);
+  };
+
   return (
     <CommonModal
       open={open}
       setOpen={setOpen}
+      destroyOnClose={false}
       centered
-      onConfirm={() => {
-        // ✅ Check date first
-        if (!selectedDate || selectedDate.length === 0) {
-          message.error("Please select at least one date before booking.");
-          return;
-        }
-
-        // 1) Purane items ko check karo
-        destination?.restaurants?.forEach((r: any) => {
-          const currentQty = quantities[r.variant.id];
-          if (!currentQty || currentQty <= 0) {
-            removeRestaurant(destination?.id, r.variant.id); // ✅ remove old
-          }
-        });
-
-        // 2) Ab naye quantities save karo
-        Object.entries(quantities).forEach(([variantId, qty]) => {
-          const dish = restaurant.dishes.find((d: any) =>
-            d.variants.some((v: any) => v.id == variantId)
-          );
-          const variant = dish?.variants.find((v: any) => v.id == variantId);
-
-          if (dish && variant && qty > 0) {
-            const payload = {
-              id: variant.id,
-              restaurant,
-              dish,
-              name: restaurant.restaurant_name,
-              dishId: dish?.id,
-              restaurantId: restaurant.id,
-              variant,
-              selectedDate: selectedDate.map((date: any) =>
-                date.format("YYYY-MM-DD")
-              ),
-              quantity: qty,
-            };
-            addRestaurant(destination?.id, payload); // ✅ update/add
-          }
-        });
-
-        console.log("Saved Items:", destination?.restaurants);
-      }}
       title={restaurant?.restaurant_name || "Menu"}
       confirmText="Book"
       width={768}
+      onConfirm={() => form.submit()} // ✅ trigger antd form submit
     >
-      <CommonDatePicker
-        isNotFormItem={false}
-        className="w-full"
-        multiple
-        value={selectedDate}
-        onChange={(date) => setSelectedDate(date)}
-        allowedDates={allowedDates}
-        label="Please select a date for your booking:"
-      />
-      <CommonTabs tabs={tabItems} />
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={handleFinish}
+        className="space-y-4"
+      >
+        <div className="flex items-start gap-4">
+          <CommonDatePicker
+            label="Please select a date for your booking:"
+            name="selectedDate"
+            multiple
+            allowedDates={allowedDates}
+          />
+
+          <CommonSelect
+            name="mealType"
+            label="Meal Type"
+            isRequired
+            options={mealTypeOptions}
+            className="w-full"
+          />
+        </div>
+
+        <CommonTabs tabs={tabItems} />
+      </Form>
     </CommonModal>
   );
 };

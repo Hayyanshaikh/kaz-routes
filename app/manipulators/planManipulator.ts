@@ -46,6 +46,7 @@ type Restaurant = {
   variant: { id: string; name: string };
   quantity: number;
   bookingDates?: (string | { date: string })[];
+  mealType: string;
   selectedDate?: (string | { date: string })[];
 };
 
@@ -104,6 +105,7 @@ export type DayWise = {
     dishId: string;
     dishName: string;
     variantId: string;
+    mealType: string;
     variantName: string;
     quantity: number;
     thumbnail: string;
@@ -211,6 +213,7 @@ export function transformToDayWise(payload: Payload): DayWise[] {
             restaurantName: r.restaurant?.name,
             dishId: r.dishId,
             dishName: r.dish?.name,
+            mealType: r.mealType,
             variantId: r.variant?.id,
             variantName: r.variant?.name,
             quantity: r.quantity,
