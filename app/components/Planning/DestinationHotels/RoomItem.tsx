@@ -6,7 +6,7 @@ import CommonDatePicker from "../../common/CommonDatePicker";
 interface Props {
   room: any;
   isBooked: boolean;
-  onBook: (selectedDate: any) => void;
+  onBook: (selectedDate: any, setSelectedDate: any) => void;
   onRemove: () => void;
   destination: any;
 }
@@ -48,7 +48,7 @@ const RoomItem = ({ room, isBooked, onBook, onRemove, destination }: Props) => {
         confirmText="Book Now"
         cancelText="Cancel"
         onConfirm={() => {
-          onBook(selectedDate);
+          onBook(selectedDate, setSelectedDate);
           setOpen(false);
         }}
         onClose={() => setOpen(false)}
