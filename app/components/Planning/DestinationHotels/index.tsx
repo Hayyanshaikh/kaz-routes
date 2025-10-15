@@ -46,7 +46,7 @@ const DestinationHotels = ({ destination }: Props) => {
       });
       return;
     }
-    if (totalBookedHotels.length >= 2) {
+    if (totalBookedHotels.length >= 9) {
       messageApi.open({
         type: "error",
         content: "You can book a maximum of 9 hotels in your plan.",
