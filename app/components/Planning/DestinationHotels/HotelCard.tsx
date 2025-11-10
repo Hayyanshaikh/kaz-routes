@@ -4,7 +4,12 @@ import RoomItem from "./RoomItem";
 interface Props {
   hotel: any;
   destination: any;
-  onBook: (hotel: any, room: any, selectedDate: any) => void;
+  onBook: (
+    hotel: any,
+    room: any,
+    selectedDate: any,
+    setSelectedDate: any
+  ) => void;
   onRemove: (destinationId: string, roomId: string) => void;
 }
 
@@ -38,7 +43,9 @@ const HotelCard = ({ hotel, destination, onBook, onRemove }: Props) => {
                 room={room}
                 isBooked={isBooked}
                 destination={destination}
-                onBook={(selectedDate) => onBook(hotel, room, selectedDate)}
+                onBook={(selectedDate, setSelectedDate) =>
+                  onBook(hotel, room, selectedDate, setSelectedDate)
+                }
                 onRemove={() => onRemove(destination?.id, room.id)}
               />
             );
