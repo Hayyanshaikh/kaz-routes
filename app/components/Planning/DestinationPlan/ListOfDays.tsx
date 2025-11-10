@@ -1,7 +1,7 @@
 "use client";
 import React, { useMemo } from "react";
 import { Collapse, Empty } from "antd";
-import { DeleteOutlined } from "@ant-design/icons";
+import { CloseOutlined, DeleteOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import useDestinationStore from "@/app/store/destinationStore";
 import usePlanStore from "@/app/store/planStore";
@@ -16,7 +16,7 @@ const TagItem = ({
 }) => (
   <div className="flex items-center gap-2 bg-gray-200 text-gray-700 text-xs px-2 py-1 rounded-full">
     <span>{label}</span>
-    <DeleteOutlined
+    <CloseOutlined
       onClick={onDelete}
       className="cursor-pointer text-gray-600"
     />
