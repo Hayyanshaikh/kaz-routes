@@ -57,7 +57,7 @@ export function getDaysCount(
   console.log("End Date:", end.format("YYYY-MM-DD"));
 
   const days = end.diff(start, "day");
-  return inclusive ? days + 1 : days;
+  return inclusive ? days + 2 : days;
 }
 
 export function getDateRange(start?: Dayjs, end?: Dayjs) {

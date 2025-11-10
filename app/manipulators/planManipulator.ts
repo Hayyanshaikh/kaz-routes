@@ -52,6 +52,7 @@ type Restaurant = {
 
 type Destination = {
   id?: string;
+  nights?: number;
   name: string;
   startDate?: string;
   endDate?: string;
@@ -66,80 +67,49 @@ export type Payload = {
   destinations?: Destination[];
 };
 
-// ---------------- Output structure ----------------
 export type DayWise = {
   date: string;
   destination: string;
+  destinationId: string;
 
-  hotelBookings: {
-    hotel_id: string;
-    room_id: string;
-    room_name: string;
-    hotel_name: string;
-    thumbnail: string;
-    images: string[];
-  }[];
-
-  carBookings: {
-    id: string;
-    name: string;
-    model: string;
-    brand: string;
-    pickup_location: string;
-    dropoff_location: string;
-    thumbnail: string;
-    images: string[];
-  }[];
-
-  siteBookings: {
-    id: string;
-    name: string;
-    date?: string[];
-    thumbnail: string;
-    images: string[];
-  }[];
-
-  restaurantBookings: {
-    restaurantId: string;
-    restaurantName: string;
-    dishId: string;
-    dishName: string;
-    variantId: string;
-    mealType: string;
-    variantName: string;
-    quantity: number;
-    thumbnail: string;
-    images: string[];
-  }[];
+  hotelBookings: any[];
+  carBookings: any[];
+  siteBookings: any[];
+  restaurantBookings: any[];
 };
 
 // ---------------- Helpers ----------------
 
-// ✅ Normalize bookingDates into string array (ignore hours)
+// ✅ Normalize all date formats
 function normalizeDates(dates: any): string[] {
   if (!Array.isArray(dates)) return [];
   return dates
-    .map((d) => (typeof d === "string" ? d : d?.date))
-    .filter(Boolean);
+    .map((d) => {
+      const dateStr = typeof d === "string" ? d : d?.date;
+      if (!dateStr) return null;
+      const normalized = dayjs(dateStr).isValid()
+        ? dayjs(dateStr).format("YYYY-MM-DD")
+        : null;
+      return normalized;
+    })
+    .filter((d): d is string => d !== null); // ✅ Type guard
 }
 
-// ✅ Check if a given item is booked on a date
-function hasDate(
-  item: any,
-  date: string,
-  key: string = "bookingDates"
-): boolean {
+// ✅ Check if an item has this date
+function hasDate(item: any, date: string, key = "bookingDates"): boolean {
   const dates = normalizeDates(item[key]);
   return dates.includes(date);
 }
 
-// ✅ Get date range between start & end date
+// ✅ Generate inclusive date range
 function getDateRange(start?: string, end?: string): string[] {
-  if (!start || !end) return [];
+  if (!start || !end || !dayjs(start).isValid() || !dayjs(end).isValid())
+    return [];
+
   let s = dayjs(start).startOf("day");
   let e = dayjs(end).startOf("day");
 
-  if (s.isAfter(e)) [s, e] = [e, s]; // swap if start > end
+  if (s.isAfter(e)) [s, e] = [e, s]; // swap
 
   const res: string[] = [];
   while (s.isBefore(e) || s.isSame(e)) {
@@ -149,28 +119,42 @@ function getDateRange(start?: string, end?: string): string[] {
   return res;
 }
 
-// ---------------- Main Function ----------------
+// ---------------- Main Transformer ----------------
 export function transformToDayWise(payload: Payload): DayWise[] {
   const result: DayWise[] = [];
 
   for (const dest of payload.destinations || []) {
+    if (!dest.nights || dest.nights === 0) continue;
+    // ✅ Normalize destination-level date range
     const destDates = getDateRange(dest.startDate, dest.endDate);
 
-    // ✅ Include any extra dates from booking arrays (in case date range missing)
-    const extraDates = new Set(destDates);
+    const allDates = new Set(destDates);
+
+    // ✅ Collect all booking dates (extra ones)
     [
       ...(dest.hotels || []),
       ...(dest.sites || []),
       ...(dest.cars || []),
       ...(dest.restaurants || []),
     ].forEach((item) => {
-      normalizeDates(item.bookingDates).forEach((d) => extraDates.add(d));
+      normalizeDates(item.bookingDates).forEach((d) => allDates.add(d));
+
+      // ✅ Only for restaurants
+      if ("selectedDate" in item && item.selectedDate) {
+        normalizeDates(item.selectedDate).forEach((d) => allDates.add(d));
+      }
     });
 
-    Array.from(extraDates).forEach((date) => {
+    // ✅ Skip invalid or empty destinations
+    const dateArray = Array.from(allDates).filter((d) => dayjs(d).isValid());
+    if (dateArray.length === 0) continue;
+
+    // ✅ Build day-wise entries
+    for (const date of dateArray) {
       result.push({
         date,
         destination: dest.name,
+        destinationId: dest.id || "",
 
         hotelBookings: (dest.hotels || [])
           .filter((h) => hasDate(h, date))
@@ -224,9 +208,11 @@ export function transformToDayWise(payload: Payload): DayWise[] {
             ],
           })),
       });
-    });
+    }
   }
 
-  // ✅ Sort result by date ascending
-  return result.sort((a, b) => dayjs(a.date).unix() - dayjs(b.date).unix());
+  // ✅ Sort by valid ascending date
+  return result
+    .filter((r) => dayjs(r.date).isValid())
+    .sort((a, b) => dayjs(a.date).diff(dayjs(b.date)));
 }

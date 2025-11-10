@@ -20,8 +20,10 @@ const DestinationLabel = ({ destination }: Props) => {
   console.log({ destination });
 
   const handleUpdateDates = (destinationId: string, newNights: number) => {
+    if (newNights <= 0) return; // ✅ Skip if nights are 0
+
     const newStart = dayjs(startDate);
-    const newEnd = newStart.add(newNights - 1, "day"); // 👈 minus 1 day
+    const newEnd = newStart.add(newNights - 1, "day");
 
     updateDestination(destinationId, {
       startDate: newStart.format("YYYY-MM-DD"),

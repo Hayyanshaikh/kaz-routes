@@ -1,25 +1,33 @@
+// useDestinationStore.ts
 import { create } from "zustand";
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import usePlanStore from "./planStore";
 
-// Basic types
+// ----------------------------
+// Type Definitions (No Change)
+// ----------------------------
 export interface Hotel {
   id: string | number;
   room_name: string;
-  nights: number;
-  price_double: number;
+  nights?: number; // Updated to optional as per usage
+  price_double: number; // Booking dates are now stored in an array inside the item object
+  bookingDates?: (string | Dayjs)[]; // Baaki fields jaise hotel, fromDate, toDate bhi is mein shamil ho sakte hain
 }
 
 export interface Car {
   id: string | number;
-  name: string;
+  name?: string; // Model name, etc.
   price: number;
+  bookingDates?: (string | Dayjs)[]; // Baaki fields jaise model, brand, daily_rate bhi is mein shamil ho sakte hain
 }
 
 export interface Site {
   id: string | number;
-  name: string;
-  date: Dayjs | string;
+  name: string; // Site bookings are stored as objects with date and hours
+  bookingDates?: {
+    date: string | Dayjs;
+    hours: number;
+  }[];
 }
 
 export interface RestaurantVariant {
@@ -28,15 +36,15 @@ export interface RestaurantVariant {
   price: number;
 }
 
-export interface Dish {
-  id: string | number;
-  variants: RestaurantVariant[];
-}
-
-export interface Restaurant {
-  id: string | number;
-  name: string;
-  dishes: Dish[];
+// Updated based on your data structure, containing selectedDate array
+export interface RestaurantBooking {
+  id: string | number; // Dish ID or internal unique ID
+  restaurantId: string | number;
+  name: string; // Restaurant Name
+  variant: RestaurantVariant;
+  mealType: string;
+  quantity: number;
+  selectedDate?: (string | Dayjs)[]; // Dates ki list // Baaki fields jaise restaurant, dish bhi shamil ho sakte hain
 }
 
 export interface Destination {
@@ -49,7 +57,7 @@ export interface Destination {
   hotels?: Hotel[];
   cars?: Car[];
   sites?: Site[];
-  restaurants?: Restaurant[];
+  restaurants?: RestaurantBooking[];
 }
 
 interface DestinationState {
@@ -64,7 +72,7 @@ interface DestinationState {
     updatedData: Partial<Destination>
   ) => void;
   removeDestination: (destinationId: string | number) => void;
-  resetDestinations: () => void;
+  resetDestinations: () => void; // --- ID-based functions (Poora item remove) ---
 
   addHotel: (destinationId: string | number, hotel: Hotel) => void;
   removeHotel: (
@@ -80,16 +88,40 @@ interface DestinationState {
 
   addRestaurant: (
     destinationId: string | number,
-    restaurant: Restaurant
+    restaurant: RestaurantBooking
   ) => void;
   removeRestaurant: (
     destinationId: string | number,
-    restaurantId: string | number
+    variantId: string | number
+  ) => void; // --- Date-based functions (Sirf Date Remove) ---
+
+  removeHotelByDate: (
+    destinationId: string | number,
+    hotelId: string | number,
+    dateToRemove: string | Dayjs
+  ) => void;
+
+  removeCarByDate: (
+    destinationId: string | number,
+    carId: string | number,
+    dateToRemove: string | Dayjs
+  ) => void;
+
+  removeSiteByDate: (
+    destinationId: string | number,
+    siteId: string | number,
+    dateToRemove: string | Dayjs
+  ) => void;
+
+  removeRestaurantByDate: (
+    destinationId: string | number,
+    variantId: string | number,
+    dateToRemove: string | Dayjs
   ) => void;
 }
 
 const useDestinationStore = create<DestinationState>((set, get) => ({
-  destinations: [],
+  destinations: [], // --- Nights/Destination CRUD ---
 
   addNight: (destinationId, nightsToAdd) => {
     const { dayCount, usedDays } = usePlanStore.getState();
@@ -130,9 +162,27 @@ const useDestinationStore = create<DestinationState>((set, get) => ({
 
   updateDestination: (destinationId, updatedData) =>
     set((state) => ({
-      destinations: state.destinations.map((d) =>
-        d.id === destinationId ? { ...d, ...updatedData } : d
-      ),
+      destinations: state.destinations.map((d) => {
+        if (d.id !== destinationId) return d;
+
+        const start = updatedData.startDate || d.startDate;
+        const end = updatedData.endDate || d.endDate;
+
+        let correctedStart = start;
+        let correctedEnd = end;
+
+        if (start && end && dayjs(start).isAfter(dayjs(end))) {
+          correctedStart = end;
+          correctedEnd = start;
+        }
+
+        return {
+          ...d,
+          ...updatedData,
+          startDate: correctedStart,
+          endDate: correctedEnd,
+        };
+      }),
     })),
 
   removeDestination: (destinationId) => {
@@ -145,7 +195,7 @@ const useDestinationStore = create<DestinationState>((set, get) => ({
     });
   },
 
-  resetDestinations: () => set({ destinations: [] }),
+  resetDestinations: () => set({ destinations: [] }), // --- ID-based Hotels ---
 
   addHotel: (destinationId, hotel) =>
     set((state) => ({
@@ -163,7 +213,7 @@ const useDestinationStore = create<DestinationState>((set, get) => ({
           ? { ...d, hotels: d.hotels?.filter((h) => h.id !== hotelId) || [] }
           : d
       ),
-    })),
+    })), // --- ID-based Cars ---
 
   addCar: (destinationId, car) =>
     set((state) => ({
@@ -179,7 +229,7 @@ const useDestinationStore = create<DestinationState>((set, get) => ({
           ? { ...d, cars: d.cars?.filter((c) => c.id !== carId) || [] }
           : d
       ),
-    })),
+    })), // --- ID-based Sites ---
 
   addSite: (destinationId, site) =>
     set((state) => ({
@@ -195,22 +245,41 @@ const useDestinationStore = create<DestinationState>((set, get) => ({
           ? { ...d, sites: d.sites?.filter((s) => s.id !== siteId) || [] }
           : d
       ),
-    })),
+    })), // --- ID/Variant-based Restaurants ---
 
   addRestaurant: (destinationId, restaurant) =>
     set((state) => ({
       destinations: state.destinations.map((d) => {
-        if (d.id !== destinationId) return d;
+        if (d.id !== destinationId) return d; // Simplified logic: Always add, or use external logic to merge dates // Agar aap chahte hain ki ek hi variant ki multiple dates ko merge karein, toh logic change hoga. // Filhaal, yeh logic assume kar raha hai ki naya restaurant object ya to add hoga, ya agar existing variantId aur date match ho toh update hoga.
 
-        const exists = d.restaurants?.find(
+        const existsIndex = d.restaurants?.findIndex(
           (r) => r.variant.id === restaurant.variant.id
         );
 
         let updatedRestaurants;
-        if (exists) {
-          updatedRestaurants = d.restaurants.map((r) =>
-            r.variant.id === restaurant.variant.id
-              ? { ...r, quantity: restaurant.quantity }
+        if (existsIndex !== undefined && existsIndex > -1) {
+          // Agar pehle se yeh variant mojood hai, to dates ko merge karein ya replace karein.
+          // Duplicate check aur Dayjs ka dhyan rakhna chahiye
+          const existingDates = d.restaurants![existsIndex].selectedDate || [];
+          const newDates = restaurant.selectedDate || [];
+          const allDates = [...existingDates, ...newDates]; // Duplicates hata kar unique dates nikalna
+          const uniqueDates = allDates.filter(
+            (date, index, self) =>
+              index ===
+              self.findIndex(
+                (d) =>
+                  dayjs(d).format("YYYY-MM-DD") ===
+                  dayjs(date).format("YYYY-MM-DD")
+              )
+          );
+
+          updatedRestaurants = d.restaurants!.map((r, index) =>
+            index === existsIndex
+              ? {
+                  ...r,
+                  quantity: restaurant.quantity,
+                  selectedDate: uniqueDates,
+                }
               : r
           );
         } else {
@@ -226,9 +295,122 @@ const useDestinationStore = create<DestinationState>((set, get) => ({
       destinations: state.destinations.map((d) =>
         d.id === destinationId
           ? {
-              ...d,
+              ...d, // Poora item remove kar dega
               restaurants:
                 d.restaurants?.filter((r) => r.variant.id !== variantId) || [],
+            }
+          : d
+      ),
+    })), // ---------------------------- // ✅ UPDATED Date-based Deletion Functions (Type Errors Fixed) // ---------------------------- // Date-based Hotels
+
+  removeHotelByDate: (destinationId, hotelId, dateToRemove) =>
+    set((state) => ({
+      destinations: state.destinations.map((d) =>
+        d.id === destinationId
+          ? {
+              ...d,
+              hotels:
+                (d.hotels
+                  ?.map((h) => {
+                    if (h.id !== hotelId) return h;
+                    if (!h.bookingDates) return h;
+
+                    const updatedDates = h.bookingDates.filter(
+                      (b) =>
+                        dayjs(b).format("YYYY-MM-DD") !==
+                        dayjs(dateToRemove).format("YYYY-MM-DD")
+                    ); // Agar koi booking date nahi bachi, null return karo (jo filter out ho jayega)
+
+                    return updatedDates.length > 0
+                      ? { ...h, bookingDates: updatedDates }
+                      : null;
+                  })
+                  .filter(Boolean) as Hotel[]) || [], // Type Assertion added
+            }
+          : d
+      ),
+    })), // Date-based Cars
+
+  removeCarByDate: (destinationId, carId, dateToRemove) =>
+    set((state) => ({
+      destinations: state.destinations.map((d) =>
+        d.id === destinationId
+          ? {
+              ...d,
+              cars:
+                (d.cars
+                  ?.map((c) => {
+                    if (c.id !== carId) return c;
+                    if (!c.bookingDates) return c;
+
+                    const updatedDates = c.bookingDates.filter(
+                      (b) =>
+                        dayjs(b).format("YYYY-MM-DD") !==
+                        dayjs(dateToRemove).format("YYYY-MM-DD")
+                    );
+
+                    return updatedDates.length > 0
+                      ? { ...c, bookingDates: updatedDates }
+                      : null;
+                  })
+                  .filter(Boolean) as Car[]) || [], // Type Assertion added
+            }
+          : d
+      ),
+    })), // Date-based Sites
+
+  removeSiteByDate: (destinationId, siteId, dateToRemove) =>
+    set((state) => ({
+      destinations: state.destinations.map((d) =>
+        d.id === destinationId
+          ? {
+              ...d,
+              sites:
+                (d.sites
+                  ?.map((s) => {
+                    if (s.id !== siteId) return s;
+
+                    if (!s.bookingDates) return s;
+                    const updatedDates = s.bookingDates.filter(
+                      (b) =>
+                        dayjs(b.date).format("YYYY-MM-DD") !==
+                        dayjs(dateToRemove).format("YYYY-MM-DD")
+                    );
+
+                    return updatedDates.length > 0
+                      ? { ...s, bookingDates: updatedDates }
+                      : null;
+                  })
+                  .filter(Boolean) as Site[]) || [], // Type Assertion added
+            }
+          : d
+      ),
+    })), // Date-based Restaurants (based on variantId)
+
+  removeRestaurantByDate: (destinationId, variantId, dateToRemove) =>
+    set((state) => ({
+      destinations: state.destinations.map((d) =>
+        d.id === destinationId
+          ? {
+              ...d,
+              restaurants:
+                (d.restaurants
+                  ?.map((r) => {
+                    if (r.variant.id !== variantId) return r;
+
+                    if (!r.selectedDate) return r;
+
+                    const updatedDates = r.selectedDate.filter(
+                      (b) =>
+                        dayjs(b).format("YYYY-MM-DD") !==
+                        dayjs(dateToRemove).format("YYYY-MM-DD")
+                    );
+
+                    return updatedDates.length > 0
+                      ? { ...r, selectedDate: updatedDates }
+                      : null;
+                  })
+                  .filter(Boolean) as RestaurantBooking[]) || [], // Type Assertion added
             }
           : d
       ),

@@ -52,7 +52,9 @@ const Index = () => {
     });
   };
 
-  if (!plan) return null;
+  if (!plan) {
+    router.push("/plan/create");
+  }
 
   return (
     <div className="max-w-4xl mx-auto border border-gray-300">

@@ -8,6 +8,7 @@ import dropdownManipulator from "@/app/manipulators/dropdownManipulator";
 import useDestinationStore from "@/app/store/destinationStore";
 import { useRouter } from "next/navigation";
 import DestinationList from "./DestinationList";
+import ListOfDays from "./ListOfDays";
 
 const DestinationPlan = () => {
   const router = useRouter();
@@ -17,7 +18,6 @@ const DestinationPlan = () => {
   const [searchValue, setSearchValue] = useState("");
   const { data: citiesRes } = useControllerGetFindAllCities();
   const citiesOption = dropdownManipulator(citiesRes?.data || []);
-  console.table(plan);
 
   const handleSelect = (_: string, option: any) => {
     const newDest = {
@@ -30,7 +30,7 @@ const DestinationPlan = () => {
   };
 
   return (
-    <div className="">
+    <div className="h-full flex flex-col">
       {/* Search / Add Destination */}
       <label className="block text-xs text-gray-600 mb-2 font-medium">
         Add Destination:
@@ -48,16 +48,17 @@ const DestinationPlan = () => {
       />
 
       {/* List of Destination Cards */}
-      <div className="mt-3">
+      <div className="mt-3 flex-1 mb-10 overflow-auto max-h-[50%]">
         {destinations?.length > 0 && (
           <div className="flex justify-between gap-2 text-xs text-gray-800 font-light px-2">
-            <span>Destnation</span>
+            <span>Destination</span>
             <span>Nights</span>
           </div>
         )}
-
         <DestinationList destinations={destinations} />
       </div>
+
+      <ListOfDays />
     </div>
   );
 };
