@@ -6,6 +6,8 @@ import React, { useState, useMemo } from "react";
 import CommonButton from "../../common/CommonButton";
 import PlanCarModal from "./PlanCarModal";
 import useDestinationStore from "@/app/store/destinationStore";
+import { getDateRange } from "@/lib/utils";
+import { useDestinationDates } from "@/app/hooks/useDestinationDates";
 
 type PlanCarCardProps = {
   car: any;
@@ -14,6 +16,8 @@ type PlanCarCardProps = {
 
 const PlanCarCard = ({ car, destination }: PlanCarCardProps) => {
   const [open, setOpen] = useState(false);
+  const { startDate, endDate } = useDestinationDates(destination);
+  const allowedDates = getDateRange(startDate, endDate);
 
   // ✅ Store se removeCar nikalo
   const removeCar = useDestinationStore((state) => state.removeCar);
@@ -73,11 +77,19 @@ const PlanCarCard = ({ car, destination }: PlanCarCardProps) => {
               label="Delete Booking"
             />
           ) : (
-            <CommonButton
-              onClick={() => setOpen(true)}
-              className="!w-full"
-              label="Book Now"
-            />
+            <div
+              title={
+                allowedDates.length === 0 ? "Please add nights to book" : ""
+              }
+              className="w-full"
+            >
+              <CommonButton
+                onClick={() => setOpen(true)}
+                className="!w-full"
+                label="Book Now"
+                disabled={allowedDates.length === 0}
+              />
+            </div>
           )}
         </div>
       </div>

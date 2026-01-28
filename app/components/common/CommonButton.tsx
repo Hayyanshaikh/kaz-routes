@@ -15,6 +15,7 @@ const CommonButton: React.FC<CommonButtonProps> = ({
   link,
   icon,
   iconPosition = "left",
+  htmlType = "button",
   ref,
   loading = false,
 }) => {
@@ -37,6 +38,7 @@ const CommonButton: React.FC<CommonButtonProps> = ({
           type="primary"
           className="w-full"
           disabled={disabled || loading}
+          htmlType={htmlType}
         >
           {content}
         </Button>
@@ -48,7 +50,7 @@ const CommonButton: React.FC<CommonButtonProps> = ({
     <Button
       ref={ref as any}
       type="primary"
-      htmlType={type as "button" | "submit" | "reset"}
+      htmlType={htmlType}
       onClick={onClick}
       disabled={disabled || loading}
       className={className}

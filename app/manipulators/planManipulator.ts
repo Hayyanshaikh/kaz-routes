@@ -2,56 +2,57 @@ import dayjs from "dayjs";
 
 // ---------------- Types ----------------
 type Hotel = {
-  id: string;
-  hotel_id: string;
+  id: string | number;
+  hotel_id?: string | number;
   room_name: string;
-  hotel: {
+  hotel?: {
     name: string;
     images?: string[];
     image?: string;
   };
-  bookingDates?: (string | { date: string })[];
+  bookingDates?: any[];
   images?: string[];
+  hotel_name?: string;
 };
 
 type Car = {
-  id: string;
-  name: string;
-  pickup_location: string;
-  dropoff_location: string;
-  model: string;
+  id: string | number;
+  name?: string;
+  pickup_location?: string;
+  dropoff_location?: string;
+  model?: string;
   brand?: { name: string };
-  bookingDates?: (string | { date: string })[];
+  bookingDates?: any[];
   images?: { image_path: string }[];
 };
 
 type Site = {
-  id: string;
+  id: string | number;
   name: string;
-  bookingDates?: (string | { date: string })[];
+  bookingDates?: any[];
   images?: string[];
 };
 
 type Restaurant = {
-  restaurant: {
-    id: string;
+  restaurant?: {
+    id: string | number;
     name: string;
     images?: string[];
   };
-  dishId: string;
-  dish: {
+  dishId?: string | number;
+  dish?: {
     name: string;
     images?: string[];
   };
-  variant: { id: string; name: string };
+  variant: { id: string | number; name: string };
   quantity: number;
-  bookingDates?: (string | { date: string })[];
+  bookingDates?: (string | { date: string } | any)[];
   mealType: string;
-  selectedDate?: (string | { date: string })[];
+  selectedDate?: (string | { date: string } | any)[];
 };
 
 type Destination = {
-  id?: string;
+  id?: string | number;
   nights?: number;
   name: string;
   startDate?: string;
@@ -70,7 +71,7 @@ export type Payload = {
 export type DayWise = {
   date: string;
   destination: string;
-  destinationId: string;
+  destinationId: string | number;
 
   hotelBookings: any[];
   carBookings: any[];
@@ -84,8 +85,13 @@ export type DayWise = {
 function normalizeDates(dates: any): string[] {
   if (!Array.isArray(dates)) return [];
   return dates
-    .map((d) => {
-      const dateStr = typeof d === "string" ? d : d?.date;
+    .map((d: any) => {
+      const dateStr =
+        typeof d === "string"
+          ? d
+          : d?.$isDayjsObject || d?.format
+            ? d
+            : d?.date;
       if (!dateStr) return null;
       const normalized = dayjs(dateStr).isValid()
         ? dayjs(dateStr).format("YYYY-MM-DD")
@@ -159,23 +165,23 @@ export function transformToDayWise(payload: Payload): DayWise[] {
         hotelBookings: (dest.hotels || [])
           .filter((h) => hasDate(h, date))
           .map((h) => ({
-            hotel_id: h.hotel_id,
+            hotel_id: h.hotel_id || "",
             room_id: h.id,
             room_name: h.room_name,
-            hotel_name: h.hotel.name,
-            thumbnail: h.images?.[0] || h.hotel.image || "",
-            images: [...(h.images || []), ...(h.hotel.images || [])],
+            hotel_name: h.hotel?.name || h.hotel_name || "",
+            thumbnail: h.images?.[0] || h.hotel?.image || "",
+            images: [...(h.images || []), ...(h.hotel?.images || [])],
           })),
 
         carBookings: (dest.cars || [])
           .filter((c) => hasDate(c, date))
           .map((c) => ({
             id: c.id,
-            name: c.name,
-            model: c.model,
+            name: c.name || "",
+            model: c.model || "",
             brand: c?.brand?.name || "",
-            pickup_location: c.pickup_location,
-            dropoff_location: c.dropoff_location,
+            pickup_location: c.pickup_location || "",
+            dropoff_location: c.dropoff_location || "",
             thumbnail: c.images?.[0]?.image_path || "",
             images: (c.images || []).map((img) => img.image_path),
           })),
@@ -193,10 +199,10 @@ export function transformToDayWise(payload: Payload): DayWise[] {
         restaurantBookings: (dest.restaurants || [])
           .filter((r) => hasDate(r, date, "selectedDate") || hasDate(r, date))
           .map((r) => ({
-            restaurantId: r.restaurant?.id,
-            restaurantName: r.restaurant?.name,
-            dishId: r.dishId,
-            dishName: r.dish?.name,
+            restaurantId: r.restaurant?.id || "",
+            restaurantName: r.restaurant?.name || "",
+            dishId: r.dishId || "",
+            dishName: r.dish?.name || "",
             mealType: r.mealType,
             variantId: r.variant?.id,
             variantName: r.variant?.name,

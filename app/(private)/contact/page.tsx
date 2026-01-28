@@ -52,7 +52,7 @@ const Contact = () => {
         });
         form.resetFields();
       },
-      onError: (err) => {
+      onError: (err: any) => {
         console.error("❌ Contact creation failed:", err);
         showError({
           message: "Contact creation failed.",

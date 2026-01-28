@@ -23,6 +23,7 @@ export interface CommonButtonProps {
   className?: string;
   link?: string;
   icon?: React.ReactNode;
+  htmlType?: "button" | "submit" | "reset";
   iconPosition?: "left" | "right";
   ref?: React.Ref<HTMLButtonElement>;
   loading?: boolean;
@@ -80,6 +81,8 @@ export interface CommonTextareaProps {
   disabled?: boolean;
   className?: string;
   label?: string;
+  rules?: Rule[];
+  isRequired?: boolean;
 }
 
 // Common Select Props

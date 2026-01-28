@@ -24,11 +24,11 @@ const About = () => {
       <section className="p-0">
         <div className="max-w-4xl mx-auto md:px-4">
           <CommonHeading
-            title={pageContent?.about?.heading}
+            title={pageContent?.about?.heading || "About Us"}
             className="text-left mb-6"
           />
           <div className="text-gray-700 space-y-4">
-            <AboutContent text={pageContent?.about?.content} />
+            <AboutContent text={pageContent?.about?.content || ""} />
           </div>
         </div>
       </section>

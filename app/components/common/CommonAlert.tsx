@@ -1,25 +1,18 @@
 import { CommonAlertProps } from "@/app/types/CommonType";
-import { Alert, AlertTitle } from "@/shadcn/components/ui/alert";
+import { Alert } from "antd";
 
 const CommonAlert: React.FC<CommonAlertProps> = ({
   title,
   color,
   className = "",
 }) => {
-  let colorClass = "";
+  let type: "success" | "warning" | "error" | "info" = "info";
 
-  if (color === "success")
-    colorClass = "bg-green-100 text-green-800 border border-green-300";
-  else if (color === "warning")
-    colorClass = "bg-yellow-100 text-yellow-800 border border-yellow-300";
-  else if (color === "error")
-    colorClass = "bg-red-100 text-red-800 border border-red-300";
+  if (color === "success") type = "success";
+  else if (color === "warning") type = "warning";
+  else if (color === "error") type = "error";
 
-  return (
-    <Alert className={`${colorClass} ${className}`}>
-      <AlertTitle>{title}</AlertTitle>
-    </Alert>
-  );
+  return <Alert message={title} type={type} className={className} showIcon />;
 };
 
 export default CommonAlert;

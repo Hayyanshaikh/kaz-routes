@@ -146,7 +146,7 @@ const SearchComponent = () => {
     <div className="flex flex-col items-start md:flex-row p-6 gap-8">
       {/* Sidebar Filter */}
       <aside className="flex-[0_0_300px] hidden md:block sticky top-6">
-        <SidebarFilter filters={formattedFilters} />
+        <SidebarFilter filters={formattedFilters as any} />
       </aside>
 
       {/* Main Content */}
@@ -170,7 +170,7 @@ const SearchComponent = () => {
         {/* Card Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
           {list.map((item: any, index: number) =>
-            getCardByCategory(item, index)
+            getCardByCategory(item, index),
           )}
         </div>
         <CommonPagination

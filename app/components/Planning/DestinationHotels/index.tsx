@@ -29,13 +29,13 @@ const DestinationHotels = ({ destination }: Props) => {
     hotel: any,
     room: any,
     selectedDate: any,
-    setSelectedDate: any
+    setSelectedDate: any,
   ) => {
     if (!plan) return;
 
     // sari destinations k hotels check karo
     const totalBookedHotels = Object.values(destinations).flatMap(
-      (d: any) => d.hotels || []
+      (d: any) => d.hotels || [],
     );
 
     if (!selectedDate?.length) {
@@ -71,6 +71,7 @@ const DestinationHotels = ({ destination }: Props) => {
     };
 
     addHotel(destination?.id, booking);
+    messageApi.success("Room booked successfully!");
 
     setSelectedDate([]);
   };

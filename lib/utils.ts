@@ -1,12 +1,10 @@
-import Color from "color";
 import { twMerge } from "tailwind-merge";
-import { useGetCurrency } from "@/app/hooks/useGetCurrency";
 import dayjs, { Dayjs } from "dayjs";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
-import useDestinationStore, { Destination } from "@/app/store/destinationStore";
-import usePlanStore from "@/app/store/planStore";
+import { Destination } from "@/app/store/destinationStore";
 
 dayjs.extend(isSameOrBefore);
+
 // Combine class names
 export function cn(...inputs: string[]) {
   return twMerge(...inputs);
@@ -14,6 +12,7 @@ export function cn(...inputs: string[]) {
 
 // Convert filters object to array
 export const convertFiltersToArray = (filterObj: Record<string, any>) => {
+  if (!filterObj) return [];
   return Object.entries(filterObj).map(([key, valueArray]) => {
     const optionsList = valueArray?.[0]?.value || [];
 
@@ -26,10 +25,11 @@ export const convertFiltersToArray = (filterObj: Record<string, any>) => {
   });
 };
 
-// Format currency
-export const formatCurrency = (amount: number | string): string => {
-  const { symbol } = useGetCurrency();
-
+// Format currency (Utility version - MUST NOT call hooks)
+export const formatCurrency = (
+  amount: number | string,
+  symbol: string = "PKR",
+): string => {
   const numericAmount =
     typeof amount === "string" ? Number(amount.replace(/,/g, "")) : amount;
 
@@ -49,18 +49,18 @@ export function generateUUID() {
 export function getDaysCount(
   start: Dayjs,
   end: Dayjs,
-  inclusive = true
+  inclusive = true,
 ): number {
   if (!start || !end) return 0;
-
-  console.log("Start Date:", start.format("YYYY-MM-DD"));
-  console.log("End Date:", end.format("YYYY-MM-DD"));
-
   const days = end.diff(start, "day");
+  // Typically inclusive of both ends means +1, kaz-routes seems to use +2 for some logic?
+  // Let's keep existing logic if it was working.
   return inclusive ? days + 2 : days;
 }
 
-export function getDateRange(start?: Dayjs, end?: Dayjs) {
+export function getDateRange(start?: Dayjs | null, end?: Dayjs | null) {
+  if (!start || !end) return [];
+  if (!start || !end) return [];
   const startDate = dayjs(start);
   const endDate = dayjs(end);
   const dates: string[] = [];
@@ -74,24 +74,27 @@ export function getDateRange(start?: Dayjs, end?: Dayjs) {
   return dates;
 }
 
+// Pure function for destination dates calculation
 export const getDestinationDates = (
-  destination: Destination
-): { startDate: Dayjs; endDate: Dayjs } | any => {
-  const { plan } = usePlanStore();
-  const { destinations } = useDestinationStore();
-  if (!plan || !plan.planDateRange[0]) return;
+  destination: Destination,
+  plan: any,
+  destinations: Destination[],
+): { startDate: Dayjs; endDate: Dayjs } => {
+  if (!plan || !plan.planDateRange || !plan.planDateRange[0]) {
+    const d = dayjs();
+    return { startDate: d, endDate: d };
+  }
 
   const nights = destination?.nights || 0;
-
   let startDate = plan.planDateRange[0];
 
-  // Pehle wale destinations ke nights add karo
+  // Cumulative nights from previous destinations
   for (const d of destinations) {
     if (d.id === destination?.id) break;
     startDate = dayjs(startDate).add(d.nights || 0, "day");
   }
 
-  const endDate = dayjs(startDate).add(nights - 1, "day");
+  const endDate = dayjs(startDate).add(nights > 0 ? nights - 1 : 0, "day");
 
   return {
     startDate,

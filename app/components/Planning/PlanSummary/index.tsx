@@ -8,6 +8,7 @@ import CommonButton from "../../common/CommonButton";
 const PlanSummary = () => {
   const router = useRouter();
   const { plan, dayCount, usedDays } = usePlanStore();
+  const [isRedirecting, setIsRedirecting] = React.useState(false);
 
   if (!plan) return null;
 
@@ -28,12 +29,12 @@ const PlanSummary = () => {
 
           <div>
             <h2 className="text-base font-semibold text-gray-800">
-              {plan.planName}
+              {plan?.planName}
             </h2>
             <p className="text-xs text-gray-500 flex items-center gap-1">
               <CalendarOutlined className="text-primary" />
-              {plan.planDateRange[0].format("DD MMM")} –{" "}
-              {plan.planDateRange[1].format("DD MMM")}
+              {plan?.planDateRange?.[0]?.format("DD MMM")} –{" "}
+              {plan?.planDateRange?.[1]?.format("DD MMM")}
             </p>
           </div>
         </div>
@@ -41,7 +42,7 @@ const PlanSummary = () => {
         {/* Right: Details + Progress */}
         <div className="flex flex-wrap items-center gap-4 sm:gap-6">
           {/* Adults (desktop only) */}
-          {plan?.adults > 0 && (
+          {plan?.adults !== undefined && plan?.adults > 0 && (
             <div className="hidden sm:block text-center">
               <div className="text-sm font-medium py-1 px-3 rounded-md bg-gray-100 border border-gray-200">
                 {plan.adults}
@@ -51,7 +52,7 @@ const PlanSummary = () => {
           )}
 
           {/* Children (desktop only) */}
-          {plan?.childrens > 0 && (
+          {plan?.childrens !== undefined && plan?.childrens > 0 && (
             <div className="hidden sm:block text-center">
               <div className="text-sm font-medium py-1 px-3 rounded-md bg-gray-100 border border-gray-200">
                 {plan.childrens}
@@ -61,7 +62,7 @@ const PlanSummary = () => {
           )}
 
           {/* Infants (desktop only) */}
-          {plan?.infants > 0 && (
+          {plan?.infants !== undefined && plan?.infants > 0 && (
             <div className="hidden sm:block text-center">
               <div className="text-sm font-medium py-1 px-3 rounded-md bg-gray-100 border border-gray-200">
                 {plan.infants}
@@ -106,7 +107,12 @@ const PlanSummary = () => {
           </div>
 
           <CommonButton
-            link={`/plan/overview/${plan.id}`}
+            // link={`/plan/overview/${plan.id}`}
+            onClick={() => {
+              setIsRedirecting(true);
+              router.push(`/plan/overview/${plan?.id}`);
+            }}
+            loading={isRedirecting}
             label="Overview"
             className="w-full sm:w-auto"
           />

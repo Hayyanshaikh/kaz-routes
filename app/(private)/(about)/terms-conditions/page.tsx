@@ -24,11 +24,11 @@ const TermsAndConditions = () => {
       <section className="p-0">
         <div className="max-w-4xl mx-auto md:px-4">
           <CommonHeading
-            title={pageContent?.terms?.heading}
+            title={pageContent?.terms?.heading || "Terms & Conditions"}
             className="text-left mb-6"
           />
           <div className="text-gray-700 space-y-4">
-            <AboutContent text={pageContent?.terms?.content} />
+            <AboutContent text={pageContent?.terms?.content || ""} />
           </div>
         </div>
       </section>

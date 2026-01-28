@@ -34,7 +34,7 @@ const ListOfDays = () => {
   } = useDestinationStore();
 
   const data = useMemo(() => ({ plan, destinations }), [plan, destinations]);
-  const daywiseData = useMemo(() => transformToDayWise(data), [data]);
+  const daywiseData = useMemo(() => transformToDayWise(data as any), [data]);
 
   if (!destinations || destinations.length === 0)
     return (
@@ -52,7 +52,7 @@ const ListOfDays = () => {
       key: `day-${idx}`,
       label: (
         <span className="text-xs font-medium">{`Day ${idx + 1} - ${dayjs(
-          day.date
+          day.date,
         ).format("DD MMM YYYY")}`}</span>
       ),
       children: hasBookings ? (
@@ -69,7 +69,7 @@ const ListOfDays = () => {
                       removeHotelByDate(
                         day.destinationId,
                         h.room_id,
-                        dayjs(day.date).format("YYYY-MM-DD")
+                        dayjs(day.date).format("YYYY-MM-DD"),
                       )
                     }
                   />
@@ -89,7 +89,7 @@ const ListOfDays = () => {
                       removeSiteByDate(
                         day.destinationId,
                         s.id,
-                        dayjs(day.date).format("YYYY-MM-DD")
+                        dayjs(day.date).format("YYYY-MM-DD"),
                       )
                     }
                   />
@@ -109,7 +109,7 @@ const ListOfDays = () => {
                       removeRestaurantByDate(
                         day.destinationId,
                         r.variantId,
-                        dayjs(day.date).format("YYYY-MM-DD")
+                        dayjs(day.date).format("YYYY-MM-DD"),
                       )
                     }
                   />
@@ -129,7 +129,7 @@ const ListOfDays = () => {
                       removeCarByDate(
                         day.destinationId,
                         c.id,
-                        dayjs(day.date).format("YYYY-MM-DD")
+                        dayjs(day.date).format("YYYY-MM-DD"),
                       )
                     }
                   />

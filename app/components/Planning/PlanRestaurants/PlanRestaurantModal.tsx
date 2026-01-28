@@ -7,7 +7,8 @@ import { TabItem } from "@/app/types/CommonType";
 import { useFormatCurrency } from "@/app/hooks/useFormatCurrency";
 import { PlusOutlined } from "@ant-design/icons";
 import useDestinationStore from "@/app/store/destinationStore";
-import { getDateRange, getDestinationDates } from "@/lib/utils";
+import { getDateRange } from "@/lib/utils";
+import { useDestinationDates } from "@/app/hooks/useDestinationDates";
 import { message, Form } from "antd";
 import CommonDatePicker from "../../common/CommonDatePicker";
 import CommonSelect from "../../common/CommonSelect";
@@ -25,15 +26,16 @@ const PlanRestaurantModal = ({
   restaurant,
   destination,
 }: Props) => {
+  const [messageApi, contextHolder] = message.useMessage();
   const { format } = useFormatCurrency();
   const { addRestaurant, removeRestaurant } = useDestinationStore();
 
   const [form] = Form.useForm();
   const [quantities, setQuantities] = useState<Record<string | number, number>>(
-    {}
+    {},
   );
 
-  const { startDate, endDate } = getDestinationDates(destination);
+  const { startDate, endDate } = useDestinationDates(destination);
   const allowedDates = getDateRange(startDate, endDate);
 
   // ✅ Reset local state jab modal open ho
@@ -51,7 +53,7 @@ const PlanRestaurantModal = ({
 
   const handleUpdateQuantity = (
     variantId: string | number,
-    quantity: number
+    quantity: number,
   ) => {
     setQuantities((prev) => {
       const updated = { ...prev };
@@ -143,12 +145,12 @@ const PlanRestaurantModal = ({
     const { selectedDate, mealType } = values;
 
     if (!selectedDate || selectedDate.length === 0) {
-      message.error("Please select at least one date before booking.");
+      messageApi.error("Please select at least one date before booking.");
       return;
     }
 
     if (!mealType) {
-      message.error("Please select a meal type.");
+      messageApi.error("Please select a meal type.");
       return;
     }
 
@@ -163,7 +165,7 @@ const PlanRestaurantModal = ({
     // Naye items add
     Object.entries(quantities).forEach(([variantId, qty]) => {
       const dish = restaurant.dishes.find((d: any) =>
-        d.variants.some((v: any) => v.id == variantId)
+        d.variants.some((v: any) => v.id == variantId),
       );
       const variant = dish?.variants.find((v: any) => v.id == variantId);
 
@@ -178,7 +180,7 @@ const PlanRestaurantModal = ({
           variant,
           mealType,
           selectedDate: selectedDate.map((date: any) =>
-            date.format("YYYY-MM-DD")
+            date.format("YYYY-MM-DD"),
           ),
           quantity: qty,
         };
@@ -186,7 +188,7 @@ const PlanRestaurantModal = ({
       }
     });
 
-    message.success("Booking saved successfully!");
+    messageApi.success("Booking saved successfully!");
     setOpen(false);
   };
 
@@ -201,6 +203,7 @@ const PlanRestaurantModal = ({
       width={768}
       onConfirm={() => form.submit()} // ✅ trigger antd form submit
     >
+      {contextHolder}
       <Form
         form={form}
         layout="vertical"

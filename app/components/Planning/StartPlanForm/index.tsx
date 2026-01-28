@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useTransition } from "react";
 import { Form, Button } from "antd";
 import CommonInput from "../../common/CommonInput";
 import CommonDatePicker from "../../common/CommonDatePicker";
@@ -9,9 +9,12 @@ import dropdownManipulator from "@/app/manipulators/dropdownManipulator";
 import usePlanStore from "@/app/store/planStore";
 import { generateUUID } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import dayjs from "dayjs";
 
 const StartPlanForm: React.FC = () => {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
   const { data: countriesData } = useControllerGetFindAllCountries();
   const countriesOptions = dropdownManipulator(countriesData?.data || []);
   const [form] = Form.useForm();
@@ -22,15 +25,20 @@ const StartPlanForm: React.FC = () => {
       id: generateUUID(),
       ...values,
     };
+
     setPlan(payload);
-    router.push(`${payload.id}/`);
+
+    startTransition(() => {
+      router.push(`${payload.id}/`);
+    });
   };
 
   return (
-    <div className="flex flex-col gap-4 max-w-sm mx-auto ">
+    <div className="flex flex-col gap-4 max-w-sm mx-auto">
       <h2 className="text-2xl font-semibold mb-1 text-center">
         Create You'r Plan
       </h2>
+
       <div className="p-6 border border-gray-300 flex flex-col gap-4 rounded-md">
         <Form
           form={form}
@@ -49,21 +57,14 @@ const StartPlanForm: React.FC = () => {
           <CommonInput
             name="planName"
             label="Plan name"
-            placeholder="Give your plan a name.."
-            rules={[{ required: true, message: "Please enter a plan name!" }]}
+            rules={[{ required: true }]}
           />
 
           <CommonMultiSelect
             name="countries"
             label="Which countries are you going?"
-            placeholder="Select countries.."
             options={countriesOptions}
-            rules={[
-              {
-                required: true,
-                message: "Please select at least one country!",
-              },
-            ]}
+            rules={[{ required: true }]}
           />
 
           <CommonDatePicker
@@ -71,41 +72,27 @@ const StartPlanForm: React.FC = () => {
             name="planDateRange"
             mode="range"
             className="w-full"
-            rules={[{ required: true, message: "Please select a duration!" }]}
+            rules={[{ required: true }]}
+            disabledDate={(current) =>
+              current && current < dayjs().startOf("day")
+            }
           />
 
-          {/* Travelers Section */}
           <div className="grid grid-cols-3 gap-4">
-            <CommonInput
-              type="number"
-              name="adults"
-              label="Adults"
-              placeholder="0"
-              rules={[{ required: true, message: "Enter adults count" }]}
-            />
-            <CommonInput
-              type="number"
-              name="childrens"
-              label="Childrens"
-              placeholder="0"
-            />
-            <CommonInput
-              type="number"
-              name="infants"
-              label="Infants"
-              placeholder="0"
-            />
+            <CommonInput type="number" name="adults" label="Adults" />
+            <CommonInput type="number" name="childrens" label="Childrens" />
+            <CommonInput type="number" name="infants" label="Infants" />
           </div>
 
-          <div className="flex justify-center w-full items-center mt-4">
-            <Button
-              type="primary"
-              htmlType="submit"
-              className="bg-primary-300 border-none w-full font-bold"
-            >
-              Start planning
-            </Button>
-          </div>
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={isPending}
+            // disabled={isPending}
+            className="bg-primary-300 border-none w-full font-bold mt-4"
+          >
+            Start planning
+          </Button>
         </Form>
       </div>
     </div>

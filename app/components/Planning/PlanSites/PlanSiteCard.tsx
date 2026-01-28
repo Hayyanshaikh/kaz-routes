@@ -20,6 +20,7 @@ interface PlanSiteCardProps {
   isBooked?: boolean;
   onBook?: () => void;
   onRemove?: () => void;
+  disabled?: boolean;
 }
 
 const PlanSiteCard: React.FC<PlanSiteCardProps> = ({
@@ -35,6 +36,7 @@ const PlanSiteCard: React.FC<PlanSiteCardProps> = ({
   isBooked = false,
   onBook,
   onRemove,
+  disabled,
 }) => {
   const { format } = useFormatCurrency();
 
@@ -80,17 +82,28 @@ const PlanSiteCard: React.FC<PlanSiteCardProps> = ({
         <span className="text-sm text-gray-600 font-semibold">
           {format(price)}
         </span>
+        <div className="pt-2 mt-auto">
+          {isBooked ? (
+            <CommonButton
+              label="Delete"
+              className="!w-full !bg-red-500 hover:!bg-red-600"
+              onClick={onRemove}
+            />
+          ) : (
+            <div
+              title={disabled ? "Please add nights to plan to book" : ""}
+              className="w-full"
+            >
+              <CommonButton
+                label="Book Now"
+                className="!w-full"
+                onClick={onBook}
+                disabled={disabled}
+              />
+            </div>
+          )}
+        </div>
       </div>
-
-      {isBooked ? (
-        <CommonButton
-          label="Remove"
-          onClick={onRemove}
-          className="!bg-red-500 !w-full"
-        />
-      ) : (
-        <CommonButton label={buttonText} className="!w-full" onClick={onBook} />
-      )}
     </Card>
   );
 };

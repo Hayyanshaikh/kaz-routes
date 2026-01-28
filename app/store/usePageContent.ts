@@ -1,21 +1,20 @@
 import { create } from "zustand";
 
 interface PageContent {
-  id?: string;
-  title: string;
-  slug?: string;
-  content: string;
+  heading?: string;
+  content?: string;
+  [key: string]: any;
 }
 
 interface PageContentStore {
-  pageContent: PageContent[] | null;
-  setPageContent: (data: PageContent[]) => void;
+  pageContent: Record<string, PageContent> | null;
+  setPageContent: (data: any) => void;
 }
 
 // ✅ Zustand store create karo
 const usePageContentStore = create<PageContentStore>((set) => ({
   pageContent: null,
-  setPageContent: (data) => set({ pageContent: data?.data }),
+  setPageContent: (data) => set({ pageContent: data }),
 }));
 
 export default usePageContentStore;

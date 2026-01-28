@@ -31,7 +31,9 @@ const DishCard = ({ dish, restaurantDetail }: DishCardProps) => {
       customer_name: values.name,
       customer_email: values.email,
       customer_phone: values.phone,
-      variant_ids: dish.variants.map((v) => parseInt(v.id as any, 10) || 1),
+      variant_ids: dish.variants.map(
+        (v: any) => parseInt(v.id as any, 10) || 1,
+      ),
     };
 
     createBooking(payload)
@@ -72,7 +74,7 @@ const DishCard = ({ dish, restaurantDetail }: DishCardProps) => {
 
       <div className="flex sm:flex-row flex-col gap-4">
         {/* Variants */}
-        {dish.variants.map((v, i) => (
+        {dish.variants.map((v: any, i: number) => (
           <div
             key={i}
             className="p-4 border border-gray-300 rounded-lg flex-1 bg-gray-50"

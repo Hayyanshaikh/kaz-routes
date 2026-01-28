@@ -10,6 +10,8 @@ import { overviewData, overviewData2 } from "@/lib/constant";
 import { useControllerPostCreateTravelPlan } from "@/app/hooks/api";
 import CommonButton from "../../common/CommonButton";
 import { transformToDayWise } from "@/app/manipulators/planManipulator";
+import dayjs from "dayjs";
+import { message } from "antd";
 
 const Index = () => {
   const { plan, resetPlan } = usePlanStore();
@@ -17,10 +19,11 @@ const Index = () => {
   const router = useRouter();
   const { mutateAsync: createPlan, isPending } =
     useControllerPostCreateTravelPlan();
+  const [isRedirecting, setIsRedirecting] = React.useState(false);
 
   // const plan = overviewData2?.plan;
   // const destinations = overviewData2?.destinations;
-  const data = { plan, destinations };
+  const data = { plan, destinations: destinations as any };
   console.log({ destinations });
 
   const convertToDaywise = transformToDayWise(data);
@@ -28,11 +31,21 @@ const Index = () => {
   const contentRef = useRef<HTMLDivElement>(null);
 
   const handleCreateTravelPlan = () => {
-    const payload = { plan, days: convertToDaywise };
+    if (!plan) return;
+
+    const formattedPlan = {
+      ...plan,
+      planDateRange: plan.planDateRange?.map((d: any) =>
+        dayjs(d).format("YYYY-MM-DD"),
+      ),
+    };
+
+    const payload = { plan: formattedPlan, days: convertToDaywise };
 
     createPlan(payload, {
       onSuccess: (response) => {
         console.log("Travel plan created:", response);
+        setIsRedirecting(true);
 
         const pdfUrl = response?.pdf_url;
 
@@ -46,15 +59,25 @@ const Index = () => {
           resetPlan();
         }, 300);
       },
-      onError: (error) => {
-        console.error("Error creating travel plan:", error);
+      onError: (error: any) => {
+        console.error(
+          "Error creating travel plan:",
+          error?.response?.data || error,
+        );
+        message.error(
+          error?.response?.data?.message || "Failed to create plan.",
+        );
       },
     });
   };
 
-  if (!plan) {
-    router.push("/plan/create");
-  }
+  useEffect(() => {
+    if (!plan) {
+      router.push("/plan/create");
+    }
+  }, [plan, router]);
+
+  if (!plan) return null;
 
   return (
     <div className="max-w-4xl mx-auto border border-gray-300">
@@ -65,7 +88,7 @@ const Index = () => {
           <CommonButton
             label="Confirm Plan"
             onClick={handleCreateTravelPlan}
-            loading={isPending}
+            loading={isPending || isRedirecting}
           />
         </div>
       </div>

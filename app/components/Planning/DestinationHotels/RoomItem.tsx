@@ -1,6 +1,7 @@
 import { useState } from "react";
 import CommonModal from "../../common/CommonModal";
-import { getDateRange, getDestinationDates } from "@/lib/utils";
+import { getDateRange } from "@/lib/utils";
+import { useDestinationDates } from "@/app/hooks/useDestinationDates";
 import CommonDatePicker from "../../common/CommonDatePicker";
 
 interface Props {
@@ -14,7 +15,7 @@ interface Props {
 const RoomItem = ({ room, isBooked, onBook, onRemove, destination }: Props) => {
   const [open, setOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<any>(null);
-  const { startDate, endDate } = getDestinationDates(destination);
+  const { startDate, endDate } = useDestinationDates(destination);
   const allowedDates = getDateRange(startDate, endDate);
 
   return (
@@ -30,8 +31,23 @@ const RoomItem = ({ room, isBooked, onBook, onRemove, destination }: Props) => {
           </button>
         ) : (
           <button
-            onClick={() => setOpen(true)}
-            className="px-2 py-0.5 rounded-full text-white bg-primary hover:bg-orange-600"
+            onClick={() => {
+              if (allowedDates.length === 0) {
+                // You can replace this with antd Tooltip if preferred, for now keeping it simple or relying on modal logic
+                // Actually, let's disable the button
+                return;
+              }
+              setOpen(true);
+            }}
+            disabled={allowedDates.length === 0}
+            title={
+              allowedDates.length === 0 ? "Please add nights to book" : "Book"
+            }
+            className={`px-2 py-0.5 rounded-full text-white ${
+              allowedDates.length === 0
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-primary hover:bg-orange-600"
+            }`}
           >
             Book
           </button>

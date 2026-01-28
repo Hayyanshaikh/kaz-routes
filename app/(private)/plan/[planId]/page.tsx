@@ -6,25 +6,25 @@ import usePlanStore from "@/app/store/planStore";
 import { FILE_BASE_URL } from "@/lib/constant";
 import { getDestinationDates } from "@/lib/utils";
 import { CalendarOutlined } from "@ant-design/icons";
-import { Button, Empty, Popconfirm } from "antd";
+import { Button, Empty, Popconfirm, message } from "antd";
 import dayjs from "dayjs";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
 
+import { useDestinationDates } from "@/app/hooks/useDestinationDates";
+
 const Page = () => {
   const router = useRouter();
+  const [messageApi, contextHolder] = message.useMessage();
   const { plan } = usePlanStore();
   const { destinations, removeDestination } = useDestinationStore();
   const searchParams = useSearchParams();
   const destinationId = searchParams.get("destination");
   const destinationData = destinations?.find(
-    (des) => String(des.id) === String(destinationId)
+    (des) => String(des.id) === String(destinationId),
   );
 
-  const { startDate, endDate } = getDestinationDates(destinationData || {}) || {
-    startDate: null,
-    endDate: null,
-  };
+  const { startDate, endDate } = useDestinationDates(destinationData);
 
   useEffect(() => {
     if (!plan) {
@@ -42,6 +42,7 @@ const Page = () => {
 
   return (
     <Container className="flex-1">
+      {contextHolder}
       <div className="flex items-center justify-between bg-white border border-gray-300 rounded-lg overflow-hidden p-3 mb-6">
         <div className="w-10 h-10 rounded flex-shrink-0 overflow-hidden bg-gray-100">
           {destinationData?.image ? (
@@ -63,7 +64,7 @@ const Page = () => {
             <p className="text-xs text-gray-500 flex items-center gap-1">
               <CalendarOutlined className="!text-primary" />
               {`${dayjs(startDate).format("MMM DD")} - ${dayjs(endDate).format(
-                "MMM DD"
+                "MMM DD",
               )}`}
             </p>
           ) : (
@@ -76,7 +77,10 @@ const Page = () => {
         <Popconfirm
           placement="bottomRight"
           title="Are you sure you want to delete?"
-          onConfirm={() => removeDestination(destinationData?.id)}
+          onConfirm={() => {
+            removeDestination(destinationData?.id);
+            messageApi.success("Destination deleted");
+          }}
           okText="Yes"
           cancelText="No"
         >

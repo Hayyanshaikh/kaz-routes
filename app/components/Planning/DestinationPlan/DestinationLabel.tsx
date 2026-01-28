@@ -1,7 +1,7 @@
 "use client";
 
 import useDestinationStore from "@/app/store/destinationStore";
-import { getDestinationDates } from "@/lib/utils";
+import { useDestinationDates } from "@/app/hooks/useDestinationDates";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -14,7 +14,7 @@ const DestinationLabel = ({ destination }: Props) => {
   const { addNight, removeNight, updateDestination } = useDestinationStore();
   const router = useRouter();
 
-  const { startDate, endDate } = getDestinationDates(destination);
+  const { startDate, endDate } = useDestinationDates(destination);
   const nights = destination.nights || 0;
 
   console.log({ destination });

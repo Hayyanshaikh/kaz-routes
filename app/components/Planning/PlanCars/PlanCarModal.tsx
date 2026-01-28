@@ -3,12 +3,13 @@
 import { FILE_BASE_URL } from "@/lib/constant";
 import Image from "next/image";
 import React from "react";
-import { Form, Input, DatePicker } from "antd";
+import { Form, Input, DatePicker, message } from "antd";
 import CommonModal from "../../common/CommonModal";
 import GoogleMapModern from "../../Cards/CustomMap";
 import useDestinationStore from "@/app/store/destinationStore";
 import CommonDatePicker from "../../common/CommonDatePicker";
-import { getDateRange, getDestinationDates } from "@/lib/utils";
+import { getDateRange } from "@/lib/utils";
+import { useDestinationDates } from "@/app/hooks/useDestinationDates";
 
 type PlanCarModalProps = {
   car: any;
@@ -23,8 +24,9 @@ const PlanCarModal = ({
   setOpen,
   destination,
 }: PlanCarModalProps) => {
+  const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
-  const { startDate, endDate } = getDestinationDates(destination);
+  const { startDate, endDate } = useDestinationDates(destination);
   const allowedDates = getDateRange(startDate, endDate);
   // ✅ store se addCar nikal lo
   const addCar = useDestinationStore((state) => state.addCar);
@@ -34,13 +36,14 @@ const PlanCarModal = ({
       ...car,
       ...values,
       bookingDates: values.bookingDates?.map((date: any) =>
-        date.format("YYYY-MM-DD")
+        date.format("YYYY-MM-DD"),
       ),
     };
 
     // ✅ Destination ID ke sath store me save karo
     if (destination?.id) {
       addCar(destination.id, payload);
+      messageApi.success("Car booked successfully!");
     }
 
     setOpen(false); // modal band karne ke liye
@@ -58,6 +61,7 @@ const PlanCarModal = ({
       centered
       onConfirm={() => form?.submit()}
     >
+      {contextHolder}
       {/* Booking Form */}
       <Form form={form} className="min-h-[300px]" onFinish={handleFinish}>
         <Form.Item noStyle name="pickup_location" initialValue="">

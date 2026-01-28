@@ -3,13 +3,14 @@ import React, { useState } from "react";
 import PlanSiteCard from "./PlanSiteCard";
 import { useControllerGetFindAllSites } from "@/app/hooks/api";
 import { FILE_BASE_URL } from "@/lib/constant";
-import { Empty, DatePicker, Spin, Form } from "antd";
+import { Empty, DatePicker, Spin, Form, message } from "antd";
 import useDestinationStore from "@/app/store/destinationStore";
 import CommonModal from "../../common/CommonModal";
 import dayjs from "dayjs";
 import CommonDatePicker from "../../common/CommonDatePicker";
 import usePlanStore from "@/app/store/planStore";
-import { getDateRange, getDestinationDates } from "@/lib/utils";
+import { getDateRange } from "@/lib/utils";
+import { useDestinationDates } from "@/app/hooks/useDestinationDates";
 import CommonPagination from "../../common/CommonPagination";
 
 type Props = {
@@ -17,6 +18,7 @@ type Props = {
 };
 
 const PlanSites = ({ destination }: Props) => {
+  const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
   const [currentPage, setCurrentPage] = useState(1);
   const { data, isLoading } = useControllerGetFindAllSites({
@@ -29,7 +31,7 @@ const PlanSites = ({ destination }: Props) => {
   const [selectedSite, setSelectedSite] = useState<any>(null);
   const [selectedDate, setSelectedDate] = useState<any>(null);
   const [open, setOpen] = useState(false);
-  const { startDate, endDate } = getDestinationDates(destination);
+  const { startDate, endDate } = useDestinationDates(destination);
   const allowedDates = getDateRange(startDate, endDate);
 
   const handleBook = (site: any) => {
@@ -42,7 +44,7 @@ const PlanSites = ({ destination }: Props) => {
       const { selectedDate } = await form.validateFields();
       const allSites = destination?.sites ?? [];
       const existingBookings = allSites.flatMap(
-        (s: any) => s.bookingDates ?? []
+        (s: any) => s.bookingDates ?? [],
       );
       const siteDuration = Number(selectedSite?.duration_hours) || 0;
 
@@ -75,7 +77,7 @@ const PlanSites = ({ destination }: Props) => {
         .flatMap((s: any) => s.bookingDates ?? []);
 
       const isDuplicate = selectedDate.some((d: any) =>
-        bookedDates.some((b: any) => b.date === dayjs(d).format("YYYY-MM-DD"))
+        bookedDates.some((b: any) => b.date === dayjs(d).format("YYYY-MM-DD")),
       );
 
       if (isDuplicate) {
@@ -94,6 +96,8 @@ const PlanSites = ({ destination }: Props) => {
         })),
       });
 
+      messageApi.success("Site booked successfully!");
+
       form.resetFields();
       setSelectedSite(null);
       setSelectedDate(null);
@@ -105,6 +109,7 @@ const PlanSites = ({ destination }: Props) => {
 
   return (
     <>
+      {contextHolder}
       {isLoading ? (
         <div className="h-[300px] flex items-center justify-center">
           <Spin />
@@ -115,7 +120,7 @@ const PlanSites = ({ destination }: Props) => {
             {sitesData?.length > 0 ? (
               sitesData?.map((site: any) => {
                 const isBooked = destination?.sites?.some(
-                  (s: any) => s.id === site.id
+                  (s: any) => s.id === site.id,
                 );
 
                 return (
@@ -134,6 +139,7 @@ const PlanSites = ({ destination }: Props) => {
                     onBook={() => handleBook(site)}
                     isBooked={isBooked}
                     onRemove={() => removeSite(destination.id, site.id)}
+                    disabled={allowedDates.length === 0}
                   />
                 );
               })

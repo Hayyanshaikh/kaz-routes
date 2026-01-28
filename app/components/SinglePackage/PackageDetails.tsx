@@ -19,6 +19,13 @@ type Hotel = {
   description: string;
   services: string[];
   items: RoomType[];
+  price?: number | string;
+  duration?: {
+    days: number | string;
+    adults: number | string;
+    children: number | string;
+    infants: number | string;
+  };
 };
 
 type Props = {
@@ -54,7 +61,7 @@ const PackageDetails = ({ packageDetail }: Props) => {
         </button>
       </div>
       <h1 className={`text-xl sm:text-2xl font-bold mb-2`}>
-        {formatCurrency(packageDetail?.price)}
+        {formatCurrency(packageDetail?.price || 0)}
       </h1>
 
       {/* Services */}
