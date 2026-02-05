@@ -23,9 +23,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     <Section>
       <Container>
         <PlanSummary />
-        <div className="flex flex-col lg:flex-row gap-3">
+        <div className="flex flex-col lg:flex-row items-start gap-3">
           {/* Sidebar */}
-          <div className="w-full lg:w-[250px]">
+          <div className="w-full lg:w-[250px] max-h-[calc(100vh-70px)] sticky top-5">
             <DestinationPlan />
           </div>
 

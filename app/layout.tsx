@@ -1,4 +1,3 @@
-import "@ant-design/v5-patch-for-react-19";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
@@ -31,6 +30,7 @@ export default function RootLayout({
       >
         <Providers>
           <ConfigProvider
+            wave={{ disabled: true }}
             theme={{
               components: {
                 Button: {

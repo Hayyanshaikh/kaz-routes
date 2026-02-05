@@ -31,7 +31,7 @@ const DestinationList: FC<DestinationListProps> = ({ destinations }) => {
 
   return (
     <Menu
-      className="h-full"
+      // className="h-full"
       selectedKeys={[selectedId]}
       items={destinations.map((d) => ({
         key: d.id,

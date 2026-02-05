@@ -48,7 +48,7 @@ const DestinationPlan = () => {
       />
 
       {/* List of Destination Cards */}
-      <div className="mt-3 flex-1 mb-10 overflow-auto max-h-[50%]">
+      <div className="mt-3 mb-10 overflow-auto">
         {destinations?.length > 0 && (
           <div className="flex justify-between gap-2 text-xs text-gray-800 font-light px-2">
             <span>Destination</span>

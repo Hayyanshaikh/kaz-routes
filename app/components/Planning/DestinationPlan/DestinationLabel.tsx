@@ -1,10 +1,12 @@
 "use client";
 
 import useDestinationStore from "@/app/store/destinationStore";
+import usePlanStore from "@/app/store/planStore";
 import { useDestinationDates } from "@/app/hooks/useDestinationDates";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import React from "react";
+import { Button } from "antd";
 
 type Props = {
   destination: any;
@@ -14,10 +16,11 @@ const DestinationLabel = ({ destination }: Props) => {
   const { addNight, removeNight, updateDestination } = useDestinationStore();
   const router = useRouter();
 
+  const { dayCount, usedDays } = usePlanStore();
   const { startDate, endDate } = useDestinationDates(destination);
   const nights = destination.nights || 0;
 
-  console.log({ destination });
+  const isMaxNightsReached = usedDays >= dayCount;
 
   const handleUpdateDates = (destinationId: string, newNights: number) => {
     if (newNights <= 0) return; // ✅ Skip if nights are 0
@@ -42,8 +45,8 @@ const DestinationLabel = ({ destination }: Props) => {
 
       {/* Nights counter */}
       <div className="flex items-center gap-2">
-        <button
-          className="w-6 h-6 flex items-center justify-center rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100"
+        <Button
+          className="w-6! h-6! flex items-center justify-center rounded-full! border border-gray-300 text-gray-600 hover:bg-gray-100"
           onClick={(e) => {
             e.stopPropagation();
             if (nights > 0) {
@@ -53,14 +56,15 @@ const DestinationLabel = ({ destination }: Props) => {
           }}
         >
           -
-        </button>
+        </Button>
 
         <span className="w-6 text-center text-sm font-semibold text-gray-700">
           {nights}
         </span>
 
-        <button
-          className="w-6 h-6 flex items-center justify-center rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100"
+        <Button
+          className={`w-6! h-6! flex items-center justify-center rounded-full! border border-gray-300 text-gray-600 `}
+          disabled={isMaxNightsReached}
           onClick={(e) => {
             e.stopPropagation();
             addNight(destination.id, 1);
@@ -68,7 +72,7 @@ const DestinationLabel = ({ destination }: Props) => {
           }}
         >
           +
-        </button>
+        </Button>
       </div>
     </div>
   );
