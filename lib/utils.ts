@@ -79,19 +79,24 @@ export const getDestinationDates = (
   destination: Destination,
   plan: any,
   destinations: Destination[],
-): { startDate: Dayjs; endDate: Dayjs } => {
+): { startDate: Dayjs | null; endDate: Dayjs | null } => {
   if (!plan || !plan.planDateRange || !plan.planDateRange[0]) {
     const d = dayjs();
     return { startDate: d, endDate: d };
   }
 
-  const nights = destination?.nights || 0;
   let startDate = plan.planDateRange[0];
 
   // Cumulative nights from previous destinations
   for (const d of destinations) {
     if (d.id === destination?.id) break;
     startDate = dayjs(startDate).add(d.nights || 0, "day");
+  }
+
+  const nights = destination?.nights || 0;
+
+  if (nights === 0) {
+    return { startDate, endDate: null };
   }
 
   const endDate = dayjs(startDate).add(nights > 0 ? nights - 1 : 0, "day");

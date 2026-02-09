@@ -47,9 +47,10 @@ const DestinationLabel = ({ destination }: Props) => {
       <div className="flex items-center gap-2">
         <Button
           className="w-6! h-6! flex items-center justify-center rounded-full! border border-gray-300 text-gray-600 hover:bg-gray-100"
+          disabled={nights <= 1}
           onClick={(e) => {
             e.stopPropagation();
-            if (nights > 0) {
+            if (nights > 1) {
               removeNight(destination.id, 1);
               handleUpdateDates(destination.id, nights - 1);
             }
