@@ -156,9 +156,11 @@ const PlanRestaurantModal = ({
 
     // Purane items remove
     destination?.restaurants?.forEach((r: any) => {
-      const currentQty = quantities[r.variant.id];
-      if (!currentQty || currentQty <= 0) {
-        removeRestaurant(destination?.id, r.variant.id);
+      if (r.restaurantId === restaurant.id) {
+        const currentQty = quantities[r.variant.id];
+        if (!currentQty || currentQty <= 0) {
+          removeRestaurant(destination?.id, r.variant.id);
+        }
       }
     });
 
