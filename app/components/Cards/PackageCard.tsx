@@ -34,6 +34,7 @@ const PackageCard: React.FC<PackageCardProps> = ({
   id,
   price,
 }) => {
+  console.log({ price });
   return (
     <div className="flex flex-col bg-white rounded-xl shadow-lg overflow-hidden transform duration-300 h-full">
       {/* Image Section */}

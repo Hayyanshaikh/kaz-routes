@@ -28,12 +28,15 @@ export const convertFiltersToArray = (filterObj: Record<string, any>) => {
 // Format currency (Utility version - MUST NOT call hooks)
 export const formatCurrency = (
   amount: number | string,
-  symbol: string = "PKR",
+  symbol?: string,
 ): string => {
+  const currency = localStorage.getItem("currency");
+  const currencyData = currency ? JSON.parse(currency) : null;
+  const currencySymbol = currencyData?.symbol || symbol;
+
   const numericAmount =
     typeof amount === "string" ? Number(amount.replace(/,/g, "")) : amount;
-
-  return `${symbol} ${numericAmount.toLocaleString("en-PK", {
+  return `${currencySymbol} ${numericAmount.toLocaleString("en-PK", {
     minimumFractionDigits: 2,
   })}`;
 };
