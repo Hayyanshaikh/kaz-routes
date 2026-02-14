@@ -11,6 +11,7 @@ import { useControllerPostCreateSiteBooking } from "@/app/hooks/api";
 import { SiteBookingPayload } from "@/app/types/CommonType";
 import SiteForm from "../SiteForm";
 import { Form } from "antd";
+import { formatCurrency } from "@/lib/utils";
 
 type SiteType = {
   id: string;
@@ -129,17 +130,17 @@ const SitesDetail = ({ site }: Props) => {
             <p className="font-semibold text-gray-900 mb-3">Pricing:</p>
             <ul className="list-disc list-inside text-sm text-gray-700">
               <li>
-                <strong className="font-medium">Adult:</strong> PKR{" "}
-                {site.pricing.adult}
+                <strong className="font-medium">Adult:</strong>{" "}
+                {formatCurrency(site.pricing.adult)}
               </li>
               <li>
-                <strong className="font-medium">Boy:</strong> PKR{" "}
-                {site.pricing.boy}
+                <strong className="font-medium">Boy:</strong>{" "}
+                {formatCurrency(site.pricing.boy)}
               </li>
               {site.pricing.child && (
                 <li>
-                  <strong className="font-medium">Child:</strong> PKR{" "}
-                  {site.pricing.child}
+                  <strong className="font-medium">Child:</strong>{" "}
+                  {formatCurrency(site.pricing.child)}
                 </li>
               )}
             </ul>

@@ -7,6 +7,7 @@ import { useControllerPostCreateRestaurantBooking } from "@/app/hooks/api";
 import { RestaurantBookingPayload } from "@/app/types/CommonType";
 import { Form, Input, DatePicker, TimePicker, InputNumber } from "antd";
 import RestaurantForm from "../RestaurantForm";
+import { formatCurrency } from "@/lib/utils";
 
 type DishCardProps = {
   dish: any;
@@ -80,12 +81,7 @@ const DishCard = ({ dish, restaurantDetail }: DishCardProps) => {
             className="p-4 border border-gray-300 rounded-lg flex-1 bg-gray-50"
           >
             <p className="text-sm text-primary font-medium mb-2">
-              {v.price &&
-                Number(v.price).toLocaleString("en-PK", {
-                  style: "currency",
-                  currency: "PKR",
-                  minimumFractionDigits: 2,
-                })}
+              {v.price && formatCurrency(v.price)}
             </p>
             <h4 className="font-semibold">{v.size}</h4>
           </div>
