@@ -8,10 +8,12 @@ import { FILE_BASE_URL } from "@/lib/constant";
 import CommonSlider from "../common/CommonSlider";
 import { useControllerGetFindAllCountries } from "@/app/hooks/api";
 import PageLoading from "../common/PageLoading";
+import { useTranslations } from "next-intl";
 
 type Props = {};
 
 const DestinationSection = (props: Props) => {
+  const t = useTranslations("home.destinations");
   const { data, isLoading } = useControllerGetFindAllCountries();
   const destinations = data?.data;
 
@@ -31,10 +33,7 @@ const DestinationSection = (props: Props) => {
   return destinations?.length > 0 ? (
     <Section>
       <Container>
-        <CommonHeading
-          subtitle="Browse our curated destinations and start planning your journey today."
-          title="Explore Our Destinations"
-        />
+        <CommonHeading subtitle={t("description")} title={t("title")} />
         <div className="hidden md:grid md:grid-cols-3 lg:grid-cols-4 gap-6">
           {destinations?.map((destination: any, index: number) => (
             <DestinationCard

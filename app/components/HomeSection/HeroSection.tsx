@@ -4,6 +4,7 @@ import Image from "next/image";
 import { HERO_SLIDES_DATA } from "@/lib/constant";
 import { SearchOutlined } from "@ant-design/icons"; // ✅ AntD icon
 import SearchBar from "../SearchBar";
+import { useTranslations } from "next-intl";
 
 type Props = {
   imageUrl?: string;
@@ -24,6 +25,7 @@ const HeroSection = ({
   descriptionClass = "",
   showSearchBar = true,
 }: Props) => {
+  const t = useTranslations("home.hero");
   return (
     <div
       className={`relative w-full h-screen overflow-hidden flex items-center justify-center ${className}`}
@@ -47,13 +49,13 @@ const HeroSection = ({
           <h1
             className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight tracking-tight rounded-md ${headingClass}`}
           >
-            {heading}
+            {t("title")}
           </h1>
           {/* Description */}
           <p
             className={`text-base sm:text-lg md:text-xl font-light opacity-90 rounded-md mb-8 ${descriptionClass}`}
           >
-            {description}
+            {t("description")}
           </p>
 
           {/* Search Bar */}

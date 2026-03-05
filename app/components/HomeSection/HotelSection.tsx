@@ -7,8 +7,11 @@ import HotelCard from "../Cards/HotelCard";
 import PageLoading from "../common/PageLoading";
 import { useControllerGetFindAllHotels } from "@/app/hooks/api";
 import CommonSlider from "../common/CommonSlider";
+import { useTranslations } from "next-intl";
 
 const SiteSection = () => {
+  const t = useTranslations("home.sites");
+
   const { data, isLoading } = useControllerGetFindAllHotels();
   const hotels = data?.data || [];
 
@@ -22,10 +25,7 @@ const SiteSection = () => {
     <Section className="bg-gray-100">
       <Container>
         <div>
-          <CommonHeading
-            title="Explore Our Global Sites"
-            subtitle="Discover the diverse range of places we operate in, each offering unique experiences."
-          />
+          <CommonHeading title={t("title")} subtitle={t("description")} />
 
           <CommonSlider
             items={hotelSlides}

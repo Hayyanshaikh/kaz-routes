@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useTransition } from "react";
 import CommonHeading from "../common/CommonHeading";
 import Container from "../Container";
 import Section from "../Container/Section";
@@ -8,10 +8,13 @@ import CommonSlider from "../common/CommonSlider";
 import { FILE_BASE_URL, PACKAGES } from "@/lib/constant";
 import { useControllerGetFindAllPackages } from "@/app/hooks/api";
 import PageLoading from "../common/PageLoading";
+import { useTranslations } from "use-intl/react";
 
 type Props = {};
 
 const PackageSection = (props: Props) => {
+  const t = useTranslations("home.destinations");
+
   const { data, isLoading } = useControllerGetFindAllPackages();
   const packages = data?.data;
 
@@ -40,10 +43,7 @@ const PackageSection = (props: Props) => {
     <Section className="bg-gray-100">
       <Container>
         <div>
-          <CommonHeading
-            title="Find Your Perfect Tour Package"
-            subtitle="Choose from our carefully curated selection of premium tour packages, each designed to provide unforgettable experiences."
-          />
+          <CommonHeading title={t("title")} subtitle={t("description")} />
           <CommonSlider
             breakpoints={{
               0: { slidesPerView: 1 },

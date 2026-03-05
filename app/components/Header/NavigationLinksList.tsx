@@ -1,9 +1,10 @@
 "use client";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 type NavigationLinksListProps = {
-  links: { href: string; label: string }[];
+  links: { href: string; label: string; key: string }[];
   wrapperClass?: string;
   itemClass?: string;
   onItemClick?: () => void;
@@ -16,6 +17,7 @@ const NavigationLinksList = ({
   onItemClick,
 }: NavigationLinksListProps) => {
   const pathname = usePathname();
+  const t = useTranslations();
 
   return (
     <div className={`flex flex-col md:flex-row ${wrapperClass}`}>
@@ -32,7 +34,7 @@ const NavigationLinksList = ({
               isActive ? "nav-link--active" : ""
             } ${itemClass}`}
           >
-            {link.label}
+            {t(link.key)}
           </Link>
         );
       })}

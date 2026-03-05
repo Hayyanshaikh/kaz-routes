@@ -7,10 +7,12 @@ import VehicleCard from "../Cards/VehicleCard";
 import { FILE_BASE_URL, VEHICLE_DATA } from "@/lib/constant";
 import { useControllerGetFindAllCars } from "@/app/hooks/api";
 import PageLoading from "../common/PageLoading";
+import { useTranslations } from "next-intl";
 
 type Props = {};
 
 const VehicleSection = (props: Props) => {
+  const t = useTranslations("home.cars");
   const { data, isLoading } = useControllerGetFindAllCars();
   const cars = data?.data;
 
@@ -22,10 +24,7 @@ const VehicleSection = (props: Props) => {
       <Section>
         <Container>
           <div>
-            <CommonHeading
-              title="Rent a Car for Your Journey"
-              subtitle="Choose from our diverse collection of well-maintained, comfortable vehicles suitable for any type of journey or adventure."
-            />
+            <CommonHeading title={t("title")} subtitle={t("description")} />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {cars?.map((car: any, index: number) => {
                 const features = [

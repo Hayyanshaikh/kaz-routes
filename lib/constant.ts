@@ -11,13 +11,19 @@ export const TOKEN_CREDENTIALS = {
 };
 
 export const NAVIGATION_LINKS = [
-  { href: "/", label: "Home" },
-  { href: "/search?category=sites", label: "Sites" },
-  { href: "/search?category=restaurants", label: "Restaurants" },
-  { href: "/search?category=packages", label: "Packages" },
-  { href: "/search?category=hotels", label: "Hotels" },
-  // { href: "/about", label: "About" },
-  // { href: "/contact", label: "Contact" },
+  { href: "/", label: "Home", key: "navbar.home" },
+  { href: "/search?category=sites", label: "Sites", key: "navbar.sites" },
+  {
+    href: "/search?category=restaurants",
+    label: "Restaurants",
+    key: "navbar.restaurants",
+  },
+  {
+    href: "/search?category=packages",
+    label: "Packages",
+    key: "navbar.packages",
+  },
+  { href: "/search?category=hotels", label: "Hotels", key: "navbar.hotels" },
 ];
 
 export const CATEGORIES = [

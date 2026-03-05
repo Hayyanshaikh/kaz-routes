@@ -3,13 +3,15 @@ import React from "react";
 import NavigationLinksList from "./NavigationLinksList";
 import Logo from "./Logo";
 import CommonButton from "../common/CommonButton";
+import { useTranslations } from "next-intl";
 
 type Props = {
   className?: string;
-  navigationLinks?: { href: string; label: string }[];
+  navigationLinks?: { href: string; label: string; key: string }[];
 };
 
 const NavigationDesktop = ({ className, navigationLinks = [] }: Props) => {
+  const t = useTranslations("header");
   return (
     <div className={`flex items-center justify-between w-full ${className}`}>
       {/* Logo */}
@@ -24,7 +26,7 @@ const NavigationDesktop = ({ className, navigationLinks = [] }: Props) => {
 
       {/* CTA Button */}
       <CommonButton
-        label="Create Plan"
+        label={t("action")}
         className="md:flex hidden"
         link="/plan/create "
       />

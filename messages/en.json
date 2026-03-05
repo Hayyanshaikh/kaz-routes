@@ -1,6 +1,55 @@
 {
+  "header": {
+    "action": "Create Plan"
+  },
+  "footer": {
+    "copyright": "Copyright ©2025 All rights reserved | Powered by",
+    "brand": "KazRoutes",
+    "tagline": "Your Travel Companion",
+    "links": {
+      "home": "Home",
+      "packages": "Packages",
+      "sites": "Sites",
+      "cars": "Cars",
+      "hotels": "Hotels",
+      "restaurants": "Restaurants",
+      "privacy": "Privacy Policy",
+      "terms": "Terms & Conditions",
+      "about": "About",
+      "contact": "Contact"
+    }
+  },
   "navbar": {
     "home": "Home",
-    "about": "About"
+    "sites": "Sites",
+    "restaurants": "Restaurants",
+    "packages": "Packages",
+    "hotels": "Hotels"
+  },
+  "home": {
+    "hero": {
+      "title": "Explore the World with Us",
+      "description": "Dive into cutting-edge technology and build the future."
+    },
+    "destinations": {
+      "title": "Explore Our Destinations",
+      "description": "Browse our curated destinations and start planning your journey today."
+    },
+    "packages": {
+      "title": "Find Your Perfect Tour Package",
+      "description": "Choose from our carefully curated selection of premium tour packages, each designed to provide unforgettable experiences."
+    },
+    "cars": {
+      "title": "Rent a Car for Your Journey",
+      "description": "Choose from our diverse collection of well-maintained, comfortable vehicles suitable for any type of journey or adventure."
+    },
+    "sites": {
+      "title": "Explore Our Global Sites",
+      "description": "Discover the diverse range of places we operate in, each offering unique experiences."
+    },
+    "restaurants": {
+      "title": "Explore Our Top Restaurants",
+      "description": "Discover the best dining experiences with our curated selection of top-rated restaurants."
+    }
   }
 }

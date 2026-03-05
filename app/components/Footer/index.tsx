@@ -9,8 +9,10 @@ import {
   LinkedinOutlined,
 } from "@ant-design/icons";
 import usePageContentStore from "@/app/store/usePageContent";
+import { useTranslations } from "next-intl";
 
 const Footer = () => {
+  const t = useTranslations("footer");
   const { pageContent } = usePageContentStore();
 
   const safeParse = (jsonString: string | undefined) => {
@@ -25,16 +27,16 @@ const Footer = () => {
   const socials = safeParse(pageContent?.contact?.socials);
 
   const navigationLinks = [
-    { label: "Home", href: "/" },
-    { label: "Packages", href: "search?category=packages" },
-    { label: "Sites", href: "search?category=sites" },
-    { label: "Cars", href: "search?category=cars" },
-    { label: "Hotels", href: "search?category=hotels" },
-    { label: "Restaurants", href: "search?category=restaurants" },
-    { label: "Privacy Policy", href: "/privacy-policy" },
-    { label: "Terms & Conditions", href: "/terms-conditions" },
-    { label: "About", href: "/about" },
-    { label: "Contact", href: "/contact" },
+    { label: "home", href: "/" },
+    { label: "packages", href: "/search?category=packages" },
+    { label: "sites", href: "/search?category=sites" },
+    { label: "cars", href: "/search?category=cars" },
+    { label: "hotels", href: "/search?category=hotels" },
+    { label: "restaurants", href: "/search?category=restaurants" },
+    { label: "privacy", href: "/privacy-policy" },
+    { label: "terms", href: "/terms-conditions" },
+    { label: "about", href: "/about" },
+    { label: "contact", href: "/contact" },
   ];
 
   return (
@@ -51,7 +53,7 @@ const Footer = () => {
                 href={link.href}
                 className="text-gray-400 hover:text-white transition-colors"
               >
-                {link.label}
+                {t(`links.${link.label}`)}
               </Link>
             ))}
           </div>
@@ -102,9 +104,9 @@ const Footer = () => {
         </div>
 
         <div className="text-center text-gray-500 text-xs mt-5">
-          Copyright ©2025 All rights reserved | Powered by{" "}
-          <span className="font-semibold text-primary">KazRoutes</span> - Your
-          Travel Companion
+          {t("copyright")}{" "}
+          <span className="font-semibold text-primary">{t("brand")}</span> -{" "}
+          {t("tagline")}
         </div>
       </Container>
     </footer>

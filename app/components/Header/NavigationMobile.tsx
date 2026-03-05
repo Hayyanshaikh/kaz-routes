@@ -5,14 +5,16 @@ import { MenuOutlined } from "@ant-design/icons"; // ✅ AntD Icon
 import { Drawer } from "antd"; // ✅ AntD Drawer
 import NavigationLinksList from "./NavigationLinksList";
 import Logo from "./Logo";
+import { useTranslations } from "next-intl";
 
 type Props = {
   className?: string;
-  navigationLinks?: { href: string; label: string }[];
+  navigationLinks?: { href: string; label: string; key: string }[];
 };
 
 const NavigationMobile = ({ className, navigationLinks = [] }: Props) => {
   const [open, setOpen] = useState(false);
+  const t = useTranslations("header");
 
   const handleClose = () => setOpen(false);
 
@@ -49,7 +51,7 @@ const NavigationMobile = ({ className, navigationLinks = [] }: Props) => {
 
           {/* CTA Button */}
           <CommonButton
-            label="Create Plan"
+            label={t("action")}
             link="/plan/create"
             className="w-full mt-auto px-4 mb-4"
           />
