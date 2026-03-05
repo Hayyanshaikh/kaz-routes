@@ -35,9 +35,8 @@ const HeroSection = ({
         fill
         className="object-cover"
         onError={(e) => {
-          (
-            e.target as HTMLImageElement
-          ).src = `https://placehold.co/1920x1080/4a5568/ffffff?text=Image+Error`;
+          (e.target as HTMLImageElement).src =
+            `https://placehold.co/1920x1080/4a5568/ffffff?text=Image+Error`;
         }}
       />
 
