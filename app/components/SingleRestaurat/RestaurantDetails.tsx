@@ -4,6 +4,7 @@ import CommonHeading from "../common/CommonHeading";
 import CommonButton from "../common/CommonButton";
 import CommonTabs from "../common/CommonTabs";
 import DishCard from "./DishCard";
+import { useTranslations } from "next-intl";
 
 type Restaurant = {
   name: string;
@@ -26,6 +27,7 @@ type Props = {
 };
 
 const RestaurantDetails = ({ restaurant }: Props) => {
+  const t = useTranslations("cards");
   const [showFull, setShowFull] = useState(false);
 
   const tabs = restaurant.dishes.map((dish) => ({
@@ -37,7 +39,7 @@ const RestaurantDetails = ({ restaurant }: Props) => {
   return (
     <section className="flex flex-col items-start flex-1 lg:w-1/2">
       <CommonHeading
-        className="text-left !mb-0"
+        className="text-left mb-0!"
         title={restaurant.name}
         subtitle={
           showFull
@@ -50,7 +52,7 @@ const RestaurantDetails = ({ restaurant }: Props) => {
           className="p-0 bg-transparent hover:bg-transparent text-gray-900 w-auto underline text-sm"
           onClick={() => setShowFull(!showFull)}
         >
-          {showFull ? "Show less" : "Show more"}
+          {showFull ? t("showLess") : t("showMore")}
         </button>
       </div>
 

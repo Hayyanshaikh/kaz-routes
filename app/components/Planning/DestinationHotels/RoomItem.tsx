@@ -12,7 +12,10 @@ interface Props {
   destination: any;
 }
 
+import { useTranslations } from "next-intl";
+
 const RoomItem = ({ room, isBooked, onBook, onRemove, destination }: Props) => {
+  const t = useTranslations("planning");
   const [open, setOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<any>(null);
   const { startDate, endDate } = useDestinationDates(destination);
@@ -27,7 +30,7 @@ const RoomItem = ({ room, isBooked, onBook, onRemove, destination }: Props) => {
             onClick={onRemove}
             className="bg-red-500 text-white px-2 py-0.5 rounded-full hover:bg-red-600"
           >
-            Delete
+            {t("delete")}
           </button>
         ) : (
           <button
@@ -41,7 +44,7 @@ const RoomItem = ({ room, isBooked, onBook, onRemove, destination }: Props) => {
             }}
             disabled={allowedDates.length === 0}
             title={
-              allowedDates.length === 0 ? "Please add nights to book" : "Book"
+              allowedDates.length === 0 ? t("addNightsToBook") : t("book")
             }
             className={`px-2 py-0.5 rounded-full text-white ${
               allowedDates.length === 0
@@ -49,7 +52,7 @@ const RoomItem = ({ room, isBooked, onBook, onRemove, destination }: Props) => {
                 : "bg-primary hover:bg-orange-600"
             }`}
           >
-            Book
+            {t("book")}
           </button>
         )}
       </div>
@@ -59,10 +62,10 @@ const RoomItem = ({ room, isBooked, onBook, onRemove, destination }: Props) => {
         open={open}
         setOpen={setOpen}
         centered={false}
-        title="Confirm Booking"
-        description={`Do you want to book room: ${room.room_name}?`}
-        confirmText="Book Now"
-        cancelText="Cancel"
+        title={t("confirmBooking")}
+        description={t("confirmBookingDesc", { name: room.room_name })}
+        confirmText={t("bookNow")}
+        cancelText={t("cancel")}
         onConfirm={() => {
           onBook(selectedDate, setSelectedDate);
           setOpen(false);
@@ -78,7 +81,7 @@ const RoomItem = ({ room, isBooked, onBook, onRemove, destination }: Props) => {
             value={selectedDate}
             onChange={(date) => setSelectedDate(date)}
             allowedDates={allowedDates}
-            label="Please select a date for your booking:"
+            label={t("selectBookingDate")}
           />
         </div>
       </CommonModal>

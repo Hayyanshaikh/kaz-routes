@@ -12,6 +12,7 @@ import { SiteBookingPayload } from "@/app/types/CommonType";
 import SiteForm from "../SiteForm";
 import { Form } from "antd";
 import { formatCurrency } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 type SiteType = {
   id: string;
@@ -43,6 +44,7 @@ type Props = {
 };
 
 const SitesDetail = ({ site }: Props) => {
+  const t = useTranslations("cards");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showFull, setShowFull] = useState(false);
   const [form] = Form.useForm();
@@ -69,15 +71,14 @@ const SitesDetail = ({ site }: Props) => {
       setIsModalOpen(false);
       form.resetFields();
       showSuccess({
-        message: "Booking Successful",
-        description: "Your booking has been confirmed successfully.",
+        message: t("booking.success"),
+        description: t("booking.successDesc"),
       });
     } catch (error: any) {
       showError({
-        message: "Submission Error",
+        message: t("booking.error"),
         description:
-          error?.response?.data?.message ||
-          "An error occurred while submitting the form.",
+          error?.response?.data?.message || t("booking.errorDesc"),
       });
       console.error("Error submitting form:", error);
     }
@@ -97,7 +98,7 @@ const SitesDetail = ({ site }: Props) => {
           className="p-0 bg-transparent hover:bg-transparent text-gray-900 w-auto underline text-sm"
           onClick={() => setShowFull(!showFull)}
         >
-          {showFull ? "Show less" : "Show more"}
+          {showFull ? t("showLess") : t("showMore")}
         </button>
       </div>
 
@@ -107,18 +108,18 @@ const SitesDetail = ({ site }: Props) => {
       <div className="flex items-center justify-between w-full gap-6 flex-wrap mb-8">
         {site.timings && (
           <div className="mt-6">
-            <p className="font-semibold text-gray-900 mb-3">Timings:</p>
+            <p className="font-semibold text-gray-900 mb-3">{t("timings")}:</p>
             <ul className="list-disc list-inside text-sm text-gray-700">
               <li>
-                <strong className="font-medium">Sight opening time:</strong>{" "}
+                <strong className="font-medium">{t("openingTime")}:</strong>{" "}
                 {dayjs(site.timings.start).format(DISPLAY_DATE)}
               </li>
               <li>
-                <strong className="font-medium">Sight closing time:</strong>{" "}
+                <strong className="font-medium">{t("closingTime")}:</strong>{" "}
                 {dayjs(site.timings.end).format(DISPLAY_DATE)}
               </li>
               <li>
-                <strong className="font-medium">Duration:</strong>{" "}
+                <strong className="font-medium">{t("duration")}:</strong>{" "}
                 {site.timings.duration_hours} hrs
               </li>
             </ul>
@@ -127,19 +128,19 @@ const SitesDetail = ({ site }: Props) => {
 
         {site.pricing && (
           <div className="mt-6">
-            <p className="font-semibold text-gray-900 mb-3">Pricing:</p>
+            <p className="font-semibold text-gray-900 mb-3">{t("pricing")}:</p>
             <ul className="list-disc list-inside text-sm text-gray-700">
               <li>
-                <strong className="font-medium">Adult:</strong>{" "}
+                <strong className="font-medium">{t("adult")}:</strong>{" "}
                 {formatCurrency(site.pricing.adult)}
               </li>
               <li>
-                <strong className="font-medium">Boy:</strong>{" "}
+                <strong className="font-medium">{t("boy")}:</strong>{" "}
                 {formatCurrency(site.pricing.boy)}
               </li>
               {site.pricing.child && (
                 <li>
-                  <strong className="font-medium">Child:</strong>{" "}
+                  <strong className="font-medium">{t("child")}:</strong>{" "}
                   {formatCurrency(site.pricing.child)}
                 </li>
               )}
@@ -149,7 +150,7 @@ const SitesDetail = ({ site }: Props) => {
 
         {site?.activities && site?.activities?.length > 0 && (
           <div className="mt-6">
-            <p className="font-semibold text-gray-900 mb-3">Facilities:</p>
+            <p className="font-semibold text-gray-900 mb-3">{t("facilities")}:</p>
             <ul className="list-disc list-inside text-sm text-gray-700">
               {site?.activities?.map((facility: string, i: number) => (
                 <li key={i}>{facility}</li>
@@ -160,7 +161,7 @@ const SitesDetail = ({ site }: Props) => {
       </div>
       <CommonButton
         onClick={() => setIsModalOpen(true)}
-        label="Book Now"
+        label={t("bookNow")}
         className="h-10 rounded-full w-full"
       />
 
@@ -170,10 +171,10 @@ const SitesDetail = ({ site }: Props) => {
         onClose={() => {
           form.resetFields();
         }}
-        title={`Book Site Visit at ${site.name}`}
-        description="Please fill out the form below to book your site visit."
-        confirmText="Confirm Booking"
-        cancelText="Cancel"
+        title={t("booking.siteTitle", { name: site.name })}
+        description={t("booking.siteDesc")}
+        confirmText={t("booking.confirmBooking")}
+        cancelText={t("booking.cancel")}
         onConfirm={() => form.submit()}
         destroyOnClose={false}
         loading={isPending}

@@ -6,8 +6,10 @@ import CommonSelect from "../common/CommonSelect";
 import CommonButton from "../common/CommonButton";
 import { CATEGORIES } from "@/lib/constant";
 import { Form } from "antd";
+import { useTranslations } from "next-intl";
 
 const SearchBar = () => {
+  const t = useTranslations("search");
   const [form] = Form.useForm();
   const router = useRouter();
   const [category, setCategory] = useState("");
@@ -20,7 +22,7 @@ const SearchBar = () => {
     if (category) {
       router.push(`/search?category=${encodeURIComponent(category)}`);
     } else {
-      alert("Category select karo pehle");
+      alert(t("alert"));
     }
   };
 
@@ -30,15 +32,15 @@ const SearchBar = () => {
         <div className="grid grid-cols-1 sm:grid-cols-1 gap-4 flex-1">
           <CommonSelect
             name="category"
-            label="Category"
+            label={t("label")}
             options={CATEGORIES}
             onValueChange={handleCategoryChange}
-            placeholder="Select Category"
+            placeholder={t("placeholder")}
           />
         </div>
 
         <CommonButton
-          label="Search"
+          label={t("button")}
           htmlType="submit"
           className="flex items-center gap-1 h-fit mt-auto"
         />

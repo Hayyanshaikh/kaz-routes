@@ -19,6 +19,7 @@ import dropdownManipulator from "@/app/manipulators/dropdownManipulator";
 import CommonCheckbox from "../common/CommonCheckbox";
 import CommonMultiSelect from "../common/CommonMultiSelect";
 import { MEALTYPE_DROPDOWN } from "@/lib/constant";
+import { useTranslations } from "next-intl";
 
 interface Props {
   form: any;
@@ -26,6 +27,8 @@ interface Props {
 }
 
 const VehicleBookingForm = ({ form, price }: Props) => {
+  const t = useTranslations("vehicleForm");
+  const tp = useTranslations("planning");
   const [difference, setDifference] = useState<number>(0);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [selectedHotels, setSelectedHotels] = useState<{
@@ -170,13 +173,13 @@ const VehicleBookingForm = ({ form, price }: Props) => {
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 mb-6">
         {index !== 0 && (
           <CommonButton
-            label="Copy from previous"
+            label={t("copyFromPrevious")}
             onClick={() => handleCopyFromPrevious(index)}
           />
         )}
         <CommonCheckbox
           name={[String(field.name), "outOfCity"]}
-          label="Out of City"
+          label={t("outOfCity")}
         />
       </div>
 
@@ -188,7 +191,7 @@ const VehicleBookingForm = ({ form, price }: Props) => {
             label="Hotel"
             name={[field.name, "hotel"]}
             options={hotelsList}
-            placeholder="- Select -"
+            placeholder={t("select")}
             onSelect={(value) => handleHotelSelect(value, index)}
           />
           {selectedHotels[field.name]?.rooms?.length > 0 && (
@@ -200,13 +203,13 @@ const VehicleBookingForm = ({ form, price }: Props) => {
                   label: `${room.room_name}`,
                   value: room.id,
                 }))}
-                placeholder="- Select Room -"
+                placeholder={t("selectRoom")}
               />
               <CommonInput
-                label="Qty"
+                label={t("qty")}
                 isRequired={false}
                 name={[field.name, "hotelRoomQty"]}
-                placeholder="Room Number"
+                placeholder={t("roomNumber")}
               />
             </>
           )}
@@ -218,7 +221,7 @@ const VehicleBookingForm = ({ form, price }: Props) => {
             label="Site"
             name={[field.name, "site"]}
             options={sitesList}
-            placeholder="- Select -"
+            placeholder={t("select")}
           />
         </div>
 
@@ -228,7 +231,7 @@ const VehicleBookingForm = ({ form, price }: Props) => {
             label="Restaurant"
             name={[field.name, "restaurant"]}
             options={restaurantsList}
-            placeholder="- Select -"
+            placeholder={t("select")}
             onSelect={(value) => {
               handleRestaurantSelect(value, index);
               form.setFieldValue([field.name, "dishes"], []);
@@ -238,13 +241,13 @@ const VehicleBookingForm = ({ form, price }: Props) => {
           {selectedRestaurants[field.name]?.dishes?.length > 0 && (
             <>
               <CommonSelect
-                label="Meal Type"
+                label={t("mealType")}
                 name={[field.name, "mealType"]}
                 options={MEALTYPE_DROPDOWN}
-                placeholder="- Select -"
+                placeholder={t("select")}
               />
               <CommonMultiSelect
-                label="Dishes"
+                label={t("dishes")}
                 name={[field.name, "dishes"]}
                 options={selectedRestaurants[field.name].dishes.map(
                   (dish: any) => ({
@@ -252,7 +255,7 @@ const VehicleBookingForm = ({ form, price }: Props) => {
                     value: dish.id,
                   })
                 )}
-                placeholder="- Select Dishes -"
+                placeholder={t("selectDishes")}
                 onValueChange={(dishIds: string[]) => {
                   setSelectedDishes((prev: any) => ({
                     ...prev,
@@ -263,9 +266,9 @@ const VehicleBookingForm = ({ form, price }: Props) => {
               />
               {selectedDishes?.[field.name]?.length > 0 && (
                 <CommonMultiSelect
-                  label="Variants"
+                  label={t("variants")}
                   name={[field.name, "variants"]}
-                  placeholder="- Select Variants -"
+                  placeholder={t("selectVariants")}
                   options={selectedDishes[field.name]
                     .map((dishId: number) => {
                       const dish = selectedRestaurants[
@@ -290,10 +293,10 @@ const VehicleBookingForm = ({ form, price }: Props) => {
 
       {/* Notes Textarea */}
       <div className="flex flex-col gap-2">
-        <label className="block text-sm font-medium text-gray-700">Notes</label>
+        <label className="block text-sm font-medium text-gray-700">{t("notes")}</label>
         <CommonTextarea
           name={[field.name, "notes"]}
-          placeholder="e.g., leave early for out-of-city, late check-in"
+          placeholder={t("notesPlaceholder")}
         />
       </div>
     </div>
@@ -305,49 +308,49 @@ const VehicleBookingForm = ({ form, price }: Props) => {
       <div className="flex flex-col gap-4 w-full md:max-w-[400px]">
         <CommonInput
           name="customerName"
-          label="Customer Name"
+          label={t("customerName")}
           placeholder="Your Name"
         />
 
         <CommonInput
           type="email"
           name="email"
-          label="Customer Email"
+          label={t("customerEmail")}
           placeholder="Email"
         />
 
         <CommonInput
           type="tel"
           name="phone"
-          label="Customer Phone"
+          label={t("customerPhone")}
           placeholder="Contact Number"
         />
 
         <CommonDatePicker
           name="pickupDate"
-          label="Pickup Date"
-          placeholder="Select Pickup Date"
+          label={t("pickupDate")}
+          placeholder={t("pickupPlaceholder")}
         />
 
         <CommonDatePicker
           name="dropOffDate"
-          label="Drop-off Date"
-          placeholder="Select Drop-off Date"
+          label={t("dropOffDate")}
+          placeholder={t("dropOffPlaceholder")}
         />
 
         <div className="p-4 bg-gray-100 rounded-md border border-gray-300">
           <div className="space-y-4">
             <div className="flex justify-between items-center text-gray-700">
-              <span className="font-medium">Days</span>
+              <span className="font-medium">{t("days")}</span>
               <span>{difference}</span>
             </div>
             <div className="flex justify-between items-center text-gray-700">
-              <span className="font-medium">Rate / day</span>
+              <span className="font-medium">{t("rate")}</span>
               <span>{formatCurrency(price)}</span>
             </div>
             <hr className="border-gray-300" />
             <div className="flex justify-between items-center">
-              <span className="text-gray-800">Estimated Total</span>
+              <span className="text-gray-800">{t("estimatedTotal")}</span>
               {formatCurrency(totalPrice)}
 
               <Form.Item name="estimated_total" hidden>
@@ -360,8 +363,8 @@ const VehicleBookingForm = ({ form, price }: Props) => {
         <div className="w-full">
           <CommonTextarea
             name="specialRequests"
-            label="Special Requests"
-            placeholder="Additional Message"
+            label={t("specialRequests")}
+            placeholder={t("additionalMessage")}
           />
         </div>
 
@@ -378,9 +381,9 @@ const VehicleBookingForm = ({ form, price }: Props) => {
       {/* Right Column */}
       <div className="flex-1 w-full">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-medium">Trip Days</h3>
+          <h3 className="text-lg font-medium">{t("tripDays")}</h3>
           <span className="text-gray-800">
-            {difference} days | {formatCurrency(totalPrice)}
+            {t("tripSummary", { days: difference, total: formatCurrency(totalPrice) })}
           </span>
         </div>
         <Form.List name="days">
@@ -393,7 +396,7 @@ const VehicleBookingForm = ({ form, price }: Props) => {
                   );
                   return {
                     key: String(i),
-                    header: `Day ${i + 1} • ${currentDate.format(
+                    header: `${tp("day", { count: i + 1 })} • ${currentDate.format(
                       "ddd, DD MMM YYYY"
                     )}`,
                     content: renderContent(field, i, currentDate),
@@ -401,7 +404,7 @@ const VehicleBookingForm = ({ form, price }: Props) => {
                 })}
               />
             ) : (
-              <Empty description="No trip days available" />
+              <Empty description={tp("noTripDays")} />
             )
           }
         </Form.List>

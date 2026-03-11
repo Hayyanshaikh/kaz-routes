@@ -16,16 +16,19 @@ interface Props {
   days: any[];
 }
 
+import { useTranslations } from "next-intl";
+
 const PlanDestinationDetail: React.FC<Props> = ({ days }) => {
+  const t = useTranslations("planning");
   const timelineItems = days.map((day, index) => ({
     key: index,
-    dot: <CheckCircleOutlined className="!text-green-500 text-lg" />,
+    dot: <CheckCircleOutlined className="text-green-500! text-lg" />,
     children: (
       <div className="pb-6">
         {/* Header */}
         <div className="flex gap-3 items-center mb-3">
           <h3 className="text-sm md:text-base font-bold text-gray-800">
-            {day.destination} - Day {index + 1}
+            {day.destination} - {t("day", { count: index + 1 })}
           </h3>
           <CommonBadge
             color="success"
@@ -40,7 +43,7 @@ const PlanDestinationDetail: React.FC<Props> = ({ days }) => {
             day?.carBookings?.length === 0 &&
             day?.restaurantBookings?.length === 0 && (
               <div className="md:col-span-2 text-center text-gray-500 py-6">
-                <Empty description="You don’t have any plan for this day" />
+                <Empty description={t("noPlanDay")} />
               </div>
             )}
 
@@ -48,14 +51,14 @@ const PlanDestinationDetail: React.FC<Props> = ({ days }) => {
           {day?.hotelBookings?.length > 0 && (
             <div>
               <h4 className="flex items-center gap-2 font-semibold mb-2">
-                <HomeOutlined className="!text-primary" /> Hotels
+                <HomeOutlined className="text-primary!" /> {t("hotels")}
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-3">
                 {day?.hotelBookings?.map((h: any, idx: number) => (
                   <CommonCard
                     key={idx}
                     id={h?.hotel_id}
-                    label="Hotel"
+                    label={t("hotelSingular")}
                     name={h?.hotel_name}
                     image={h?.thumbnail || null}
                     description={h?.room_name}
@@ -69,14 +72,14 @@ const PlanDestinationDetail: React.FC<Props> = ({ days }) => {
           {day?.siteBookings?.length > 0 && (
             <div>
               <h4 className="flex items-center gap-2 font-semibold mb-2">
-                <EnvironmentOutlined className="!text-primary" /> Sites
+                <EnvironmentOutlined className="text-primary!" /> {t("sites")}
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-3">
                 {day?.siteBookings?.map((s: any, idx: number) => (
                   <CommonCard
                     key={idx}
                     id={s?.id}
-                    label="Site"
+                    label={t("siteSingular")}
                     name={s?.name}
                     image={s?.thumbnail || null}
                     description={s?.name}
@@ -90,23 +93,23 @@ const PlanDestinationDetail: React.FC<Props> = ({ days }) => {
           {day?.carBookings?.length > 0 && (
             <div>
               <h4 className="flex items-center gap-2 font-semibold mb-2">
-                <CarOutlined className="!text-primary" /> Cars
+                <CarOutlined className="text-primary!" /> {t("cars")}
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-3">
                 {day?.carBookings?.map((c: any, idx: number) => (
                   <CommonCard
                     key={idx}
                     id={c?.id}
-                    label="Car"
+                    label={t("carSingular")}
                     name={`${c?.brand} ${c?.model}`}
                     image={c?.thumbnail || null}
                     description={
                       <div>
                         <span className="block">
-                          Dropoff: {c?.dropoff_location}
+                          {t("dropoff")} {c?.dropoff_location}
                         </span>
                         <span className="block">
-                          Pickup: {c?.pickup_location}
+                          {t("pickup")} {c?.pickup_location}
                         </span>
                       </div>
                     }
@@ -120,17 +123,17 @@ const PlanDestinationDetail: React.FC<Props> = ({ days }) => {
           {day?.restaurantBookings?.length > 0 && (
             <div>
               <h4 className="flex items-center gap-2 font-semibold mb-2">
-                <ShopOutlined className="!text-primary" /> Restaurants
+                <ShopOutlined className="text-primary!" /> {t("restaurants")}
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-3">
                 {day?.restaurantBookings?.map((r: any, idx: number) => (
                   <CommonCard
                     key={idx}
                     id={r?.restaurantId}
-                    label="Restaurant"
+                    label={t("restaurantSingular")}
                     name={r?.dishName}
                     image={r?.thumbnail || null}
-                    description={`Quantity: ${r?.quantity}`}
+                    description={`${t("quantity")} ${r?.quantity}`}
                   />
                 ))}
               </div>
@@ -143,13 +146,13 @@ const PlanDestinationDetail: React.FC<Props> = ({ days }) => {
 
   return (
     <div className="px-4 py-6 border-t pt-10 border-gray-300 bg-gray-50">
-      <Timeline className="!p-0" items={timelineItems} />
+      <Timeline className="p-0!" items={timelineItems} />
       <div className="text-center mt-6">
         <h2 className="text-lg md:text-xl font-bold text-gray-800">
-          End of Adventure!
+          {t("endAdventure")}
         </h2>
         <p className="text-xs md:text-sm text-gray-500">
-          Thanks for exploring with us ✨
+          {t("thanksExploring")}
         </p>
       </div>
     </div>

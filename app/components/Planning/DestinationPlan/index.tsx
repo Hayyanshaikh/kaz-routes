@@ -15,7 +15,10 @@ import { PlusOutlined, MinusOutlined } from "@ant-design/icons";
 import { getDestinationDates } from "@/lib/utils";
 import dayjs from "dayjs";
 
+import { useTranslations } from "next-intl";
+
 const DestinationPlan = () => {
+  const t = useTranslations("planning");
   const router = useRouter();
   const { plan, dayCount, usedDays } = usePlanStore();
   const { addDestination, destinations, addNight, updateDestination } =
@@ -73,12 +76,12 @@ const DestinationPlan = () => {
     <div className="h-full flex flex-col">
       {/* Search / Add Destination */}
       <label className="block text-xs text-gray-600 mb-2 font-medium">
-        Add Destination:
+        {t("addDestination")}
       </label>
       <AutoComplete
         className="w-full"
         options={citiesOption}
-        placeholder="Search Destination"
+        placeholder={t("searchDestination")}
         value={searchValue}
         onChange={(val) => setSearchValue(val)}
         onSelect={handleSelect}
@@ -89,7 +92,7 @@ const DestinationPlan = () => {
       />
       {remainingNights < 1 && (
         <p className="text-[10px] text-red-500 mt-1">
-          No nights remaining in your plan.
+          {t("noNightsRemaining")}
         </p>
       )}
 
@@ -97,8 +100,8 @@ const DestinationPlan = () => {
       <div className="mt-3 mb-10 overflow-auto">
         {destinations?.length > 0 && (
           <div className="flex justify-between gap-2 text-xs text-gray-800 font-light px-2">
-            <span>Destination</span>
-            <span>Nights</span>
+            <span>{t("destination")}</span>
+            <span>{t("nights")}</span>
           </div>
         )}
         <DestinationList destinations={destinations} />
@@ -110,14 +113,13 @@ const DestinationPlan = () => {
       <CommonModal
         open={isModalOpen}
         setOpen={setIsModalOpen}
-        title="Select Nights"
-        confirmText="Add Destination"
+        title={t("selectNights")}
+        confirmText={t("addDestination")}
         onConfirm={handleConfirmAddition}
       >
         <div className="py-4">
           <p className="text-sm text-gray-600 mb-4">
-            How many nights would you like to stay in{" "}
-            <span className="font-semibold">{selectedOption?.label}</span>?
+            {t("stayQuestion", { name: selectedOption?.label })}
           </p>
           <div className="flex items-center justify-center gap-6">
             <Button
@@ -140,11 +142,13 @@ const DestinationPlan = () => {
           </div>
           <p className="text-xs text-gray-400 mt-4 text-center">
             {remainingNights > 0
-              ? `You have ${remainingNights} night${remainingNights > 1 ? "s" : ""} remaining.`
-              : "No nights remaining."}
+              ? remainingNights === 1
+                ? t("oneNightRemaining")
+                : t("nightsRemaining", { count: remainingNights })
+              : t("noNightsLeft")}
           </p>
           <p className="text-xs text-gray-400 mt-1 text-center">
-            At least 1 night is required.
+            {t("atLeastOneNight")}
           </p>
         </div>
       </CommonModal>

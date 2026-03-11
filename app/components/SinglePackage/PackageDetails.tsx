@@ -5,6 +5,7 @@ import CommonButton from "../common/CommonButton";
 import CommonTabs from "../common/CommonTabs";
 import { RoomType } from "@/app/types/CommonType";
 import Item from "./Item";
+import { useTranslations } from "next-intl";
 
 // ✅ Ant Design Icons import
 import {
@@ -41,6 +42,11 @@ const PackageDetails = ({ packageDetail }: Props) => {
     content: <Item item={item} key={index} packageDetail={packageDetail} />,
   }));
 
+  const t = useTranslations("cards");
+  const tp = useTranslations("planning");
+  const tc = useTranslations("common"); // For days, adults, children if they are in common
+  // Checking where days, adults etc are... they are in planning mostly.
+
   return (
     <section className="flex flex-col items-start flex-1 lg:w-1/2">
       <CommonHeading
@@ -57,7 +63,7 @@ const PackageDetails = ({ packageDetail }: Props) => {
           className="p-0 bg-transparent hover:bg-transparent text-gray-900 w-auto underline text-sm"
           onClick={() => setShowFull(!showFull)}
         >
-          {showFull ? "Show less" : "Show more"}
+          {showFull ? t("showLess") : t("showMore")}
         </button>
       </div>
       <h1 className={`text-xl sm:text-2xl font-bold mb-2`}>
@@ -70,28 +76,28 @@ const PackageDetails = ({ packageDetail }: Props) => {
         <div className="flex items-start flex-col gap-2">
           <ClockCircleOutlined style={{ fontSize: 20 }} />
           <span className="text-sm">
-            <strong className="font-medium">Days:</strong>{" "}
+            <strong className="font-medium">{t("days", { count: "" }).replace(":", "")}:</strong>{" "}
             {packageDetail?.duration?.days}
           </span>
         </div>
         <div className="flex items-start flex-col gap-2">
           <TeamOutlined style={{ fontSize: 20 }} />
           <span className="text-sm">
-            <strong className="font-medium">Adults:</strong>{" "}
+            <strong className="font-medium">{tp("adults")}:</strong>{" "}
             {packageDetail?.duration?.adults}
           </span>
         </div>
         <div className="flex items-start flex-col gap-2">
           <UserOutlined style={{ fontSize: 20 }} />
           <span className="text-sm">
-            <strong className="font-medium">Children:</strong>{" "}
+            <strong className="font-medium">{tp("children")}:</strong>{" "}
             {packageDetail?.duration?.children}
           </span>
         </div>
         <div className="flex items-start flex-col gap-2">
           <UserOutlined style={{ fontSize: 20 }} />
           <span className="text-sm">
-            <strong className="font-medium">Infants:</strong>{" "}
+            <strong className="font-medium">{tp("infants")}:</strong>{" "}
             {packageDetail?.duration?.infants}
           </span>
         </div>

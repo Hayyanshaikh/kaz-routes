@@ -19,11 +19,13 @@ import PackageCard from "../Cards/PackageCard";
 import VehicleCard from "../Cards/VehicleCard";
 import HotelCard from "../Cards/HotelCard";
 import CommonPagination from "../common/CommonPagination";
+import { useTranslations } from "next-intl";
 
 const SearchComponent = () => {
   const searchParams = useSearchParams();
   const category = searchParams.get("category");
   const [currentPage, setCurrentPage] = useState(1);
+  const t = useTranslations("search.categories");
 
   useEffect(() => {
     // jab category change ho, current page reset ho jaye 1
@@ -157,11 +159,11 @@ const SearchComponent = () => {
             <CommonButton
               key={cat.value}
               link={`search?category=${cat.value}`}
-              label={cat.label}
+              label={t(cat.value)}
               className={`${
                 cat.value === category
                   ? ""
-                  : "*:!border *:!border-gray-300 *:!bg-transparent *:!text-black *:!hover:text-white *:!hover:border-primary"
+                  : "*:border! *:border-gray-300! *:bg-transparent! *:text-black! *:hover:text-white *:hover:border-primary"
               }`}
             />
           ))}

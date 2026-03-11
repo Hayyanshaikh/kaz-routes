@@ -7,6 +7,7 @@ import CommonBadge from "../common/CommonBadge";
 import CommonButton from "../common/CommonButton";
 import Image from "next/image";
 import { FILE_BASE_URL } from "@/lib/constant";
+import { useTranslations } from "next-intl";
 
 interface RestaurantCardProps {
   restaurant: {
@@ -36,6 +37,7 @@ const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant }) => {
     dishes = [],
     seats = 108,
   } = restaurant;
+  const t = useTranslations("cards");
 
   const image = images?.[0]
     ? `${FILE_BASE_URL}/${images[0]}`
@@ -58,7 +60,7 @@ const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant }) => {
           <CommonBadge label={address || "Restaurant"} />
           <div className="flex items-center text-xs gap-1 bg-white px-2 py-1 rounded-full text-gray-600 font-semibold">
             <CoffeeOutlined className="text-primary" />
-            {dishCount} Dishes
+            {t("dishes", { count: dishes.length })}
           </div>
         </div>
       </div>
@@ -87,7 +89,7 @@ const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant }) => {
 
         <CommonButton
           link={`restaurants/${id}`}
-          label="View Details"
+          label={t("viewDetails")}
           className="w-full mt-auto"
           icon={<ArrowRightOutlined />}
           iconPosition="right"

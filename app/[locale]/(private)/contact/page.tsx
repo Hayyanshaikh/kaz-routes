@@ -17,10 +17,12 @@ import usePageContentStore from "@/app/store/usePageContent";
 import { useControllerContactSubmit } from "@/app/hooks/api";
 import { showError, showSuccess } from "@/app/components/common/CommonSonner";
 import { Form } from "antd";
+import { useTranslations } from "next-intl";
 
 const Contact = () => {
   const { pageContent } = usePageContentStore();
   const [form] = Form.useForm();
+  const t = useTranslations("pages.contact");
 
   const { mutate: createContact, isPending } = useControllerContactSubmit();
 
@@ -47,18 +49,17 @@ const Contact = () => {
     createContact(values, {
       onSuccess: () => {
         showSuccess({
-          message: "Contact created successfully!",
-          description: "We will get back to you shortly.",
+          message: t("messages.success"),
+          description: t("messages.successDesc"),
         });
         form.resetFields();
       },
       onError: (err: any) => {
         console.error("❌ Contact creation failed:", err);
         showError({
-          message: "Contact creation failed.",
+          message: t("messages.error"),
           description:
-            err?.response?.data?.message ||
-            "An error occurred. Please try again later.",
+            err?.response?.data?.message || t("messages.errorDesc"),
         });
       },
     });
@@ -67,41 +68,45 @@ const Contact = () => {
   return (
     <>
       <Head>
-        <title>Contact Us</title>
+        <title>{t("title")}</title>
       </Head>
       {parsedData.form.enabled && (
         <Section>
           <Container>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
               <h2 className="text-4xl font-bold leading-snug mb-6 text-gray-900">
-                {parsedData.header.title || "We're Here to Help — Contact Us"}
+                {parsedData.header.title || t("headerTitle")}
               </h2>
 
               <Form form={form} layout="vertical" onFinish={onSubmit}>
-                <CommonInput name="name" label="Name" placeholder="Your Name" />
+                <CommonInput
+                  name="name"
+                  label={t("form.name")}
+                  placeholder={t("form.namePlaceholder")}
+                />
 
                 <CommonInput
                   name="email"
-                  label="Email"
+                  label={t("form.email")}
                   type="email"
-                  placeholder="Your Email"
+                  placeholder={t("form.emailPlaceholder")}
                 />
 
                 <CommonInput
                   name="phone"
-                  label="Phone"
+                  label={t("form.phone")}
                   type="tel"
-                  placeholder="Your Phone"
+                  placeholder={t("form.phonePlaceholder")}
                 />
 
                 <CommonTextarea
                   name="message"
-                  label="Message"
-                  placeholder="Your Message"
+                  label={t("form.message")}
+                  placeholder={t("form.messagePlaceholder")}
                   className="h-32"
                 />
 
-                <CommonButton label="Submit" type="submit" />
+                <CommonButton label={t("form.submit")} type="submit" />
               </Form>
             </div>
           </Container>
@@ -111,13 +116,13 @@ const Contact = () => {
       <Section className="bg-gray-100">
         <Container>
           <CommonHeading
-            title="Our Contact Details"
-            subtitle="Get in touch with us for any inquiries or support."
+            title={t("detailsTitle")}
+            subtitle={t("detailsSubtitle")}
           />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             {/* Emails */}
             <div className="flex flex-col items-center gap-4">
-              <MailOutlined className="!text-primary text-4xl" />
+              <MailOutlined className="text-primary! text-4xl" />
               <div className="text-center">
                 {parsedData.info.emails?.map((email: string, i: number) => (
                   <p key={i}>
@@ -134,7 +139,7 @@ const Contact = () => {
 
             {/* Phones */}
             <div className="flex flex-col items-center gap-4">
-              <PhoneOutlined className="!text-primary text-4xl" />
+              <PhoneOutlined className="text-primary! text-4xl" />
               <div className="text-center">
                 {parsedData.info.phones?.map((phone: string, i: number) => (
                   <p key={i}>
@@ -151,7 +156,7 @@ const Contact = () => {
 
             {/* Address */}
             <div className="flex flex-col items-center gap-4">
-              <EnvironmentOutlined className="!text-primary text-4xl" />
+              <EnvironmentOutlined className="text-primary! text-4xl" />
               <div className="text-center text-gray-600">
                 <p>{parsedData.info.address}</p>
                 <p>{parsedData.info.hours}</p>

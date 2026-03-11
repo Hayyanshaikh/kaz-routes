@@ -12,8 +12,10 @@ import CommonButton from "../../common/CommonButton";
 import { transformToDayWise } from "@/app/manipulators/planManipulator";
 import dayjs from "dayjs";
 import { message } from "antd";
+import { useTranslations } from "next-intl";
 
 const Index = () => {
+  const t = useTranslations("planning");
   const { plan, resetPlan } = usePlanStore();
   const { destinations, resetDestinations } = useDestinationStore();
   const router = useRouter();
@@ -65,7 +67,7 @@ const Index = () => {
           error?.response?.data || error,
         );
         message.error(
-          error?.response?.data?.message || "Failed to create plan.",
+          error?.response?.data?.message || t("createError"),
         );
       },
     });
@@ -86,7 +88,7 @@ const Index = () => {
         <PlanDestinationDetail days={convertToDaywise} />
         <div className="flex items-center justify-center pb-10 bg-gray-50">
           <CommonButton
-            label="Confirm Plan"
+            label={t("confirmPlan")}
             onClick={handleCreateTravelPlan}
             loading={isPending || isRedirecting}
           />

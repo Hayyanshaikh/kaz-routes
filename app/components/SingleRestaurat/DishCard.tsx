@@ -8,6 +8,7 @@ import { RestaurantBookingPayload } from "@/app/types/CommonType";
 import { Form, Input, DatePicker, TimePicker, InputNumber } from "antd";
 import RestaurantForm from "../RestaurantForm";
 import { formatCurrency } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 type DishCardProps = {
   dish: any;
@@ -15,6 +16,7 @@ type DishCardProps = {
 };
 
 const DishCard = ({ dish, restaurantDetail }: DishCardProps) => {
+  const t = useTranslations("cards");
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
 
@@ -40,7 +42,7 @@ const DishCard = ({ dish, restaurantDetail }: DishCardProps) => {
     createBooking(payload)
       .then(() => {
         showSuccess({
-          message: "Booking Confirmed",
+          message: t("booking.confirm"),
           description:
             "Your booking request has been successfully submitted. We will get back to you shortly.",
         });
@@ -50,7 +52,7 @@ const DishCard = ({ dish, restaurantDetail }: DishCardProps) => {
       .catch((error) => {
         console.error("Booking Error:", error);
         showError({
-          message: "Booking Failed",
+          message: t("booking.discard"),
           description:
             error?.response?.data?.message ||
             "Something went wrong while processing your booking.",
@@ -88,13 +90,13 @@ const DishCard = ({ dish, restaurantDetail }: DishCardProps) => {
         ))}
       </div>
 
-      <CommonButton label="Book Now" onClick={() => setOpen(true)} />
+      <CommonButton label={t("bookNow")} onClick={() => setOpen(true)} />
 
       <CommonModal
         open={open}
         setOpen={setOpen}
-        title={`Restaurant Booking ${dish.name}`}
-        confirmText="Submit Booking"
+        title={t("booking.restaurantTitle", { name: dish.name })}
+        confirmText={t("booking.submit")}
         onClose={() => form.resetFields()}
         destroyOnClose={false}
         loading={isPending}

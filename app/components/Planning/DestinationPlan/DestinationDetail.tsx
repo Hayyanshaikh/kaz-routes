@@ -7,25 +7,28 @@ import PlanSites from "../PlanSites";
 import PlanRestaurants from "../PlanRestaurants";
 import PlanCars from "../PlanCars";
 
+import { useTranslations } from "next-intl";
+
 const DestinationDetail = ({ destinationData }: { destinationData: any }) => {
+  const t = useTranslations("planning");
   const links = [
     {
-      label: "Hotels",
+      label: t("hotels"),
       value: "hotels",
       content: <DestinationHotels destination={destinationData} />,
     },
     {
-      label: "Sites",
+      label: t("sites"),
       value: "sites",
       content: <PlanSites destination={destinationData} />,
     },
     {
-      label: "Restaurants",
+      label: t("restaurants"),
       value: "restaurants",
       content: <PlanRestaurants destination={destinationData} />,
     },
     {
-      label: "Cars",
+      label: t("cars"),
       value: "cars",
       content: <PlanCars destination={destinationData} />,
     },

@@ -6,11 +6,13 @@ import { ArrowRightOutlined } from "@ant-design/icons";
 import Image from "next/image";
 import { FILE_BASE_URL } from "@/lib/constant";
 import CommonBadge from "../common/CommonBadge";
+import { useTranslations } from "next-intl";
 
 const HotelCard = ({ hotelData }: { hotelData: any }) => {
   if (!hotelData) {
     return;
   }
+  const t = useTranslations("cards");
 
   const { hotel_name, description, city, images, rooms, id } = hotelData;
 
@@ -29,7 +31,7 @@ const HotelCard = ({ hotelData }: { hotelData: any }) => {
           }}
         />
         <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/50 to-transparent p-4 flex items-center justify-between">
-          <CommonBadge label={`Total Rooms: ${rooms?.length}`} />
+          <CommonBadge label={t("totalRooms", { count: rooms?.length })} />
         </div>
       </div>
 
@@ -47,7 +49,7 @@ const HotelCard = ({ hotelData }: { hotelData: any }) => {
         <CommonButton
           link={`hotels/${id}`}
           className="w-full mt-auto"
-          label="View Details"
+          label={t("viewDetails")}
           iconPosition="right"
           icon={<ArrowRightOutlined />}
         />

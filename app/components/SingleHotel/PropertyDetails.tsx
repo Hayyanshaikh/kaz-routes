@@ -6,6 +6,7 @@ import Services from "./Services";
 import CommonTabs from "../common/CommonTabs";
 import Room from "./Room";
 import { RoomType } from "@/app/types/CommonType";
+import { useTranslations } from "next-intl";
 
 export type Hotel = {
   name: string;
@@ -20,6 +21,7 @@ type Props = {
 };
 
 const PropertyDetails = ({ hotel }: Props) => {
+  const t = useTranslations("cards");
   const [showFull, setShowFull] = useState(false);
 
   const tabs = hotel.rooms.map((room, index) => ({
@@ -42,7 +44,7 @@ const PropertyDetails = ({ hotel }: Props) => {
           className="p-0 bg-transparent hover:bg-transparent text-gray-900 w-auto underline text-sm"
           onClick={() => setShowFull(!showFull)}
         >
-          {showFull ? "Show less" : "Show more"}
+          {showFull ? t("showLess") : t("showMore")}
         </button>
       </div>
 

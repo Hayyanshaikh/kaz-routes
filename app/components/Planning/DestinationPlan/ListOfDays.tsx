@@ -23,7 +23,10 @@ const TagItem = ({
   </div>
 );
 
+import { useTranslations } from "next-intl";
+
 const ListOfDays = () => {
+  const t = useTranslations("planning");
   const { plan } = usePlanStore();
   const {
     destinations,
@@ -38,7 +41,7 @@ const ListOfDays = () => {
 
   if (!destinations || destinations.length === 0)
     return (
-      <p className="text-xs text-gray-400 italic">No destinations added yet.</p>
+      <p className="text-xs text-gray-400 italic">{t("noDestinationsAdded")}</p>
     );
 
   const collapseItems = daywiseData.map((day, idx) => {
@@ -51,7 +54,7 @@ const ListOfDays = () => {
     return {
       key: `day-${idx}`,
       label: (
-        <span className="text-xs font-medium">{`Day ${idx + 1} - ${dayjs(
+        <span className="text-xs font-medium">{`${t("day", { count: idx + 1 })} - ${dayjs(
           day.date,
         ).format("DD MMM YYYY")}`}</span>
       ),
@@ -59,7 +62,7 @@ const ListOfDays = () => {
         <div className="space-y-3">
           {day.hotelBookings.length > 0 && (
             <div>
-              <h3 className="font-semibold text-gray-800 mb-1">Hotels</h3>
+              <h3 className="font-semibold text-gray-800 mb-1">{t("hotels")}</h3>
               <div className="flex flex-wrap gap-2">
                 {day.hotelBookings.map((h, i) => (
                   <TagItem
@@ -79,7 +82,7 @@ const ListOfDays = () => {
           )}
           {day.siteBookings.length > 0 && (
             <div>
-              <h3 className="font-semibold text-gray-800 mb-1">Sites</h3>
+              <h3 className="font-semibold text-gray-800 mb-1">{t("sites")}</h3>
               <div className="flex flex-wrap gap-2">
                 {day.siteBookings.map((s, i) => (
                   <TagItem
@@ -99,7 +102,7 @@ const ListOfDays = () => {
           )}
           {day.restaurantBookings.length > 0 && (
             <div>
-              <h3 className="font-semibold text-gray-800 mb-1">Restaurants</h3>
+              <h3 className="font-semibold text-gray-800 mb-1">{t("restaurants")}</h3>
               <div className="flex flex-wrap gap-2">
                 {day.restaurantBookings.map((r, i) => (
                   <TagItem
@@ -119,12 +122,12 @@ const ListOfDays = () => {
           )}
           {day.carBookings.length > 0 && (
             <div>
-              <h3 className="font-semibold text-gray-800 mb-1">Cars</h3>
+              <h3 className="font-semibold text-gray-800 mb-1">{t("cars")}</h3>
               <div className="flex flex-wrap gap-2">
                 {day.carBookings.map((c, i) => (
                   <TagItem
                     key={`car-${i}`}
-                    label={c.brand || c.model || "Car"}
+                    label={c.brand || c.model || t("cars").slice(0, -1)} // Car is plural, slice for singular as fallback
                     onDelete={() =>
                       removeCarByDate(
                         day.destinationId,
@@ -140,7 +143,7 @@ const ListOfDays = () => {
         </div>
       ) : (
         <Empty
-          description="No bookings for this day"
+          description={t("noBookingsDay")}
           image={Empty.PRESENTED_IMAGE_SIMPLE}
         />
       ),
@@ -151,7 +154,7 @@ const ListOfDays = () => {
     daywiseData?.length > 0 && (
       <div className="mt-auto">
         <label className="block text-xs text-gray-600 mb-2 font-medium">
-          Summary:
+          {t("summary")}
         </label>
         <div className=" max-h-[40vh] overflow-auto">
           <Collapse size="small" accordion items={collapseItems} />

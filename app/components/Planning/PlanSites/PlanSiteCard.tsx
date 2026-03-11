@@ -6,6 +6,7 @@ import { ClockCircleOutlined, HourglassOutlined } from "@ant-design/icons";
 import CommonButton from "../../common/CommonButton";
 import dayjs from "dayjs";
 import { useFormatCurrency } from "@/app/hooks/useFormatCurrency";
+import { useTranslations } from "next-intl";
 
 interface PlanSiteCardProps {
   imageSrc: string;
@@ -32,12 +33,13 @@ const PlanSiteCard: React.FC<PlanSiteCardProps> = ({
   startTime,
   endTime,
   duration,
-  buttonText = "Book Now",
+  buttonText,
   isBooked = false,
   onBook,
   onRemove,
   disabled,
 }) => {
+  const t = useTranslations("search");
   const { format } = useFormatCurrency();
 
   // Dummy date ke sath time attach karo
@@ -58,7 +60,7 @@ const PlanSiteCard: React.FC<PlanSiteCardProps> = ({
           className="h-40 w-full object-cover rounded-t-lg"
         />
       }
-      className="rounded-lg border !border-gray-300"
+      className="rounded-lg border border-gray-300!"
     >
       {/* Title */}
       <h2 className="text-base font-semibold text-gray-900 truncate">
@@ -69,11 +71,11 @@ const PlanSiteCard: React.FC<PlanSiteCardProps> = ({
       {/* Details */}
       <div className="flex flex-wrap items-center gap-3 text-xs text-gray-600 mb-3">
         <div className="flex items-center gap-1">
-          <ClockCircleOutlined className="!text-primary" /> {formattedStart} –{" "}
+          <ClockCircleOutlined className="text-primary!" /> {formattedStart} –{" "}
           {formattedEnd}
         </div>
         <div className="flex items-center gap-1">
-          <HourglassOutlined className="!text-primary" /> {duration}
+          <HourglassOutlined className="text-primary!" /> {duration}
         </div>
       </div>
 
@@ -85,18 +87,18 @@ const PlanSiteCard: React.FC<PlanSiteCardProps> = ({
         <div className="pt-2 mt-auto">
           {isBooked ? (
             <CommonButton
-              label="Delete"
-              className="!w-full !bg-red-500 hover:!bg-red-600"
+              label={t("delete")}
+              className="w-full! bg-red-500! hover:bg-red-600!"
               onClick={onRemove}
             />
           ) : (
             <div
-              title={disabled ? "Please add nights to plan to book" : ""}
+              title={disabled ? t("addNightsToPlan") : ""}
               className="w-full"
             >
               <CommonButton
-                label="Book Now"
-                className="!w-full"
+                label={buttonText || t("button")}
+                className="w-full!"
                 onClick={onBook}
                 disabled={disabled}
               />

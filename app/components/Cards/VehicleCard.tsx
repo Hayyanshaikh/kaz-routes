@@ -12,6 +12,7 @@ import { showError, showSuccess } from "../common/CommonSonner";
 import { Form, Input } from "antd";
 import VehicleBookingForm from "../VehicleBookingForm";
 import dayjs from "dayjs";
+import { useTranslations } from "next-intl";
 
 const { TextArea } = Input;
 
@@ -39,6 +40,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
   const isVertical = layout === "vertical";
   const [isBookingModal, setIsBookingModal] = useState(false);
   const [form] = Form.useForm();
+  const t = useTranslations("cards");
   // todo: this task pending
   const { mutateAsync: carBooking, isPending } =
     useControllerPostCreateCarBooking();
@@ -173,7 +175,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
             <CommonButton
               iconPosition="right"
               icon={<ArrowRightOutlined className="text-primary" />} // ✅ AntD icon
-              label="Book Now"
+              label={t("bookNow")}
               onClick={() => setIsBookingModal(true)}
             />
           </div>
@@ -184,10 +186,10 @@ const VehicleCard: React.FC<VehicleCardProps> = ({
       <CommonModal
         open={isBookingModal}
         setOpen={setIsBookingModal}
-        title={`Book ${carBrand} ${carModel}`}
+        title={t("booking.title", { name: `${carBrand} ${carModel}` })}
         loading={isPending}
-        cancelText="Discard"
-        confirmText="Book"
+        cancelText={t("booking.discard")}
+        confirmText={t("booking.confirm")}
         centered
         destroyOnClose={false}
         onClose={() => form.resetFields()}

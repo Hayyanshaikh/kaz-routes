@@ -10,6 +10,7 @@ import {
   TeamOutlined,
 } from "@ant-design/icons";
 import { formatCurrency } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 interface Props {
   item: any;
@@ -17,6 +18,7 @@ interface Props {
 }
 
 const Item = ({ item, packageDetail }: Props) => {
+  const t = useTranslations("cards");
   return (
     <div className="w-full mt-5 pb-6 space-y-6">
       <div className="flex items-center justify-between gap-4">
@@ -52,7 +54,10 @@ const Item = ({ item, packageDetail }: Props) => {
         */}
       </div>
 
-      <CommonButton label="Book Now" className="h-10 rounded-full w-full" />
+      <CommonButton
+        label={t("bookNow")}
+        className="h-10 rounded-full w-full"
+      />
     </div>
   );
 };

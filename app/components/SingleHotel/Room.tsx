@@ -11,8 +11,10 @@ import CommonModal from "../common/CommonModal";
 import { useControllerPostCreateHotelBooking } from "@/app/hooks/api";
 import HotelBookingForm from "../HotelForm"; // Ab isko AntD compatible bana lena
 import { showError, showSuccess } from "../common/CommonSonner";
+import { useTranslations } from "next-intl";
 
 const Room = ({ room, hotelDetail }: PropertyDetailProps) => {
+  const t = useTranslations("cards");
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
   const { mutateAsync: createHotelBooking, isPending } =
@@ -40,15 +42,14 @@ const Room = ({ room, hotelDetail }: PropertyDetailProps) => {
       setOpen(false);
       form.resetFields();
       showSuccess({
-        message: "Booking Successful",
-        description: "Your hotel booking has been successfully created.",
+        message: t("booking.success"),
+        description: t("booking.hotelSuccessDesc"),
       });
     } catch (error: any) {
       showError({
-        message: "Booking Failed",
+        message: t("booking.failed"),
         description:
-          error?.response?.data?.message ||
-          "Something went wrong. Please try again.",
+          error?.response?.data?.message || t("messages.errorDesc"),
       });
     }
   };
@@ -57,12 +58,12 @@ const Room = ({ room, hotelDetail }: PropertyDetailProps) => {
     <div className="w-full mt-5 pb-6 space-y-6">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
-          <h3 className="text-xl font-bold">{room.name} Room</h3>
+          <h3 className="text-xl font-bold">{room.name} {t("bed")}</h3>
           <CommonBadge color="success" label={room?.status} />
         </div>
         <p className="text-lg font-semibold text-gray-900">
           {room.pricing.single && formatCurrency(room.pricing.single)}
-          <span className="text-gray-500 text-sm font-normal"> / Single</span>
+          <span className="text-gray-500 text-sm font-normal"> / {t("adult")}</span>
         </p>
       </div>
 
@@ -72,27 +73,27 @@ const Room = ({ room, hotelDetail }: PropertyDetailProps) => {
         <div className="flex items-start flex-col gap-2">
           <CoffeeOutlined className="text-lg" />
           <span className="text-sm">
-            <strong className="font-medium">Meal:</strong> {room.meal_plan}
+            <strong className="font-medium">{t("meal")}:</strong> {room.meal_plan}
           </span>
         </div>
         <div className="flex items-start flex-col gap-2">
           <HomeOutlined className="text-lg" />
           <span className="text-sm">
-            <strong className="font-medium">Bed:</strong> {room.bed_type}
+            <strong className="font-medium">{t("bed")}:</strong> {room.bed_type}
           </span>
         </div>
         <div className="flex items-start flex-col gap-2">
           <RestOutlined className="text-lg" />
           <span className="text-sm">
-            <strong className="font-medium">Attached Bath:</strong>{" "}
-            {room.has_attached_bath ? "Yes" : "No"}
+            <strong className="font-medium">{t("bath")}:</strong>{" "}
+            {room.has_attached_bath ? t("yes") : t("no")}
           </span>
         </div>
       </div>
 
       <div className="flex items-start gap-16 border-b border-gray-300 pb-5">
         <div>
-          <p className="font-semibold text-gray-900 mb-3">Facilities:</p>
+          <p className="font-semibold text-gray-900 mb-3">{t("facilities")}:</p>
           <ul className="list-disc list-inside text-sm text-gray-700">
             {room.facilities.map((facility: string, i: number) => (
               <li key={i}>{facility}</li>
@@ -101,23 +102,23 @@ const Room = ({ room, hotelDetail }: PropertyDetailProps) => {
         </div>
 
         <div>
-          <p className="font-semibold text-gray-900 mb-3">Pricing List:</p>
+          <p className="font-semibold text-gray-900 mb-3">{t("pricing")} List:</p>
           <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
             <li>
-              <strong className="font-semibold">Double:</strong>{" "}
+              <strong className="font-semibold">{t("double")}:</strong>{" "}
               {room.pricing.double === 0
                 ? "Free"
                 : room.pricing.double && formatCurrency(room.pricing.double)}
             </li>
             <li>
-              <strong className="font-semibold">Extra Bed:</strong>{" "}
+              <strong className="font-semibold">{t("extraBed")}:</strong>{" "}
               {room.pricing.extra_bed === 0
                 ? "Free"
                 : room.pricing.extra_bed &&
                   formatCurrency(room.pricing.extra_bed)}
             </li>
             <li>
-              <strong className="font-semibold">Child (No Bed):</strong>{" "}
+              <strong className="font-semibold">{t("childNoBed")}:</strong>{" "}
               {room.pricing.child_no_bed === 0
                 ? "Free"
                 : room.pricing.child_no_bed &&
@@ -128,7 +129,7 @@ const Room = ({ room, hotelDetail }: PropertyDetailProps) => {
       </div>
 
       <CommonButton
-        label={isPending ? "Submitting..." : "Book Now"}
+        label={isPending ? t("submitting") : t("bookNow")}
         className="h-10 rounded-full w-full"
         onClick={() => setOpen(true)}
         disabled={isPending}
@@ -137,8 +138,8 @@ const Room = ({ room, hotelDetail }: PropertyDetailProps) => {
       <CommonModal
         open={open}
         setOpen={setOpen}
-        title={`Hotel Booking ${room.name} Room`}
-        confirmText={isPending ? "Submitting..." : "Submit Booking"}
+        title={t("booking.hotelTitle", { name: room.name })}
+        confirmText={isPending ? t("submitting") : t("booking.submit")}
         width={766}
         destroyOnClose={false}
         onClose={() => form.resetFields()}

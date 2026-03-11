@@ -10,6 +10,7 @@ import CommonBadge from "../common/CommonBadge";
 import CommonButton from "../common/CommonButton";
 import Image from "next/image";
 import { formatCurrency } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 type PackageCardProps = {
   imageUrl: string;
@@ -34,6 +35,7 @@ const PackageCard: React.FC<PackageCardProps> = ({
   id,
   price,
 }) => {
+  const t = useTranslations("cards");
   console.log({ price });
   return (
     <div className="flex flex-col bg-white rounded-xl shadow-lg overflow-hidden transform duration-300 h-full">
@@ -68,11 +70,11 @@ const PackageCard: React.FC<PackageCardProps> = ({
         <div className="flex items-center justify-between text-stone-500 text-sm mb-4">
           <div className="flex items-center space-x-1">
             <ClockCircleOutlined />
-            <span>{duration} Days</span>
+            <span>{t("days", { count: duration })}</span>
           </div>
           <div className="flex items-center space-x-1">
             <UserOutlined />
-            <span>Max {maxParticipants}</span>
+            <span>{t("maxParticipants", { count: maxParticipants })}</span>
           </div>
         </div>
 
@@ -83,7 +85,7 @@ const PackageCard: React.FC<PackageCardProps> = ({
           </div>
           <CommonButton
             link={`packages/${id}`}
-            label="Details"
+            label={t("details")}
             iconPosition="right"
             icon={<ArrowRightOutlined />}
           />

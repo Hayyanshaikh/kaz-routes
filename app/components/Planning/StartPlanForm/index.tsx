@@ -11,7 +11,10 @@ import { generateUUID } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 
+import { useTranslations } from "next-intl";
+
 const StartPlanForm: React.FC = () => {
+  const t = useTranslations("planning");
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -36,7 +39,7 @@ const StartPlanForm: React.FC = () => {
   return (
     <div className="flex flex-col gap-4 max-w-sm mx-auto">
       <h2 className="text-2xl font-semibold mb-1 text-center">
-        Create You'r Plan
+        {t("createPlan")}
       </h2>
 
       <div className="p-6 border border-gray-300 flex flex-col gap-4 rounded-md">
@@ -56,19 +59,19 @@ const StartPlanForm: React.FC = () => {
         >
           <CommonInput
             name="planName"
-            label="Plan name"
+            label={t("planName")}
             rules={[{ required: true }]}
           />
 
           <CommonMultiSelect
             name="countries"
-            label="Which countries are you going?"
+            label={t("countriesQuestion")}
             options={countriesOptions}
             rules={[{ required: true }]}
           />
 
           <CommonDatePicker
-            label="Duration"
+            label={t("duration")}
             name="planDateRange"
             mode="range"
             className="w-full"
@@ -79,9 +82,9 @@ const StartPlanForm: React.FC = () => {
           />
 
           <div className="grid grid-cols-3 gap-4">
-            <CommonInput type="number" name="adults" label="Adults" />
-            <CommonInput type="number" name="childrens" label="Childrens" />
-            <CommonInput type="number" name="infants" label="Infants" />
+            <CommonInput type="number" name="adults" label={t("adults")} />
+            <CommonInput type="number" name="childrens" label={t("children")} />
+            <CommonInput type="number" name="infants" label={t("infants")} />
           </div>
 
           <Button
@@ -91,7 +94,7 @@ const StartPlanForm: React.FC = () => {
             // disabled={isPending}
             className="bg-primary-300 border-none w-full font-bold mt-4"
           >
-            Start planning
+            {t("startPlanning")}
           </Button>
         </Form>
       </div>

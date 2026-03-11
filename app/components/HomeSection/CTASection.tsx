@@ -4,8 +4,10 @@ import React from "react";
 import Container from "../Container";
 import Section from "../Container/Section";
 import CommonButton from "../common/CommonButton";
+import { useTranslations } from "next-intl";
 
 const CTASection = () => {
+  const t = useTranslations("home.cta");
   return (
     <Section
       className="relative bg-cover bg-center bg-no-repeat py-20"
@@ -20,14 +22,9 @@ const CTASection = () => {
       {/* Content */}
       <Container>
         <div className="relative z-10 text-center max-w-2xl mx-auto text-white">
-          <h2 className="text-3xl font-bold mb-4">
-            Discover Tailored Travel Packages
-          </h2>
-          <p className="mb-6">
-            Explore curated trips, luxury stays, and adventure experiences — all
-            ready to book in just a few clicks.
-          </p>
-          <CommonButton label="Explore Packages" />
+          <h2 className="text-3xl font-bold mb-4">{t("title")}</h2>
+          <p className="mb-6">{t("description")}</p>
+          <CommonButton label={t("button")} />
         </div>
       </Container>
     </Section>

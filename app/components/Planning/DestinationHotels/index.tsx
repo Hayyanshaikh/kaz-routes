@@ -12,7 +12,10 @@ interface Props {
   destination: any;
 }
 
+import { useTranslations } from "next-intl";
+
 const DestinationHotels = ({ destination }: Props) => {
+  const t = useTranslations("planning");
   const [messageApi, contextHolder] = message.useMessage();
   const { addHotel, removeHotel, destinations } = useDestinationStore();
   const { plan, usedDays } = usePlanStore();
@@ -41,7 +44,7 @@ const DestinationHotels = ({ destination }: Props) => {
     if (!selectedDate?.length) {
       messageApi.open({
         type: "error",
-        content: "Please select at least one date for booking.",
+        content: t("selectDateError"),
         duration: 5,
       });
       return;
@@ -49,7 +52,7 @@ const DestinationHotels = ({ destination }: Props) => {
     if (totalBookedHotels.length >= 9) {
       messageApi.open({
         type: "error",
-        content: "You can book a maximum of 9 hotels in your plan.",
+        content: t("maxHotelsError"),
         duration: 5,
       });
       return;
@@ -71,7 +74,7 @@ const DestinationHotels = ({ destination }: Props) => {
     };
 
     addHotel(destination?.id, booking);
-    messageApi.success("Room booked successfully!");
+    messageApi.success(t("bookingSuccess"));
 
     setSelectedDate([]);
   };

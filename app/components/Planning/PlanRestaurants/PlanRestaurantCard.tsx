@@ -10,6 +10,7 @@ import useDestinationStore from "@/app/store/destinationStore";
 import { message } from "antd";
 import { getDateRange } from "@/lib/utils";
 import { useDestinationDates } from "@/app/hooks/useDestinationDates";
+import { useTranslations } from "next-intl";
 
 type Restaurant = {
   id: number | string;
@@ -26,6 +27,7 @@ type Props = {
 };
 
 const PlanRestaurantCard: React.FC<Props> = ({ restaurant, destination }) => {
+  const t = useTranslations("search");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRestaurant, setSelectedRestaurant] = useState<any>(null);
   const { removeRestaurant } = useDestinationStore();
@@ -47,7 +49,7 @@ const PlanRestaurantCard: React.FC<Props> = ({ restaurant, destination }) => {
         variantsToRemove.forEach((v: any) => {
           removeRestaurant(destination.id, v.variant.id);
         });
-        messageApi.success("Restaurant booking removed");
+        messageApi.success(t("restaurantBookingRemoved"));
       }
     }
   };
@@ -93,20 +95,20 @@ const PlanRestaurantCard: React.FC<Props> = ({ restaurant, destination }) => {
         <div className="pt-2 mt-auto">
           {isBooked ? (
             <CommonButton
-              label="Delete Booking"
-              className="!w-full !bg-red-500 hover:!bg-red-600"
+              label={t("deleteBooking")}
+              className="w-full! bg-red-500! hover:bg-red-600!"
               onClick={handleDelete}
             />
           ) : (
             <div
               title={
-                allowedDates.length === 0 ? "Please add nights to book" : ""
+                allowedDates.length === 0 ? t("addNightsToBook") : ""
               }
               className="w-full"
             >
               <CommonButton
-                label="Book Now"
-                className="!w-full"
+                label={t("button")}
+                className="w-full!"
                 disabled={allowedDates.length === 0}
                 onClick={() => {
                   setSelectedRestaurant(restaurant);

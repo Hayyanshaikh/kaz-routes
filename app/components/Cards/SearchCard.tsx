@@ -10,6 +10,7 @@ import {
   TagOutlined,
 } from "@ant-design/icons"; // ✅ Antd Icons
 import { formatCurrency } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 type SearchCardProps = {
   name: string;
@@ -28,6 +29,7 @@ const SearchCard = ({
   adultPrice,
   childPrice,
 }: SearchCardProps) => {
+  const t = useTranslations("cards");
   return (
     <div className="bg-white rounded-xl border border-gray-300 p-4 flex flex-col gap-4">
       {/* 🖼️ Image Wrapper */}
@@ -62,7 +64,7 @@ const SearchCard = ({
         </div>
         <CommonButton
           link={link}
-          label="View Details"
+          label={t("viewDetails")}
           className="w-full"
           iconPosition="right"
           icon={<ArrowRightOutlined />}

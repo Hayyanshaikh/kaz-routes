@@ -4,8 +4,10 @@ import usePlanStore from "@/app/store/planStore";
 import { ArrowLeftOutlined, CalendarOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import CommonButton from "../../common/CommonButton";
+import { useTranslations } from "next-intl";
 
 const PlanSummary = () => {
+  const t = useTranslations("planning");
   const router = useRouter();
   const { plan, dayCount, usedDays } = usePlanStore();
   const [isRedirecting, setIsRedirecting] = React.useState(false);
@@ -47,7 +49,7 @@ const PlanSummary = () => {
               <div className="text-sm font-medium py-1 px-3 rounded-md bg-gray-100 border border-gray-200">
                 {plan.adults}
               </div>
-              <span className="text-xs text-black/80">Adults</span>
+              <span className="text-xs text-black/80">{t("adults")}</span>
             </div>
           )}
 
@@ -57,7 +59,7 @@ const PlanSummary = () => {
               <div className="text-sm font-medium py-1 px-3 rounded-md bg-gray-100 border border-gray-200">
                 {plan.childrens}
               </div>
-              <span className="text-xs text-black/80">Children</span>
+              <span className="text-xs text-black/80">{t("children")}</span>
             </div>
           )}
 
@@ -67,7 +69,7 @@ const PlanSummary = () => {
               <div className="text-sm font-medium py-1 px-3 rounded-md bg-gray-100 border border-gray-200">
                 {plan.infants}
               </div>
-              <span className="text-xs text-black/80">Infants</span>
+              <span className="text-xs text-black/80">{t("infants")}</span>
             </div>
           )}
 
@@ -102,7 +104,7 @@ const PlanSummary = () => {
               </div>
             </div>
             <div className="text-xs text-gray-500 leading-tight">
-              Nights <br /> planned
+              {t("nightsPlanned")}
             </div>
           </div>
 
@@ -113,7 +115,7 @@ const PlanSummary = () => {
               router.push(`/plan/overview/${plan?.id}`);
             }}
             loading={isRedirecting}
-            label="Overview"
+            label={t("overview")}
             className="w-full sm:w-auto"
           />
         </div>

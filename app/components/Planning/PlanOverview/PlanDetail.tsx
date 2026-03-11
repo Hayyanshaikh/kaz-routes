@@ -8,6 +8,7 @@ import {
 } from "@ant-design/icons";
 import CommonButton from "../../common/CommonButton";
 import CommonBadge from "../../common/CommonBadge";
+import { useTranslations } from "next-intl";
 
 interface PlanDetailProps {
   plan: any;
@@ -15,6 +16,7 @@ interface PlanDetailProps {
 }
 
 const PlanDetail: React.FC<PlanDetailProps> = ({ plan, destinationsCount }) => {
+  const t = useTranslations();
   const { planName, countries, planDateRange } = plan;
 
   const formatDate = (dateString: string) => {
@@ -33,9 +35,9 @@ const PlanDetail: React.FC<PlanDetailProps> = ({ plan, destinationsCount }) => {
     return Math.ceil(timeDiff / (1000 * 3600 * 24));
   };
 
-  const startDate = formatDate(planDateRange[0]);
-  const endDate = formatDate(planDateRange[1]);
-  const nights = calculateNights(planDateRange[0], planDateRange[1]);
+  const startDate = formatDate((planDateRange as any)?.[0]);
+  const endDate = formatDate((planDateRange as any)?.[1]);
+  const nights = calculateNights((planDateRange as any)?.[0], (planDateRange as any)?.[1]);
   const numberOfCountries = countries.length;
 
   return (
@@ -48,17 +50,17 @@ const PlanDetail: React.FC<PlanDetailProps> = ({ plan, destinationsCount }) => {
         <div className="flex flex-wrap justify-center items-center gap-3 text-sm font-medium mb-6">
           <CommonBadge
             icon={<ClockCircleOutlined className="w-4 h-4 text-gray-500" />}
-            label={`${nights} Nights`}
+            label={t("cards.nights", { count: nights ?? 0 })}
           />
 
           <CommonBadge
             icon={<EnvironmentOutlined className="w-4 h-4 text-gray-500" />}
-            label={`${destinationsCount} Destinations`}
+            label={t("cards.destinations", { count: destinationsCount ?? 0 })}
           />
 
           <CommonBadge
             icon={<GlobalOutlined className="w-4 h-4 text-gray-500" />}
-            label={`${numberOfCountries} Countries`}
+            label={t("cards.countries", { count: numberOfCountries ?? 0 })}
           />
         </div>
 
@@ -68,10 +70,10 @@ const PlanDetail: React.FC<PlanDetailProps> = ({ plan, destinationsCount }) => {
         </p>
 
         {/* Discover Trip - Animated Arrow Button */}
-        <CommonButton label="Discover trip" />
+        <CommonButton label={t("planning.discover")} />
         {/* Animated Down Arrow (scroll indicator) */}
         <div className="mt-6 flex justify-center">
-          <DownOutlined className="!text-gray-600 animate-bounce text-xl" />
+          <DownOutlined className="text-gray-600! animate-bounce text-xl" />
         </div>
       </div>
     </div>

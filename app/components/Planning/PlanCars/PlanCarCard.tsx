@@ -8,6 +8,7 @@ import PlanCarModal from "./PlanCarModal";
 import useDestinationStore from "@/app/store/destinationStore";
 import { getDateRange } from "@/lib/utils";
 import { useDestinationDates } from "@/app/hooks/useDestinationDates";
+import { useTranslations } from "next-intl";
 
 type PlanCarCardProps = {
   car: any;
@@ -15,6 +16,7 @@ type PlanCarCardProps = {
 };
 
 const PlanCarCard = ({ car, destination }: PlanCarCardProps) => {
+  const t = useTranslations("search");
   const [open, setOpen] = useState(false);
   const { startDate, endDate } = useDestinationDates(destination);
   const allowedDates = getDateRange(startDate, endDate);
@@ -48,7 +50,7 @@ const PlanCarCard = ({ car, destination }: PlanCarCardProps) => {
           </div>
         ) : (
           <div className="w-full h-44 bg-gray-100 flex items-center justify-center text-gray-400 text-sm">
-            No Image
+            {t("noImage")}
           </div>
         )}
 
@@ -66,27 +68,29 @@ const PlanCarCard = ({ car, destination }: PlanCarCardProps) => {
             <span>Trans: {car.transmission}</span>
             <span>Seats: {car.seating_capacity}</span>
             <span className="font-semibold text-primary">
-              {car.daily_rate ? `PKR ${car.daily_rate}/day` : "On Request"}
+              {car.daily_rate
+                ? t("ratePerDay", { rate: car.daily_rate })
+                : t("onRequest")}
             </span>
           </div>
 
           {isBooked ? (
             <CommonButton
               onClick={handleRemove}
-              className="!w-full !bg-red-500 hover:!bg-red-600"
-              label="Delete Booking"
+              className="w-full! bg-red-500! hover:bg-red-600!"
+              label={t("deleteBooking")}
             />
           ) : (
             <div
               title={
-                allowedDates.length === 0 ? "Please add nights to book" : ""
+                allowedDates.length === 0 ? t("addNightsToBook") : ""
               }
               className="w-full"
             >
               <CommonButton
                 onClick={() => setOpen(true)}
-                className="!w-full"
-                label="Book Now"
+                className="w-full!"
+                label={t("button")}
                 disabled={allowedDates.length === 0}
               />
             </div>

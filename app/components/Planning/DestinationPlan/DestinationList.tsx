@@ -10,7 +10,10 @@ type DestinationListProps = {
   destinations: any[];
 };
 
+import { useTranslations } from "next-intl";
+
 const DestinationList: FC<DestinationListProps> = ({ destinations }) => {
+  const t = useTranslations("planning");
   const router = useRouter();
   const searchParams = useSearchParams();
   const selectedId = searchParams.get("destination") || "";
@@ -24,7 +27,7 @@ const DestinationList: FC<DestinationListProps> = ({ destinations }) => {
   if (!destinations || destinations.length === 0) {
     return (
       <div className="py-5 flex justify-center">
-        <Empty description="No Destination Selected" />
+        <Empty description={t("noDestinationSelected")} />
       </div>
     );
   }
