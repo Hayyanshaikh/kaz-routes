@@ -48,6 +48,7 @@
       "description": "Discover the diverse range of places we operate in, each offering unique experiences."
     },
     "restaurants": {
+      "title": "Top-Rated Restaurants",
       "description": "Discover the best dining experiences with our curated selection of top-rated restaurants."
     },
     "cta": {

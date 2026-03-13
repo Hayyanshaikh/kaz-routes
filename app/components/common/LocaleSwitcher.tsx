@@ -4,6 +4,8 @@ import React from "react";
 import { useLocale } from "next-intl";
 import { usePathname, useRouter } from "next/navigation";
 import { Select, ConfigProvider } from "antd";
+import RussiaFlagIcon from "@/app/icons/RussiaFlagIcon";
+import UnitedStatesIcon from "@/app/icons/UnitedStates";
 
 const LocaleSwitcher: React.FC = () => {
   const locale = useLocale();
@@ -12,13 +14,13 @@ const LocaleSwitcher: React.FC = () => {
 
   const handleLocaleChange = (newLocale: string) => {
     if (!pathname) return;
-    
+
     // Split the pathname: /en/about -> ["", "en", "about"]
     const segments = pathname.split("/");
-    
+
     // Replace the locale segment
     segments[1] = newLocale;
-    
+
     const newPath = segments.join("/");
     router.push(newPath);
   };
@@ -46,10 +48,26 @@ const LocaleSwitcher: React.FC = () => {
           value={locale}
           onChange={handleLocaleChange}
           options={[
-            { value: "en", label: "🇺🇸" },
-            { value: "ru", label: "🇷🇺" },
+            {
+              value: "en",
+              label: (
+                <div className="flex items-center gap-2 text-white">
+                  <UnitedStatesIcon size={20} />
+                  EN
+                </div>
+              ),
+            },
+            {
+              value: "ru",
+              label: (
+                <div className="flex items-center gap-2 text-white">
+                  <RussiaFlagIcon size={20} />
+                  RU
+                </div>
+              ),
+            },
           ]}
-          className="w-[65px]"
+          // className="w-[65px]"
           variant="borderless"
           styles={{
             popup: {
