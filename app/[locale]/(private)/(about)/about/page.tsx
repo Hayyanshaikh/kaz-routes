@@ -26,7 +26,7 @@ const About = () => {
             className="text-left mb-6"
           />
           <div className="text-gray-700 space-y-4">
-            <AboutContent text={pageContent?.about?.content || ""} />
+            <AboutContent text={pageContent?.data?.about?.content || ""} />
           </div>
         </div>
       </section>

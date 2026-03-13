@@ -26,7 +26,7 @@ const PrivacyPolicy = () => {
             className="text-left mb-6"
           />
           <div className="text-gray-700 space-y-4">
-            <AboutContent text={pageContent?.policy?.content || ""} />
+            <AboutContent text={pageContent?.data?.policy?.content || ""} />
           </div>
         </div>
       </section>

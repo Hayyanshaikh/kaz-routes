@@ -8,6 +8,8 @@ import { useTranslations } from "next-intl";
 const TermsAndConditions = () => {
   const { pageContent } = usePageContentStore();
   const t = useTranslations("pages.terms");
+
+  console.log({ pageContent });
   return (
     <div className="">
       <Head>
@@ -26,7 +28,7 @@ const TermsAndConditions = () => {
             className="text-left mb-6"
           />
           <div className="text-gray-700 space-y-4">
-            <AboutContent text={pageContent?.terms?.content || ""} />
+            <AboutContent text={pageContent?.data?.terms?.content || ""} />
           </div>
         </div>
       </section>
