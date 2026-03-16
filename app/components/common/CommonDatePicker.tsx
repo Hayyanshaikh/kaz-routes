@@ -7,7 +7,7 @@ import dayjs, { Dayjs } from "dayjs";
 interface ExtendedProps extends CommonDatePickerProps {
   isNotFormItem?: boolean;
   multiple?: boolean;
-  allowedDates?: string[]; // ✅ new prop
+  allowedDates?: string[]; // ✅ trip dates
 }
 
 const CommonDatePicker: React.FC<ExtendedProps> = ({
@@ -24,15 +24,15 @@ const CommonDatePicker: React.FC<ExtendedProps> = ({
   onChange,
   disabledDate,
   mode = "date",
-  isNotFormItem = false, // ✅ new prop
-  allowedDates, // ✅ new prop
+  isNotFormItem = false,
+  allowedDates,
 }) => {
   const appliedRules =
     rules && rules.length > 0
       ? rules
       : isRequired
-      ? [{ required: true, message: `${label || name} is required` }]
-      : [];
+        ? [{ required: true, message: `${label || name} is required` }]
+        : [];
 
   // ✅ Custom disabledDate logic with allowedDates
   const handleDisabledDate = (current: Dayjs) => {
@@ -43,6 +43,16 @@ const CommonDatePicker: React.FC<ExtendedProps> = ({
   };
 
   const renderPicker = () => {
+    // first allowed date for calendar open
+    const defaultTripDate =
+      allowedDates && allowedDates.length > 0
+        ? dayjs(allowedDates[0])
+        : undefined;
+    const lastTripDate =
+      allowedDates && allowedDates.length > 0
+        ? dayjs(allowedDates[allowedDates.length - 1])
+        : undefined;
+
     if (mode === "time") {
       return (
         <TimePicker
@@ -62,12 +72,13 @@ const CommonDatePicker: React.FC<ExtendedProps> = ({
         <DatePicker
           placement="topLeft"
           showTime
-          value={value}
+          value={null} // selection disabled
+          defaultPickerValue={defaultTripDate} // calendar month open
           placeholder={placeholder || "Select Date & Time"}
           disabled={disabled}
           allowClear={false}
           className={className || "w-full"}
-          onChange={onChange}
+          onChange={() => {}} // disable selection
           disabledDate={handleDisabledDate}
         />
       );
@@ -76,8 +87,13 @@ const CommonDatePicker: React.FC<ExtendedProps> = ({
     if (mode === "range") {
       return (
         <DatePicker.RangePicker
-          value={value}
-          onChange={onChange}
+          value={null} // selection disabled
+          defaultPickerValue={
+            defaultTripDate && lastTripDate
+              ? [defaultTripDate, lastTripDate]
+              : undefined
+          } // calendar month open
+          onChange={() => {}} // disable selection
           placement="topLeft"
           placeholder={["Start Date", "End Date"]}
           disabled={disabled}
@@ -90,14 +106,15 @@ const CommonDatePicker: React.FC<ExtendedProps> = ({
 
     return (
       <DatePicker
-        value={value}
+        value={null} // selection disabled
+        defaultPickerValue={defaultTripDate} // calendar month open
         placement="topLeft"
         placeholder={placeholder}
         disabled={disabled}
         multiple={multiple}
         allowClear={false}
         className={className || "w-full"}
-        onChange={onChange}
+        onChange={() => {}} // disable selection
         disabledDate={handleDisabledDate}
       />
     );

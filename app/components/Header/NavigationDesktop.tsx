@@ -27,7 +27,7 @@ const NavigationDesktop = ({ className, navigationLinks = [] }: Props) => {
 
       {/* CTA Button & Language Switcher */}
       <div className="md:flex hidden items-center gap-4">
-        <LocaleSwitcher />
+        {/* <LocaleSwitcher /> */}
         <CommonButton
           label={t("action")}
           className="md:flex hidden"
