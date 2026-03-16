@@ -183,7 +183,8 @@
     "endAdventure": "Конец приключения!",
     "thanksExploring": "Спасибо, что исследуете с нами ✨",
     "bookNow": "Забронировать сейчас",
-    "cancel": "Отмена"
+    "cancel": "Отмена",
+    "back": "Назад к плану"
   },
   "vehicleForm": {
     "copyFromPrevious": "Копировать из предыдущего",

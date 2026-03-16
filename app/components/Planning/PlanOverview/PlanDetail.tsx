@@ -9,6 +9,7 @@ import {
 import CommonButton from "../../common/CommonButton";
 import CommonBadge from "../../common/CommonBadge";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 
 interface PlanDetailProps {
   plan: any;
@@ -26,6 +27,7 @@ const PlanDetail: React.FC<PlanDetailProps> = ({
   isRedirecting,
 }) => {
   const t = useTranslations();
+  const router = useRouter();
   const { planName, countries, planDateRange } = plan;
 
   const formatDate = (dateString: string) => {
@@ -81,11 +83,10 @@ const PlanDetail: React.FC<PlanDetailProps> = ({
           {startDate} – {endDate}
         </p>
 
-        {/* Discover Trip - Animated Arrow Button */}
+        {/* Back Button */}
         <CommonButton
-          label={t("planning.confirmPlan")}
-          onClick={handleCreateTravelPlan}
-          loading={isPending || isRedirecting}
+          label={t("planning.back") || "Back"}
+          onClick={() => router.back()}
         />
         {/* Animated Down Arrow (scroll indicator) */}
         <div className="mt-6 flex justify-center">

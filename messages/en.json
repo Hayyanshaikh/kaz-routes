@@ -183,7 +183,8 @@
     "endAdventure": "End of Adventure!",
     "thanksExploring": "Thanks for exploring with us ✨",
     "bookNow": "Book Now",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "back": "Back to Plan"
   },
   "vehicleForm": {
     "copyFromPrevious": "Copy from previous",
