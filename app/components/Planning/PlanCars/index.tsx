@@ -26,7 +26,12 @@ const PlanCars = ({ destination }: Props) => {
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {carData.map((car: any) => (
-          <PlanCarCard destination={destination} key={car.id} car={car} />
+          <PlanCarCard
+            destination={destination}
+            key={car.id}
+            car={car}
+            buttonText="Book"
+          />
         ))}
       </div>
 

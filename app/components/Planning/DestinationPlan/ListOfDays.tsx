@@ -62,7 +62,9 @@ const ListOfDays = () => {
         <div className="space-y-3">
           {day.hotelBookings.length > 0 && (
             <div>
-              <h3 className="font-semibold text-gray-800 mb-1">{t("hotels")}</h3>
+              <h3 className="font-semibold text-gray-800 mb-1">
+                {t("hotels")}
+              </h3>
               <div className="flex flex-wrap gap-2">
                 {day.hotelBookings.map((h, i) => (
                   <TagItem
@@ -102,7 +104,9 @@ const ListOfDays = () => {
           )}
           {day.restaurantBookings.length > 0 && (
             <div>
-              <h3 className="font-semibold text-gray-800 mb-1">{t("restaurants")}</h3>
+              <h3 className="font-semibold text-gray-800 mb-1">
+                {t("restaurants")}
+              </h3>
               <div className="flex flex-wrap gap-2">
                 {day.restaurantBookings.map((r, i) => (
                   <TagItem
@@ -152,7 +156,7 @@ const ListOfDays = () => {
 
   return (
     daywiseData?.length > 0 && (
-      <div className="mt-auto">
+      <div className="lg:mt-auto flex-1">
         <label className="block text-xs text-gray-600 mb-2 font-medium">
           {t("summary")}
         </label>

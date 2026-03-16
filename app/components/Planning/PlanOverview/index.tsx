@@ -14,7 +14,7 @@ import dayjs from "dayjs";
 import { message } from "antd";
 import { useTranslations } from "next-intl";
 
-const Index = () => {
+const PlanOverview = () => {
   const t = useTranslations("planning");
   const { plan, resetPlan } = usePlanStore();
   const { destinations, resetDestinations } = useDestinationStore();
@@ -66,9 +66,7 @@ const Index = () => {
           "Error creating travel plan:",
           error?.response?.data || error,
         );
-        message.error(
-          error?.response?.data?.message || t("createError"),
-        );
+        message.error(error?.response?.data?.message || t("createError"));
       },
     });
   };
@@ -84,7 +82,13 @@ const Index = () => {
   return (
     <div className="max-w-4xl mx-auto border border-gray-300">
       <div ref={contentRef} id="plan-summary">
-        <PlanDetail plan={plan} destinationsCount={destinations?.length} />
+        <PlanDetail
+          plan={plan}
+          isPending={isPending}
+          isRedirecting={isRedirecting}
+          destinationsCount={destinations?.length}
+          handleCreateTravelPlan={handleCreateTravelPlan}
+        />
         <PlanDestinationDetail days={convertToDaywise} />
         <div className="flex items-center justify-center pb-10 bg-gray-50">
           <CommonButton
@@ -98,4 +102,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default PlanOverview;

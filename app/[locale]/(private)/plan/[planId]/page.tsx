@@ -41,7 +41,7 @@ const Page = () => {
   }
 
   return (
-    <Container className="flex-1">
+    <div className="px-0! lg:px-4 flex-1 w-full">
       {contextHolder}
       <div className="flex items-center justify-between bg-white border border-gray-300 rounded-lg overflow-hidden p-3 mb-6">
         <div className="w-10 h-10 rounded flex-shrink-0 overflow-hidden bg-gray-100">
@@ -94,7 +94,7 @@ const Page = () => {
       </div>
 
       <DestinationDetail destinationData={destinationData} />
-    </Container>
+    </div>
   );
 };
 

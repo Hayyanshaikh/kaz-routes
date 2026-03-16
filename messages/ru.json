@@ -70,7 +70,7 @@
     "button": "Поиск",
     "alert": "Пожалуйста, сначала выберите категорию",
     "noImage": "Нет изображения",
-    "ratePerDay": "PKR {rate}/день",
+    "ratePerDay": "{rate}/день",
     "onRequest": "По запросу",
     "deleteBooking": "Удалить бронирование",
     "delete": "Удалить",

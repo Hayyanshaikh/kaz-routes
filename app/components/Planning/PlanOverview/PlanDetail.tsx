@@ -13,9 +13,18 @@ import { useTranslations } from "next-intl";
 interface PlanDetailProps {
   plan: any;
   destinationsCount?: number;
+  handleCreateTravelPlan: () => void;
+  isPending?: boolean;
+  isRedirecting?: boolean;
 }
 
-const PlanDetail: React.FC<PlanDetailProps> = ({ plan, destinationsCount }) => {
+const PlanDetail: React.FC<PlanDetailProps> = ({
+  plan,
+  destinationsCount,
+  handleCreateTravelPlan,
+  isPending,
+  isRedirecting,
+}) => {
   const t = useTranslations();
   const { planName, countries, planDateRange } = plan;
 
@@ -37,7 +46,10 @@ const PlanDetail: React.FC<PlanDetailProps> = ({ plan, destinationsCount }) => {
 
   const startDate = formatDate((planDateRange as any)?.[0]);
   const endDate = formatDate((planDateRange as any)?.[1]);
-  const nights = calculateNights((planDateRange as any)?.[0], (planDateRange as any)?.[1]);
+  const nights = calculateNights(
+    (planDateRange as any)?.[0],
+    (planDateRange as any)?.[1],
+  );
   const numberOfCountries = countries.length;
 
   return (
@@ -70,7 +82,11 @@ const PlanDetail: React.FC<PlanDetailProps> = ({ plan, destinationsCount }) => {
         </p>
 
         {/* Discover Trip - Animated Arrow Button */}
-        <CommonButton label={t("planning.discover")} />
+        <CommonButton
+          label={t("planning.confirmPlan")}
+          onClick={handleCreateTravelPlan}
+          loading={isPending || isRedirecting}
+        />
         {/* Animated Down Arrow (scroll indicator) */}
         <div className="mt-6 flex justify-center">
           <DownOutlined className="text-gray-600! animate-bounce text-xl" />

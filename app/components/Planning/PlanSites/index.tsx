@@ -133,6 +133,7 @@ const PlanSites = ({ destination }: Props) => {
                     price={`${site.price_adult}`}
                     title={site.name}
                     city={`${site.city?.name}, ${site.country?.name}`}
+                    buttonText="Book"
                     startTime={site.start_time}
                     endTime={site.end_time}
                     duration={`${site.duration_hours} hrs`}

@@ -73,33 +73,34 @@ const DestinationPlan = () => {
   const remainingNights = dayCount - usedDays;
 
   return (
-    <div className="h-full flex flex-col">
-      {/* Search / Add Destination */}
-      <label className="block text-xs text-gray-600 mb-2 font-medium">
-        {t("addDestination")}
-      </label>
-      <AutoComplete
-        className="w-full"
-        options={citiesOption}
-        placeholder={t("searchDestination")}
-        value={searchValue}
-        onChange={(val) => setSearchValue(val)}
-        onSelect={handleSelect}
-        disabled={remainingNights < 1}
-        filterOption={(inputValue: any, option: any) =>
-          option?.label.toLowerCase().includes(inputValue.toLowerCase())
-        }
-      />
-      {remainingNights < 1 && (
-        <p className="text-[10px] text-red-500 mt-1">
-          {t("noNightsRemaining")}
-        </p>
-      )}
-
+    <div className="h-full flex lg:items-stretch sm:items-start gap-6 lg:gap-0 lg:flex-col sm:flex-row flex-col sm:flex-wrap lg:flex-nowrap">
+      <div className="flex-[0_0_100%]">
+        {/* Search / Add Destination */}
+        <label className="block text-xs text-gray-600 mb-2 font-medium">
+          {t("addDestination")}
+        </label>
+        <AutoComplete
+          className="w-full"
+          options={citiesOption}
+          placeholder={t("searchDestination")}
+          value={searchValue}
+          onChange={(val) => setSearchValue(val)}
+          onSelect={handleSelect}
+          disabled={remainingNights < 1}
+          filterOption={(inputValue: any, option: any) =>
+            option?.label.toLowerCase().includes(inputValue.toLowerCase())
+          }
+        />
+        {remainingNights < 1 && (
+          <p className="text-[10px] text-red-500 mt-1">
+            {t("noNightsRemaining")}
+          </p>
+        )}
+      </div>
       {/* List of Destination Cards */}
-      <div className="mt-3 mb-10 overflow-auto">
+      <div className="flex-1 lg:mt-3 mb-0 lg:mb-10 overflow-auto">
         {destinations?.length > 0 && (
-          <div className="flex justify-between gap-2 text-xs text-gray-800 font-light px-2">
+          <div className="flex justify-between gap-2 text-xs text-gray-800 font-light px-1 lg:px-2">
             <span>{t("destination")}</span>
             <span>{t("nights")}</span>
           </div>

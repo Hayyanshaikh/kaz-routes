@@ -34,6 +34,7 @@ const PlanRestaurants = ({ destination }: Props) => {
             destination={destination}
             key={restaurant.id}
             restaurant={restaurant}
+            buttonText="Book"
           />
         ))}
       </div>

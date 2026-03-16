@@ -24,9 +24,14 @@ type Restaurant = {
 type Props = {
   restaurant: Restaurant;
   destination: any;
+  buttonText?: string;
 };
 
-const PlanRestaurantCard: React.FC<Props> = ({ restaurant, destination }) => {
+const PlanRestaurantCard: React.FC<Props> = ({
+  restaurant,
+  destination,
+  buttonText,
+}) => {
   const t = useTranslations("search");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRestaurant, setSelectedRestaurant] = useState<any>(null);
@@ -70,7 +75,7 @@ const PlanRestaurantCard: React.FC<Props> = ({ restaurant, destination }) => {
       </div>
 
       {/* Content */}
-      <div className="p-3 flex flex-col gap-2">
+      <div className="p-3 flex flex-col gap-2 flex-1">
         <h3 className="text-sm font-medium text-gray-800">
           {restaurant.restaurant_name}
         </h3>
@@ -101,13 +106,11 @@ const PlanRestaurantCard: React.FC<Props> = ({ restaurant, destination }) => {
             />
           ) : (
             <div
-              title={
-                allowedDates.length === 0 ? t("addNightsToBook") : ""
-              }
+              title={allowedDates.length === 0 ? t("addNightsToBook") : ""}
               className="w-full"
             >
               <CommonButton
-                label={t("button")}
+                label={buttonText || t("button")}
                 className="w-full!"
                 disabled={allowedDates.length === 0}
                 onClick={() => {

@@ -12,7 +12,6 @@ import {
   EnvironmentOutlined,
   PhoneOutlined,
 } from "@ant-design/icons";
-
 import usePageContentStore from "@/app/store/usePageContent";
 import { useControllerContactSubmit } from "@/app/hooks/api";
 import { showError, showSuccess } from "@/app/components/common/CommonSonner";
@@ -38,11 +37,38 @@ const Contact = () => {
 
   // Parse stringified JSON from store
   const parsedData = {
-    header: safeParse(pageContent?.contact?.header),
-    form: safeParse(pageContent?.contact?.form),
-    info: safeParse(pageContent?.contact?.info),
-    socials: safeParse(pageContent?.contact?.socials),
-    map: safeParse(pageContent?.contact?.map),
+    header: safeParse(pageContent?.data?.contact?.header),
+    form: safeParse(pageContent?.data?.contact?.form),
+    info: safeParse(pageContent?.data?.contact?.info),
+    socials: safeParse(pageContent?.data?.contact?.socials),
+    map: safeParse(pageContent?.data?.contact?.map),
+  };
+
+  // ✅ Generate iframe HTML dynamically
+  const getMapIframe = () => {
+    if (!parsedData.map.enabled) return null;
+
+    // 1️⃣ Already valid iframe HTML
+    if (parsedData.map.iframe?.includes("<iframe")) {
+      return parsedData.map.iframe;
+    }
+
+    // 2️⃣ If coordinates exist, generate embed URL
+    if (parsedData.map.lat && parsedData.map.lng) {
+      const lat = parsedData.map.lat;
+      const lng = parsedData.map.lng;
+      // Optional: You can use your Google Maps API key if needed
+      const embedUrl = `https://www.google.com/maps/embed/v1/view?key=YOUR_API_KEY&center=${lat},${lng}&zoom=14&maptype=roadmap`;
+
+      return `<iframe src="${embedUrl}" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>`;
+    }
+
+    // 3️⃣ If only short link exists → fallback message
+    if (parsedData.map.iframe) {
+      return `<div class="text-center text-gray-500 p-10">Map preview not available for this link. <a href="${parsedData.map.iframe}" target="_blank" class="text-blue-500 underline">Open in Google Maps</a></div>`;
+    }
+
+    return null;
   };
 
   const onSubmit = (values: any) => {
@@ -58,8 +84,7 @@ const Contact = () => {
         console.error("❌ Contact creation failed:", err);
         showError({
           message: t("messages.error"),
-          description:
-            err?.response?.data?.message || t("messages.errorDesc"),
+          description: err?.response?.data?.message || t("messages.errorDesc"),
         });
       },
     });
@@ -70,6 +95,7 @@ const Contact = () => {
       <Head>
         <title>{t("title")}</title>
       </Head>
+
       {parsedData.form.enabled && (
         <Section>
           <Container>
@@ -84,28 +110,24 @@ const Contact = () => {
                   label={t("form.name")}
                   placeholder={t("form.namePlaceholder")}
                 />
-
                 <CommonInput
                   name="email"
                   label={t("form.email")}
                   type="email"
                   placeholder={t("form.emailPlaceholder")}
                 />
-
                 <CommonInput
                   name="phone"
                   label={t("form.phone")}
                   type="tel"
                   placeholder={t("form.phonePlaceholder")}
                 />
-
                 <CommonTextarea
                   name="message"
                   label={t("form.message")}
                   placeholder={t("form.messagePlaceholder")}
                   className="h-32"
                 />
-
                 <CommonButton label={t("form.submit")} type="submit" />
               </Form>
             </div>
@@ -166,13 +188,12 @@ const Contact = () => {
         </Container>
       </Section>
 
-      {parsedData.map.enabled && (
+      {parsedData.map.enabled && getMapIframe() && (
         <Section>
           <Container>
-            {/* Map */}
             <div
               className="h-screen rounded-2xl overflow-hidden shadow-lg"
-              dangerouslySetInnerHTML={{ __html: parsedData.map.iframe }}
+              dangerouslySetInnerHTML={{ __html: getMapIframe() }}
             />
           </Container>
         </Section>

@@ -80,7 +80,7 @@ const PlanSiteCard: React.FC<PlanSiteCardProps> = ({
       </div>
 
       {/* Price & Action */}
-      <div className="flex flex-wrap gap-2 items-center justify-between my-3">
+      <div className="flex flex-wrap gap-2 items-center justify-between mt-3">
         <span className="text-sm text-gray-600 font-semibold">
           {format(price)}
         </span>
