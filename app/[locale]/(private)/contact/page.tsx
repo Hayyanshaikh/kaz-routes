@@ -104,7 +104,12 @@ const Contact = () => {
                 {parsedData.header.title || t("headerTitle")}
               </h2>
 
-              <Form form={form} layout="vertical" onFinish={onSubmit}>
+              <Form
+                form={form}
+                layout="vertical"
+                className="flex flex-col gap-2"
+                onFinish={onSubmit}
+              >
                 <CommonInput
                   name="name"
                   label={t("form.name")}
