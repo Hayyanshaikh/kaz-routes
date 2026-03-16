@@ -2,7 +2,7 @@
 
 import { FILE_BASE_URL } from "@/lib/constant";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 import { Form, Input, DatePicker, message } from "antd";
 import CommonModal from "../../common/CommonModal";
 import GoogleMapModern from "../../Cards/CustomMap";
@@ -10,6 +10,7 @@ import useDestinationStore from "@/app/store/destinationStore";
 import CommonDatePicker from "../../common/CommonDatePicker";
 import { getDateRange } from "@/lib/utils";
 import { useDestinationDates } from "@/app/hooks/useDestinationDates";
+import dayjs from "dayjs";
 
 type PlanCarModalProps = {
   car: any;
@@ -49,6 +50,14 @@ const PlanCarModal = ({
     setOpen(false); // modal band karne ke liye
   };
 
+  const selectedDates = allowedDates?.map((date: any) => dayjs(date));
+
+  useEffect(() => {
+    form.setFieldValue("bookingDates", selectedDates);
+  }, []);
+
+  console.log({ selectedDates });
+
   if (!car) return null;
 
   return (
@@ -75,11 +84,9 @@ const PlanCarModal = ({
 
         <CommonDatePicker
           name={"bookingDates"}
-          isNotFormItem={false}
+          // isNotFormItem={false}
           className="w-full"
           multiple
-          // value={selectedDate}
-          // onChange={(date) => setSelectedDate(date)}
           allowedDates={allowedDates}
           label="Please select a date for your booking:"
         />

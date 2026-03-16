@@ -72,7 +72,7 @@ const CommonDatePicker: React.FC<ExtendedProps> = ({
         <DatePicker
           placement="topLeft"
           showTime
-          value={null} // selection disabled
+          value={value || null} // selection disabled
           defaultPickerValue={defaultTripDate} // calendar month open
           placeholder={placeholder || "Select Date & Time"}
           disabled={disabled}
@@ -87,13 +87,16 @@ const CommonDatePicker: React.FC<ExtendedProps> = ({
     if (mode === "range") {
       return (
         <DatePicker.RangePicker
-          value={null} // selection disabled
+          value={value || null} // selected dates show honge
           defaultPickerValue={
-            defaultTripDate && lastTripDate
-              ? [defaultTripDate, lastTripDate]
+            allowedDates && allowedDates.length > 0
+              ? [
+                  dayjs(allowedDates[0]),
+                  dayjs(allowedDates[allowedDates.length - 1]),
+                ]
               : undefined
-          } // calendar month open
-          onChange={() => {}} // disable selection
+          } // calendar initial month
+          onChange={onChange} // parent update kare
           placement="topLeft"
           placeholder={["Start Date", "End Date"]}
           disabled={disabled}
@@ -106,7 +109,7 @@ const CommonDatePicker: React.FC<ExtendedProps> = ({
 
     return (
       <DatePicker
-        value={null} // selection disabled
+        value={value || null} // selection disabled
         defaultPickerValue={defaultTripDate} // calendar month open
         placement="topLeft"
         placeholder={placeholder}
