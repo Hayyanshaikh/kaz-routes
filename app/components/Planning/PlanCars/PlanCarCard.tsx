@@ -10,6 +10,7 @@ import { getDateRange } from "@/lib/utils";
 import { useDestinationDates } from "@/app/hooks/useDestinationDates";
 import { useTranslations } from "next-intl";
 import { useFormatCurrency } from "@/app/hooks/useFormatCurrency";
+import usePlanStore from "@/app/store/planStore";
 
 type PlanCarCardProps = {
   car: any;
@@ -27,6 +28,10 @@ const PlanCarCard = ({ car, destination, buttonText }: PlanCarCardProps) => {
   const allowedDates = getDateRange(startDate, endDate);
 
   const removeCar = useDestinationStore((state) => state.removeCar);
+
+  const plan = usePlanStore((state) => state.plan);
+  const requiredSeats = (plan?.adults || 0) + (plan?.childrens || 0);
+  const hasEnoughSeats = Number(car?.seating_capacity) >= requiredSeats;
 
   const isBooked = useMemo(() => {
     return destination?.cars?.some((c: any) => c?.id === car?.id);
@@ -86,14 +91,20 @@ const PlanCarCard = ({ car, destination, buttonText }: PlanCarCardProps) => {
             />
           ) : (
             <div
-              title={allowedDates?.length === 0 ? t("addNightsToBook") : ""}
+              title={
+                allowedDates?.length === 0
+                  ? t("addNightsToBook")
+                  : !hasEnoughSeats
+                  ? `Requires at least ${requiredSeats} seats`
+                  : ""
+              }
               className="w-full"
             >
               <CommonButton
                 onClick={() => setOpen(true)}
                 className="w-full!"
                 label={buttonText || t("button")}
-                disabled={allowedDates?.length === 0}
+                disabled={allowedDates?.length === 0 || !hasEnoughSeats}
               />
             </div>
           )}

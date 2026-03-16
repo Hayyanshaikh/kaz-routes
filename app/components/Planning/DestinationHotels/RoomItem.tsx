@@ -43,9 +43,7 @@ const RoomItem = ({ room, isBooked, onBook, onRemove, destination }: Props) => {
               setOpen(true);
             }}
             disabled={allowedDates.length === 0}
-            title={
-              allowedDates.length === 0 ? t("addNightsToBook") : t("book")
-            }
+            title={allowedDates.length === 0 ? t("addNightsToBook") : t("book")}
             className={`px-2 py-0.5 rounded-full text-white ${
               allowedDates.length === 0
                 ? "bg-gray-400 cursor-not-allowed"

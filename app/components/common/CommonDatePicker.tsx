@@ -109,7 +109,7 @@ const CommonDatePicker: React.FC<ExtendedProps> = ({
 
     return (
       <DatePicker
-        value={value || null} // selection disabled
+        value={value} // Pass the actual value
         defaultPickerValue={defaultTripDate} // calendar month open
         placement="topLeft"
         placeholder={placeholder}
@@ -117,7 +117,7 @@ const CommonDatePicker: React.FC<ExtendedProps> = ({
         multiple={multiple}
         allowClear={false}
         className={className || "w-full"}
-        onChange={() => {}} // disable selection
+        onChange={onChange} // Pass down the actual onChange handler
         disabledDate={handleDisabledDate}
       />
     );
