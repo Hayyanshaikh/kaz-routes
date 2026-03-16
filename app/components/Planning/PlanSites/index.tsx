@@ -71,22 +71,6 @@ const PlanSites = ({ destination }: Props) => {
         return;
       }
 
-      // Duplicate check
-      const bookedDates = allSites
-        .filter((s: any) => s.id === selectedSite.id)
-        .flatMap((s: any) => s.bookingDates ?? []);
-
-      const isDuplicate = selectedDate.some((d: any) =>
-        bookedDates.some((b: any) => b.date === dayjs(d).format("YYYY-MM-DD")),
-      );
-
-      if (isDuplicate) {
-        form.setFields([
-          { name: "selectedDate", errors: ["Already booked for these dates."] },
-        ]);
-        return;
-      }
-
       // ✅ Valid
       addSite(destination.id, {
         ...selectedSite,

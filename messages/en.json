@@ -77,7 +77,8 @@
     "addNightsToBook": "Please add nights to book",
     "addNightsToPlan": "Please add nights to plan to book",
     "restaurantBookingRemoved": "Restaurant booking removed",
-    "bookedSuccess": "Booked successfully!"
+    "bookedSuccess": "Booked successfully!",
+    "bookAgain": "Book again"
   },
   "cards": {
     "viewDetails": "View Details",

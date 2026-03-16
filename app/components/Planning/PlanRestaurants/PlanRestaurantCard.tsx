@@ -98,28 +98,20 @@ const PlanRestaurantCard: React.FC<Props> = ({
 
         {/* Button */}
         <div className="pt-2 mt-auto">
-          {isBooked ? (
+          <div
+            title={allowedDates.length === 0 ? t("addNightsToBook") : ""}
+            className="w-full"
+          >
             <CommonButton
-              label={t("deleteBooking")}
-              className="w-full! bg-red-500! hover:bg-red-600!"
-              onClick={handleDelete}
+              label={buttonText || t("button")}
+              className="w-full!"
+              disabled={allowedDates.length === 0}
+              onClick={() => {
+                setSelectedRestaurant(restaurant);
+                setIsModalOpen(true);
+              }}
             />
-          ) : (
-            <div
-              title={allowedDates.length === 0 ? t("addNightsToBook") : ""}
-              className="w-full"
-            >
-              <CommonButton
-                label={buttonText || t("button")}
-                className="w-full!"
-                disabled={allowedDates.length === 0}
-                onClick={() => {
-                  setSelectedRestaurant(restaurant);
-                  setIsModalOpen(true);
-                }}
-              />
-            </div>
-          )}
+          </div>
         </div>
       </div>
       <PlanRestaurantModal

@@ -85,25 +85,17 @@ const PlanSiteCard: React.FC<PlanSiteCardProps> = ({
           {format(price)}
         </span>
         <div className="pt-2 mt-auto">
-          {isBooked ? (
+          <div
+            title={disabled ? t("addNightsToPlan") : ""}
+            className="w-full"
+          >
             <CommonButton
-              label={t("delete")}
-              className="w-full! bg-red-500! hover:bg-red-600!"
-              onClick={onRemove}
+              label={isBooked ? t("bookAgain") : (buttonText || t("button"))}
+              className="w-full!"
+              onClick={onBook}
+              disabled={disabled}
             />
-          ) : (
-            <div
-              title={disabled ? t("addNightsToPlan") : ""}
-              className="w-full"
-            >
-              <CommonButton
-                label={buttonText || t("button")}
-                className="w-full!"
-                onClick={onBook}
-                disabled={disabled}
-              />
-            </div>
-          )}
+          </div>
         </div>
       </div>
     </Card>

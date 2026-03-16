@@ -77,7 +77,8 @@
     "addNightsToBook": "Пожалуйста, добавьте ночи для бронирования",
     "addNightsToPlan": "Пожалуйста, добавьте ночи в план для бронирования",
     "restaurantBookingRemoved": "Бронирование ресторана удалено",
-    "bookedSuccess": "Успешно забронировано!"
+    "bookedSuccess": "Успешно забронировано!",
+    "bookAgain": "Забронировать снова"
   },
   "cards": {
     "viewDetails": "Подробнее",
