@@ -60,6 +60,7 @@ const NavigationMobile = ({ className, navigationLinks = [] }: Props) => {
               label={t("action")}
               link="/plan/create"
               className="w-full"
+              onClick={handleClose}
             />
           </div>
         </div>

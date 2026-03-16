@@ -36,6 +36,7 @@ const CommonButton: React.FC<CommonButtonProps> = ({
         <Button
           ref={ref as any}
           type="primary"
+          onClick={onClick}
           className="w-full"
           disabled={disabled || loading}
           htmlType={htmlType}
