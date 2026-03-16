@@ -185,7 +185,8 @@
     "thanksExploring": "Thanks for exploring with us ✨",
     "bookNow": "Book Now",
     "cancel": "Cancel",
-    "back": "Back to Plan"
+    "back": "Back to Plan",
+    "carCapacityWarning": "You have {passengers} passengers but your booked cars only seat {seats}. Please book additional or larger cars."
   },
   "vehicleForm": {
     "copyFromPrevious": "Copy from previous",

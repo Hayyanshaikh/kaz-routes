@@ -53,8 +53,10 @@ const PlanCarModal = ({
   const selectedDates = allowedDates?.map((date: any) => dayjs(date));
 
   useEffect(() => {
-    form.setFieldValue("bookingDates", selectedDates);
-  }, []);
+    if (open) {
+      form.setFieldValue("bookingDates", selectedDates);
+    }
+  }, [open, form]);
 
   console.log({ selectedDates });
 

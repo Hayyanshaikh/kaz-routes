@@ -11,7 +11,7 @@ import { useControllerPostCreateTravelPlan } from "@/app/hooks/api";
 import CommonButton from "../../common/CommonButton";
 import { transformToDayWise } from "@/app/manipulators/planManipulator";
 import dayjs from "dayjs";
-import { message } from "antd";
+import { message, Alert } from "antd";
 import { useTranslations } from "next-intl";
 
 const PlanOverview = () => {
@@ -29,6 +29,18 @@ const PlanOverview = () => {
   console.log({ destinations });
 
   const convertToDaywise = transformToDayWise(data);
+
+  const requiredSeats = (plan?.adults || 0) + (plan?.childrens || 0);
+  const totalCarSeats = (destinations as any[])?.reduce(
+    (acc: number, dest: any) => {
+      const carSeats = (dest?.cars || []).reduce(
+        (sum: number, car: any) => sum + Number(car?.seating_capacity || 0),
+        0,
+      );
+      return acc + carSeats;
+    },
+    0,
+  );
 
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -82,6 +94,18 @@ const PlanOverview = () => {
   return (
     <div className="max-w-4xl mx-auto border border-gray-300">
       <div ref={contentRef} id="plan-summary">
+        {totalCarSeats > 0 && totalCarSeats < requiredSeats && (
+          <div className="p-4">
+            <Alert
+              type="error"
+              showIcon
+              message={t("carCapacityWarning", {
+                passengers: requiredSeats,
+                seats: totalCarSeats,
+              })}
+            />
+          </div>
+        )}
         <PlanDetail
           plan={plan}
           isPending={isPending}
@@ -90,7 +114,12 @@ const PlanOverview = () => {
           handleCreateTravelPlan={handleCreateTravelPlan}
         />
         <PlanDestinationDetail days={convertToDaywise} />
-        <div className="flex items-center justify-center pb-10 bg-gray-50">
+        <div className="flex items-center justify-center gap-4 pb-10 bg-gray-50">
+          <CommonButton
+            label={t("back")}
+            onClick={() => router.back()}
+            className="bg-transparent! hover:bg-primary! hover:text-white! border-primary! text-primary!"
+          />
           <CommonButton
             label={t("confirmPlan")}
             onClick={handleCreateTravelPlan}

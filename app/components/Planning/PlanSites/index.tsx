@@ -160,7 +160,13 @@ const PlanSites = ({ destination }: Props) => {
                   setSelectedDate(date);
                   form.setFieldsValue({ selectedDate: date });
                 }}
-                allowedDates={allowedDates}
+                allowedDates={allowedDates.filter((date) => {
+                  if (!selectedSite) return true;
+                  const alreadyBookedDates = destination?.sites
+                    ?.filter((s: any) => s.id === selectedSite.id)
+                    ?.flatMap((s: any) => s.bookingDates?.map((b: any) => b.date) || []);
+                  return !alreadyBookedDates.includes(date);
+                })}
               />
             </Form>
           </CommonModal>
