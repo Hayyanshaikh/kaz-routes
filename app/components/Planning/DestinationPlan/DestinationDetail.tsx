@@ -18,17 +18,17 @@ const DestinationDetail = ({ destinationData }: { destinationData: any }) => {
       content: <DestinationHotels destination={destinationData} />,
     },
     {
-      label: t("sites"),
+      label: t("activities"),
       value: "sites",
       content: <PlanSites destination={destinationData} />,
     },
     {
-      label: t("restaurants"),
+      label: t("meals"),
       value: "restaurants",
       content: <PlanRestaurants destination={destinationData} />,
     },
     {
-      label: t("cars"),
+      label: t("vehicle"),
       value: "cars",
       content: <PlanCars destination={destinationData} />,
     },

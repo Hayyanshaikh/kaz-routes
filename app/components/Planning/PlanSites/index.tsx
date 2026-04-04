@@ -36,6 +36,11 @@ const PlanSites = ({ destination }: Props) => {
 
   const handleBook = (site: any) => {
     setSelectedSite(site);
+    const existingBooking = destination?.sites?.find((s: any) => s.id === site.id);
+    const bookedDates =
+      existingBooking?.bookingDates?.map((b: any) => dayjs(b.date)) || [];
+    setSelectedDate(bookedDates);
+    form.setFieldsValue({ selectedDate: bookedDates });
     setOpen(true);
   };
 
@@ -72,13 +77,17 @@ const PlanSites = ({ destination }: Props) => {
       }
 
       // ✅ Valid
-      addSite(destination.id, {
-        ...selectedSite,
-        bookingDates: selectedDate.map((d: any) => ({
-          date: dayjs(d).format("YYYY-MM-DD"),
-          hours: siteDuration,
-        })),
-      });
+      if (selectedDate.length === 0) {
+        removeSite(destination.id, selectedSite.id);
+      } else {
+        addSite(destination.id, {
+          ...selectedSite,
+          bookingDates: selectedDate.map((d: any) => ({
+            date: dayjs(d).format("YYYY-MM-DD"),
+            hours: siteDuration,
+          })),
+        });
+      }
 
       messageApi.success("Site booked successfully!");
 
@@ -160,13 +169,7 @@ const PlanSites = ({ destination }: Props) => {
                   setSelectedDate(date);
                   form.setFieldsValue({ selectedDate: date });
                 }}
-                allowedDates={allowedDates.filter((date) => {
-                  if (!selectedSite) return true;
-                  const alreadyBookedDates = destination?.sites
-                    ?.filter((s: any) => s.id === selectedSite.id)
-                    ?.flatMap((s: any) => s.bookingDates?.map((b: any) => b.date) || []);
-                  return !alreadyBookedDates.includes(date);
-                })}
+                allowedDates={allowedDates}
               />
             </Form>
           </CommonModal>

@@ -1,23 +1,41 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import usePlanStore from "@/app/store/planStore";
-import { ArrowLeftOutlined, CalendarOutlined } from "@ant-design/icons";
+import useDestinationStore from "@/app/store/destinationStore";
+import {
+  ArrowLeftOutlined,
+  CalendarOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import CommonButton from "../../common/CommonButton";
+import CommonModal from "../../common/CommonModal";
 import { useTranslations } from "next-intl";
+import { message } from "antd";
 
 const PlanSummary = () => {
   const t = useTranslations("planning");
   const router = useRouter();
-  const { plan, dayCount, usedDays } = usePlanStore();
-  const [isRedirecting, setIsRedirecting] = React.useState(false);
+  const { plan, dayCount, usedDays, resetPlan } = usePlanStore();
+  const { resetDestinations } = useDestinationStore();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [messageApi, contextHolder] = message.useMessage();
 
   if (!plan) return null;
 
   const percentage = Math.round((usedDays / dayCount) * 100);
 
+  const handleDelete = () => {
+    resetPlan();
+    resetDestinations();
+    messageApi.success(t("deleteSuccess"));
+    router.push("/plan/create");
+    setIsDeleteModalOpen(false);
+  };
+
   return (
     <div className="bg-white border-b pb-4 mb-4 border-gray-200">
+      {contextHolder}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         {/* Left: Back + Plan Info */}
         <div className="flex items-center gap-3">
@@ -41,38 +59,8 @@ const PlanSummary = () => {
           </div>
         </div>
 
-        {/* Right: Details + Progress */}
+        {/* Right: Details + Progress + Actions */}
         <div className="flex flex-wrap items-center gap-4 sm:gap-6">
-          {/* Adults (desktop only) */}
-          {plan?.adults !== undefined && plan?.adults > 0 && (
-            <div className="hidden sm:block text-center">
-              <div className="text-sm font-medium py-1 px-3 rounded-md bg-gray-100 border border-gray-200">
-                {plan.adults}
-              </div>
-              <span className="text-xs text-black/80">{t("adults")}</span>
-            </div>
-          )}
-
-          {/* Children (desktop only) */}
-          {plan?.childrens !== undefined && plan?.childrens > 0 && (
-            <div className="hidden sm:block text-center">
-              <div className="text-sm font-medium py-1 px-3 rounded-md bg-gray-100 border border-gray-200">
-                {plan.childrens}
-              </div>
-              <span className="text-xs text-black/80">{t("children")}</span>
-            </div>
-          )}
-
-          {/* Infants (desktop only) */}
-          {plan?.infants !== undefined && plan?.infants > 0 && (
-            <div className="hidden sm:block text-center">
-              <div className="text-sm font-medium py-1 px-3 rounded-md bg-gray-100 border border-gray-200">
-                {plan.infants}
-              </div>
-              <span className="text-xs text-black/80">{t("infants")}</span>
-            </div>
-          )}
-
           {/* Circular progress (always visible) */}
           <div className="flex items-center gap-2">
             <div className="relative w-12 h-12">
@@ -108,18 +96,35 @@ const PlanSummary = () => {
             </div>
           </div>
 
-          <CommonButton
-            // link={`/plan/overview/${plan.id}`}
-            onClick={() => {
-              setIsRedirecting(true);
-              router.push(`/plan/overview/${plan?.id}`);
-            }}
-            loading={isRedirecting}
-            label={t("overview")}
-            className="w-full sm:w-auto"
-          />
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <CommonButton
+              onClick={() => {
+                window.open(`/plan/overview/${plan?.id}`, "_blank");
+              }}
+              label={t("overview")}
+              className="flex-1 sm:flex-initial"
+            />
+            <button
+              onClick={() => setIsDeleteModalOpen(true)}
+              className="flex items-center justify-center h-10 w-10 rounded-lg border border-red-200 text-red-500 transition hover:bg-red-500 hover:text-white hover:border-red-500"
+              title={t("deletePlan")}
+            >
+              <DeleteOutlined />
+            </button>
+          </div>
         </div>
       </div>
+
+      <CommonModal
+        open={isDeleteModalOpen}
+        setOpen={setIsDeleteModalOpen}
+        title={t("deletePlan")}
+        description={t("deletePlanConfirm")}
+        onConfirm={handleDelete}
+        confirmText={t("yes") || "Yes"}
+        cancelText={t("no") || "No"}
+        onClose={() => setIsDeleteModalOpen(false)}
+      />
     </div>
   );
 };

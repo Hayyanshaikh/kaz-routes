@@ -3,10 +3,12 @@ import CommonModal from "../../common/CommonModal";
 import { getDateRange } from "@/lib/utils";
 import { useDestinationDates } from "@/app/hooks/useDestinationDates";
 import CommonDatePicker from "../../common/CommonDatePicker";
+import dayjs from "dayjs";
 
 interface Props {
   room: any;
   isBooked: boolean;
+  bookedDates?: any[];
   onBook: (selectedDate: any, setSelectedDate: any) => void;
   onRemove: () => void;
   destination: any;
@@ -14,7 +16,14 @@ interface Props {
 
 import { useTranslations } from "next-intl";
 
-const RoomItem = ({ room, isBooked, onBook, onRemove, destination }: Props) => {
+const RoomItem = ({
+  room,
+  isBooked,
+  bookedDates,
+  onBook,
+  onRemove,
+  destination,
+}: Props) => {
   const t = useTranslations("planning");
   const [open, setOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<any>(null);
@@ -27,10 +36,13 @@ const RoomItem = ({ room, isBooked, onBook, onRemove, destination }: Props) => {
         <span className="text-gray-700 truncate">{room.room_name}</span>
         {isBooked ? (
           <button
-            onClick={onRemove}
-            className="bg-red-500 text-white px-2 py-0.5 rounded-full hover:bg-red-600"
+            onClick={() => {
+              setSelectedDate(bookedDates?.map((d: any) => dayjs(d)));
+              setOpen(true);
+            }}
+            className="bg-green-600 text-white px-2 py-0.5 rounded-full hover:bg-green-700 font-medium"
           >
-            {t("delete")}
+            {t("alreadyBooked")}
           </button>
         ) : (
           <button
@@ -65,7 +77,11 @@ const RoomItem = ({ room, isBooked, onBook, onRemove, destination }: Props) => {
         confirmText={t("bookNow")}
         cancelText={t("cancel")}
         onConfirm={() => {
-          onBook(selectedDate, setSelectedDate);
+          if (selectedDate?.length === 0) {
+            onRemove();
+          } else {
+            onBook(selectedDate, setSelectedDate);
+          }
           setOpen(false);
         }}
         onClose={() => setOpen(false)}

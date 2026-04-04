@@ -31,6 +31,7 @@ const PlanCarModal = ({
   const allowedDates = getDateRange(startDate, endDate);
   // ✅ store se addCar nikal lo
   const addCar = useDestinationStore((state) => state.addCar);
+  const removeCar = useDestinationStore((state) => state.removeCar);
 
   const handleFinish = (values: any) => {
     const payload = {
@@ -43,14 +44,22 @@ const PlanCarModal = ({
 
     // ✅ Destination ID ke sath store me save karo
     if (destination?.id) {
-      addCar(destination.id, payload);
-      messageApi.success("Car booked successfully!");
+      if (values.bookingDates?.length === 0) {
+        removeCar(destination.id, car.id);
+        messageApi.success("Car booking removed!");
+      } else {
+        addCar(destination.id, payload);
+        messageApi.success("Car booked successfully!");
+      }
     }
 
     setOpen(false); // modal band karne ke liye
   };
 
-  const selectedDates = allowedDates?.map((date: any) => dayjs(date));
+  const existingBooking = destination?.cars?.find((c: any) => c.id === car.id);
+  const selectedDates =
+    existingBooking?.bookingDates?.map((date: any) => dayjs(date)) ||
+    allowedDates?.map((date: any) => dayjs(date));
 
   useEffect(() => {
     if (open) {

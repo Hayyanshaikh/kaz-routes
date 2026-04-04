@@ -27,6 +27,7 @@ export interface CommonButtonProps {
   iconPosition?: "left" | "right";
   ref?: React.Ref<HTMLButtonElement>;
   loading?: boolean;
+  labelClassName?: string;
 }
 
 // Common Input Props

@@ -5,11 +5,13 @@ import {
   EnvironmentOutlined,
   GlobalOutlined,
   DownOutlined,
+  DollarOutlined,
 } from "@ant-design/icons";
 import CommonButton from "../../common/CommonButton";
 import CommonBadge from "../../common/CommonBadge";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
+import { useFormatCurrency } from "@/app/hooks/useFormatCurrency";
 
 interface PlanDetailProps {
   plan: any;
@@ -17,6 +19,7 @@ interface PlanDetailProps {
   handleCreateTravelPlan: () => void;
   isPending?: boolean;
   isRedirecting?: boolean;
+  totalPrice?: number;
 }
 
 const PlanDetail: React.FC<PlanDetailProps> = ({
@@ -25,9 +28,11 @@ const PlanDetail: React.FC<PlanDetailProps> = ({
   handleCreateTravelPlan,
   isPending,
   isRedirecting,
+  totalPrice = 0,
 }) => {
   const t = useTranslations();
   const router = useRouter();
+  const { format } = useFormatCurrency();
   const { planName, countries, planDateRange } = plan;
 
   const formatDate = (dateString: string) => {
@@ -77,6 +82,17 @@ const PlanDetail: React.FC<PlanDetailProps> = ({
             label={t("cards.countries", { count: numberOfCountries ?? 0 })}
           />
         </div>
+
+        {/* Total Price */}
+        {totalPrice > 0 && (
+          <div className="mb-6">
+            <CommonBadge
+              color="success"
+              label={`${t("planning.totalPackage") || "Total Package"}: ${format(totalPrice)}`}
+              className="text-lg! py-2! px-4! text-center! justify-center!"
+            />
+          </div>
+        )}
 
         {/* Trip Dates */}
         <p className="text-sm sm:text-base font-medium mb-8 text-gray-800">

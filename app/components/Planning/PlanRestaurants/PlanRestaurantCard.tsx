@@ -103,8 +103,8 @@ const PlanRestaurantCard: React.FC<Props> = ({
             className="w-full"
           >
             <CommonButton
-              label={buttonText || t("button")}
-              className="w-full!"
+              label={isBooked ? t("bookAgain") : (buttonText || t("button"))}
+              className={`w-full! ${isBooked ? "bg-green-600! hover:bg-green-700!" : ""}`}
               disabled={allowedDates.length === 0}
               onClick={() => {
                 setSelectedRestaurant(restaurant);

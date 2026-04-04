@@ -11,13 +11,14 @@ import PlanSummary from "@/app/components/Planning/PlanSummary";
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const plan = usePlanStore((state) => state.plan);
+  const hasHydrated = usePlanStore((state) => state.hasHydrated);
   const { destinations } = useDestinationStore();
 
   React.useEffect(() => {
-    if (!plan?.id) {
+    if (hasHydrated && !plan?.id) {
       router.push("/plan/create");
     }
-  }, [plan, router]);
+  }, [hasHydrated, plan, router]);
 
   return (
     <Section>

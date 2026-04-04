@@ -12,6 +12,7 @@ import { useDestinationDates } from "@/app/hooks/useDestinationDates";
 import { message, Form } from "antd";
 import CommonDatePicker from "../../common/CommonDatePicker";
 import CommonSelect from "../../common/CommonSelect";
+import dayjs from "dayjs";
 
 type Props = {
   open: boolean;
@@ -40,8 +41,20 @@ const PlanRestaurantModal = ({
 
   // ✅ Reset local state jab modal open ho
   useEffect(() => {
-    if (open) {
+    if (open && restaurant) {
       const initial: Record<string | number, number> = {};
+      const firstVariantBooking = destination?.restaurants?.find(
+        (r: any) => r.restaurantId === restaurant.id
+      );
+      
+      const bookedDates = firstVariantBooking?.selectedDate?.map((d: any) => dayjs(d)) || [];
+      const mealType = firstVariantBooking?.mealType;
+
+      form.setFieldsValue({
+        selectedDate: bookedDates,
+        mealType: mealType,
+      });
+
       destination?.restaurants?.forEach((r: any) => {
         if (r.restaurantId === restaurant.id) {
           initial[r.variant.id] = r.quantity;
@@ -49,7 +62,7 @@ const PlanRestaurantModal = ({
       });
       setQuantities(initial);
     }
-  }, [open, destination, restaurant]);
+  }, [open, destination, restaurant, form]);
 
   const handleUpdateQuantity = (
     variantId: string | number,
@@ -181,9 +194,7 @@ const PlanRestaurantModal = ({
           restaurantId: restaurant.id,
           variant,
           mealType,
-          selectedDate: selectedDate.map((date: any) =>
-            date.format("YYYY-MM-DD"),
-          ),
+          selectedDate: selectedDate,
           quantity: qty,
         };
         addRestaurant(destination?.id, payload);

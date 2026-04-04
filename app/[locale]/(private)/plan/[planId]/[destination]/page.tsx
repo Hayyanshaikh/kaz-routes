@@ -16,7 +16,7 @@ const layout = () => {
   const destination = searchParams.get("destination");
 
   const destinationData = destinations?.find(
-    (des) => String(des.id) === String(destination)
+    (des) => String(des.id) === String(destination),
   );
 
   if (!destinationData) return;

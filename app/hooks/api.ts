@@ -347,7 +347,7 @@ export const useControllerGetFindAllAgentPackageItems = (
     package_id: number;
     item_date: string;
   },
-  enabled: boolean = true
+  enabled: boolean = true,
 ) =>
   useQuery({
     queryKey: ["ControllerGetAgentPackageItemsByDate", params],
@@ -362,7 +362,7 @@ export const useControllerGetFindAllAgentPackageItems = (
 
 export const useControllerGetAgentPackageItemsByPackageId = (
   packageId: number,
-  enabled: boolean = true
+  enabled: boolean = true,
 ) =>
   useQuery({
     queryKey: ["ControllerGetAgentPackageItemsByPackageId", packageId],
@@ -406,7 +406,7 @@ export const useControllerPostCreateItinerary = () => {
 // ✅ GET /package-itineraries?package_id=14
 export const useControllerGetFindPackageItinerariesByPackageId = (
   packageId: number,
-  enabled: boolean = true
+  enabled: boolean = true,
 ) =>
   useQuery({
     queryKey: ["ControllerGetFindPackageItinerariesByPackageId", packageId],
@@ -427,7 +427,7 @@ export const useCurrencySettings = (options?: QueryOptions) =>
       const res = await axios.get("/settings");
       // Filter currency from response
       const currencyItem = res.data.data.find(
-        (item: any) => item.key === "currency"
+        (item: any) => item.key === "currency",
       );
       return currencyItem?.value[0] ?? {};
     },

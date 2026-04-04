@@ -56,9 +56,8 @@ export function getDaysCount(
 ): number {
   if (!start || !end) return 0;
   const days = end.diff(start, "day");
-  // Typically inclusive of both ends means +1, kaz-routes seems to use +2 for some logic?
-  // Let's keep existing logic if it was working.
-  return inclusive ? days + 1 : days;
+  // Typically inclusive of both ends means +1, kaz-routes uses +2 for specific business duration logic.
+  return inclusive ? days + 2 : days + 1;
 }
 
 export function getDateRange(start?: Dayjs | null, end?: Dayjs | null) {

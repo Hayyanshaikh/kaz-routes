@@ -91,7 +91,7 @@ const PlanSiteCard: React.FC<PlanSiteCardProps> = ({
           >
             <CommonButton
               label={isBooked ? t("bookAgain") : (buttonText || t("button"))}
-              className="w-full!"
+              className={`w-full! ${isBooked ? "bg-green-600! hover:bg-green-700!" : ""}`}
               onClick={onBook}
               disabled={disabled}
             />

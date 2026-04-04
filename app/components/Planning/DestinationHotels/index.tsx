@@ -62,7 +62,7 @@ const DestinationHotels = ({ destination }: Props) => {
 
     const booking = {
       ...room,
-      bookingDates: selectedDate?.map((date: any) => date.format("YYYY-MM-DD")),
+      bookingDates: selectedDate,
       hotel: {
         images: hotel?.images,
         name: hotel?.hotel_name,

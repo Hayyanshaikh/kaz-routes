@@ -5,6 +5,8 @@ type Hotel = {
   id: string | number;
   hotel_id?: string | number;
   room_name: string;
+  price_double?: number;
+  price?: number;
   hotel?: {
     name: string;
     images?: string[];
@@ -18,6 +20,8 @@ type Hotel = {
 type Car = {
   id: string | number;
   name?: string;
+  price?: number;
+  daily_rate?: number;
   pickup_location?: string;
   dropoff_location?: string;
   model?: string;
@@ -29,6 +33,8 @@ type Car = {
 type Site = {
   id: string | number;
   name: string;
+  price_adult?: number;
+  price_child?: number;
   bookingDates?: any[];
   images?: string[];
 };
@@ -44,7 +50,7 @@ type Restaurant = {
     name: string;
     images?: string[];
   };
-  variant: { id: string | number; name: string };
+  variant: { id: string | number; name: string; price?: number };
   quantity: number;
   bookingDates?: (string | { date: string } | any)[];
   mealType: string;
@@ -168,6 +174,7 @@ export function transformToDayWise(payload: Payload): DayWise[] {
             hotel_id: h.hotel_id || "",
             room_id: h.id,
             room_name: h.room_name,
+            price: Number(h.price || h.price_double || 0),
             hotel_name: h.hotel?.name || h.hotel_name || "",
             thumbnail: h.images?.[0] || h.hotel?.image || "",
             images: [...(h.images || []), ...(h.hotel?.images || [])],
@@ -180,6 +187,7 @@ export function transformToDayWise(payload: Payload): DayWise[] {
             name: c.name || "",
             model: c.model || "",
             brand: c?.brand?.name || "",
+            price: Number(c.daily_rate || c.price || 0),
             pickup_location: c.pickup_location || "",
             dropoff_location: c.dropoff_location || "",
             thumbnail: c.images?.[0]?.image_path || "",
@@ -191,6 +199,8 @@ export function transformToDayWise(payload: Payload): DayWise[] {
           .map((s) => ({
             id: s.id,
             name: s.name,
+            price_adult: Number(s.price_adult || 0),
+            price_child: Number(s.price_child || 0),
             date: normalizeDates(s.bookingDates),
             thumbnail: s.images?.[0] || "",
             images: s.images || [],
@@ -206,6 +216,7 @@ export function transformToDayWise(payload: Payload): DayWise[] {
             mealType: r.mealType,
             variantId: r.variant?.id,
             variantName: r.variant?.name,
+            price: Number(r.variant?.price || 0),
             quantity: r.quantity,
             thumbnail: r.dish?.images?.[0] || r.restaurant?.images?.[0] || "",
             images: [

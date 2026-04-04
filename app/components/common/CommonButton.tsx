@@ -18,13 +18,14 @@ const CommonButton: React.FC<CommonButtonProps> = ({
   htmlType = "button",
   ref,
   loading = false,
+  labelClassName = "",
 }) => {
   const loaderIcon = <LoadingOutlined spin />;
 
   const content = (
     <span className="flex items-center justify-center gap-2">
       {!loading && iconPosition === "left" && icon && <span>{icon}</span>}
-      {label && <span>{label}</span>}
+      {label && <span className={labelClassName}>{label}</span>}
       {!loading && iconPosition === "right" && icon && <span>{icon}</span>}
       {loading && <Spin indicator={loaderIcon} size="small" />}
     </span>

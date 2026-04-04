@@ -16,7 +16,7 @@ import { useDestinationDates } from "@/app/hooks/useDestinationDates";
 const Page = () => {
   const router = useRouter();
   const [messageApi, contextHolder] = message.useMessage();
-  const { plan } = usePlanStore();
+  const { plan, hasHydrated } = usePlanStore();
   const { destinations, removeDestination } = useDestinationStore();
   const searchParams = useSearchParams();
   const destinationId = searchParams.get("destination");
@@ -27,10 +27,10 @@ const Page = () => {
   const { startDate, endDate } = useDestinationDates(destinationData);
 
   useEffect(() => {
-    if (!plan) {
+    if (hasHydrated && !plan) {
       router.push(`/plan/create`);
     }
-  }, [plan]);
+  }, [hasHydrated, plan]);
 
   if (!destinationId || !destinationData) {
     return (

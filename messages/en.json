@@ -78,7 +78,7 @@
     "addNightsToPlan": "Please add nights to plan to book",
     "restaurantBookingRemoved": "Restaurant booking removed",
     "bookedSuccess": "Booked successfully!",
-    "bookAgain": "Book again"
+    "bookAgain": "Already Booked"
   },
   "cards": {
     "viewDetails": "View Details",
@@ -131,6 +131,11 @@
     }
   },
   "planning": {
+    "deletePlan": "Delete Plan",
+    "deletePlanConfirm": "Are you sure you want to delete this plan?",
+    "deleteSuccess": "Plan deleted successfully!",
+    "yes": "Yes",
+    "no": "No",
     "discover": "Discover trip",
     "confirmPlan": "Confirm Plan",
     "adults": "Adults",
@@ -161,12 +166,16 @@
     "summary": "Summary:",
     "noBookingsDay": "No bookings for this day",
     "bookingSuccess": "Room booked successfully!",
+    "alreadyBooked": "Already Booked",
     "selectDateError": "Please select at least one date for booking.",
     "maxHotelsError": "You can book a maximum of 9 hotels in your plan.",
     "hotels": "Hotels",
     "sites": "Sites",
+    "activities": "Activities",
     "restaurants": "Restaurants",
+    "meals": "Meals",
     "cars": "Cars",
+    "vehicle": "Vehicle",
     "confirmBooking": "Confirm Booking",
     "confirmBookingDesc": "Do you want to book room: {name}?",
     "selectBookingDate": "Please select a date for your booking:",
@@ -186,7 +195,9 @@
     "bookNow": "Book Now",
     "cancel": "Cancel",
     "back": "Back to Plan",
-    "carCapacityWarning": "You have {passengers} passengers but your booked cars only seat {seats}. Please book additional or larger cars."
+    "carCapacityWarning": "You have {passengers} passengers but your booked cars only seat {seats}. Please book additional or larger cars.",
+    "subTotal": "Sub total",
+    "totalPackage": "Total Package Price"
   },
   "vehicleForm": {
     "copyFromPrevious": "Copy from previous",

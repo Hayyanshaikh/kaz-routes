@@ -16,7 +16,7 @@ import { useTranslations } from "next-intl";
 
 const PlanOverview = () => {
   const t = useTranslations("planning");
-  const { plan, resetPlan } = usePlanStore();
+  const { plan, resetPlan, hasHydrated } = usePlanStore();
   const { destinations, resetDestinations } = useDestinationStore();
   const router = useRouter();
   const { mutateAsync: createPlan, isPending } =
@@ -41,6 +41,30 @@ const PlanOverview = () => {
     },
     0,
   );
+
+  const totalPackagePrice = convertToDaywise?.reduce((acc: number, day: any) => {
+    const hotelTotal = day?.hotelBookings?.reduce(
+      (sum: number, h: any) => sum + Number(h.price || 0),
+      0,
+    );
+    const carTotal = day?.carBookings?.reduce(
+      (sum: number, c: any) => sum + Number(c.price || 0),
+      0,
+    );
+    const siteTotal = day?.siteBookings?.reduce(
+      (sum: number, s: any) =>
+        sum +
+        (Number(s.price_adult || 0) * (plan?.adults || 0) +
+          Number(s.price_child || 0) * (plan?.childrens || 0)),
+      0,
+    );
+    const restaurantTotal = day?.restaurantBookings?.reduce(
+      (sum: number, r: any) => sum + Number(r.price || 0) * Number(r.quantity || 0),
+      0,
+    );
+
+    return acc + hotelTotal + carTotal + siteTotal + restaurantTotal;
+  }, 0);
 
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -84,11 +108,12 @@ const PlanOverview = () => {
   };
 
   useEffect(() => {
-    if (!plan) {
+    if (hasHydrated && !plan) {
       router.push("/plan/create");
     }
-  }, [plan, router]);
+  }, [hasHydrated, plan, router]);
 
+  if (!hasHydrated) return null;
   if (!plan) return null;
 
   return (
@@ -110,6 +135,7 @@ const PlanOverview = () => {
           plan={plan}
           isPending={isPending}
           isRedirecting={isRedirecting}
+          totalPrice={totalPackagePrice}
           destinationsCount={destinations?.length}
           handleCreateTravelPlan={handleCreateTravelPlan}
         />

@@ -84,9 +84,9 @@ const PlanCarCard = ({ car, destination, buttonText }: PlanCarCardProps) => {
 
           {isBooked ? (
             <CommonButton
-              onClick={handleRemove}
-              className="w-full! bg-red-500! hover:bg-red-600!"
-              label={t("deleteBooking")}
+              onClick={() => setOpen(true)}
+              className="w-full! bg-green-600! hover:bg-green-700!"
+              label={t("bookAgain")}
             />
           ) : (
             <div
@@ -104,14 +104,12 @@ const PlanCarCard = ({ car, destination, buttonText }: PlanCarCardProps) => {
         </div>
       </div>
 
-      {!isBooked && (
-        <PlanCarModal
-          destination={destination}
-          car={car}
-          open={open}
-          setOpen={setOpen}
-        />
-      )}
+      <PlanCarModal
+        destination={destination}
+        car={car}
+        open={open}
+        setOpen={setOpen}
+      />
     </>
   );
 };
